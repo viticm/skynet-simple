@@ -1,0 +1,11 @@
+cscope.* 
+tags
+cscope.files
+cscope.in.out
+cscope.out
+cscope.po.out
+
+# skynet
+luaclib/*.so
+cservice/*.so
+skynet/*

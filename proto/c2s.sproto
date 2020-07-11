@@ -1,0 +1,11 @@
+# The client to server proto defines.
+
+# Test
+mytest 1 {
+  request {
+    text 0 : string
+  }
+  response {
+    text 0 : string
+  }
+}

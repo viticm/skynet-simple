@@ -1,0 +1,8 @@
+# The server to client proto defines.
+
+# The hello message.
+hello 1 {
+  request {
+    text 0 : string
+  }
+}
