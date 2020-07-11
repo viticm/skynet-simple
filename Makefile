@@ -48,4 +48,6 @@ clean :
 	cd $(SKYNET_PATH) && $(MAKE) clean
 	rm -f $(CSERVICE_PATH)/*.so $(LUA_CLIB_PATH)/*.so
 
-cleanall : clean
+cleanall :
+	cd $(SKYNET_PATH) && $(MAKE) cleanall
+	rm -f $(CSERVICE_PATH)/*.so $(LUA_CLIB_PATH)/*.so
