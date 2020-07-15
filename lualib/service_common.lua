@@ -27,13 +27,14 @@ function _M.start()
   skynet.call(proto_loader, 'lua', 'load', { 'c2s', 's2c' })
 
   -- Debug service.
-  local dport = skynet.getenv('debugport')
+  local dport = skynet.getenv('dport')
   skynet.uniqueservice('debug_console', dport)
 
   log:error('the error log')
   log:warn('the warn log')
   log:info('the info log')
   log:debug('the debug log')
+  log:dump({'ccc', {a = 1}, 3}, "the test table")
 
 end
 

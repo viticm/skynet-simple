@@ -86,11 +86,11 @@ function log:__call(...)
   logger.print(5, msg)
 end
 
-function log:dump(...)
+function log:dump(value, flag)
   if self.level < 5 then
     return
   end
-  local msg = self:msg(util.dump(...))
+  local msg = self:msg(util.dump(value, nil, flag))
   logger.print(5, msg)
 end
 

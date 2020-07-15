@@ -5,3 +5,23 @@ lua_path = root.."lualib/?.lua;"..root.."lualib/?/init.lua;"..root.."skynet/lual
 lua_cpath = root.."luaclib/?.so;"..root.."skynet/luaclib/?.so"
 snax = root.."service/?.lua;"..root.."test/?.lua"
 cpath = root.."cservice/?.so;"..root.."skynet/cservice/?.so"
+
+-- Other settings.
+
+log_path = "$LOGPATH"
+pid_file = "$PIDFILE"
+dport_file = "$DPORT_FILE"
+
+daemon = "$DAEMON"
+logger = "$LOGGER"
+loggersize = 100 * 1024 * 1024
+
+setting_host = "$SETTING_HOST"
+
+if "" == daemon then
+  daemon = nil
+end
+
+if "" == logger then
+  logger = nil
+end

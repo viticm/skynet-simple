@@ -7,4 +7,4 @@ start = "login/main"
 bootstrap = "snlua bootstrap"	-- The service for bootstrap
 port = 2333
 ip = "0.0.0.0"
-debugport = port + 10000
+dport = port + 10000

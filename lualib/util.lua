@@ -10,6 +10,11 @@
 --]]
 local _M = {}
 
+local function _func2str(func)
+  local info = debug.getinfo(func, 'S')
+  return string.format('"%s" -- [[%s:%d]]', info.short_src, info.linedefined)
+end
+
 local function _table2str(lua_table, raw_table, table_map, n, fold, indent)        
   indent = indent or 1                                                             
   for k, v in pairs(lua_table) do                                                  
@@ -37,6 +42,8 @@ local function _table2str(lua_table, raw_table, table_map, n, fold, indent)
     else                                                                           
       if type(v) == 'string' then                                                  
         v = string.format('%q', v)                                                 
+      elseif 'function' == type(v) then
+        v = _func2str(v)
       else                                                                         
         v = tostring(v)                                                            
       end                                                                          
@@ -47,21 +54,27 @@ local function _table2str(lua_table, raw_table, table_map, n, fold, indent)
   return n                                                                         
 end
 
--- Dump a table to string.
--- @param table lua_table The source table.
+-- Dump a value.
+-- @param mixed value the value.
 -- @param mixed fold
+-- @param mixed flag
 -- @return mixed
-function _M.dump(lua_table, fold)
-  if type(lua_table) == 'table' then                                               
+function _M.dump(value, fold, flag)
+  local the_type = type(value)
+  if 'table' == the_type then                                               
     local raw_table = {}                                                           
     local table_map = {}                                                        
-    table_map[tostring(lua_table)] = true                                       
+    table_map[tostring(value)] = true                                       
     local n = 0                                                                 
     n = n + 1; raw_table[n] = '{\n'                                             
-    n = _table2str(lua_table, raw_table, table_map, n, fold)                    
+    n = _table2str(value, raw_table, table_map, n, fold)                    
     n = n + 1; raw_table[n] = '}'                                               
-    return table.concat(raw_table, '')                                          
+    return (flag and flag or "") .. table.concat(raw_table, '')                                          
+  elseif 'function' == the_type then
+    return _func2str(value)
   else                                                                          
     return lua_table                                                            
   end   
 end
+
+return _M
