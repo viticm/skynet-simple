@@ -11,10 +11,16 @@
 
 local skynet = require "skynet"
 local sharetable = require "skynet.sharetable"
+local setting = require "setting"
+local log = require "log"
 
 local _M = {}
 
 function _M.start()
+
+  -- Setting.
+  local def_setting = dofile('bin/def_setting.lua')
+  setting.init(def_setting)
   
   -- Proto load.
   local proto_loader = skynet.uniqueservice('proto_loader')
@@ -23,6 +29,11 @@ function _M.start()
   -- Debug service.
   local dport = skynet.getenv('debugport')
   skynet.uniqueservice('debug_console', dport)
+
+  log:error('the error log')
+  log:warn('the warn log')
+  log:info('the info log')
+  log:debug('the debug log')
 
 end
 

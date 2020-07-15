@@ -9,3 +9,21 @@ cscope.po.out
 luaclib/*.so
 cservice/*.so
 skynet/*
+
+#############
+## cache dir
+#############
+*.dir
+*.so
+*.lib
+*.dll
+*.tlog
+*.a
+
+#############
+## Cmake
+#############
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile

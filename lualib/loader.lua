@@ -9,7 +9,7 @@
  - @uses The lua loader diffrent from skynet.
 --]]
 local args = {}
-for word in string.gmatch(..., "%S+") do
+for word in string.gmatch(..., '%S+') do
   table.insert(args, word)
 end
 
@@ -19,8 +19,8 @@ local main, pattern
 local mainargs
 
 local err = {}
-for pat in string.gmatch(LUA_SERVICE, "([^;]+);*") do
-  local filename = string.gsub(pat, "?", SERVICE_NAME)
+for pat in string.gmatch(LUA_SERVICE, '([^;]+);*') do
+  local filename = string.gsub(pat, '?', SERVICE_NAME)
   local f, msg = loadfile(filename)
   if not f then
     table.insert(err, msg)
@@ -41,24 +41,24 @@ for pat in string.gmatch(LUA_SERVICE, "([^;]+);*") do
 end
 
 if not main then
-  error(table.concat(err, "\n"))
+  error(table.concat(err, '\n'))
 end
 
 LUA_SERVICE = nil
 package.path , LUA_PATH = LUA_PATH
 package.cpath , LUA_CPATH = LUA_CPATH
 
-local service_path = string.match(pattern, "(.*/)[^/?]+$")
+local service_path = string.match(pattern, '(.*/)[^/?]+$')
 
 if service_path then
-  service_path = string.gsub(service_path, "?", args[1])
-  package.path = service_path .. "?.lua;" .. package.path
+  service_path = string.gsub(service_path, '?', args[1])
+  package.path = service_path .. '?.lua;' .. package.path
   SERVICE_PATH = service_path
 else
-  local p = string.match(pattern, "(.*/).+$")
+  local p = string.match(pattern, '(.*/).+$')
   SERVICE_PATH = p
   if mainargs then -- Will load service file in this way.
-    package.path = SERVICE_PATH .. "?.lua;" .. package.path
+    package.path = SERVICE_PATH .. '?.lua;' .. package.path
   end
 end
 
