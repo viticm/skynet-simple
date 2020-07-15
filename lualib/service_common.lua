@@ -28,6 +28,9 @@ function _M.start()
 
   -- Debug service.
   local dport = skynet.getenv('dport')
+  local fp = assert(io.open(skynet.getenv('dport_file'), 'w'))
+  fp:write(dport)
+  fp:close()
   skynet.uniqueservice('debug_console', dport)
 
   log:error('the error log')

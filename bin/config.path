@@ -6,11 +6,14 @@ lua_cpath = root.."luaclib/?.so;"..root.."skynet/luaclib/?.so"
 snax = root.."service/?.lua;"..root.."test/?.lua"
 cpath = root.."cservice/?.so;"..root.."skynet/cservice/?.so"
 
--- Other settings.
+-- Other settings from the start.sh env.
 
 log_path = "$LOGPATH"
 pid_file = "$PIDFILE"
 dport_file = "$DPORT_FILE"
+
+svr_type = "$SVR_TYPE"
+svr_id = "$SVR_ID"
 
 daemon = "$DAEMON"
 logger = "$LOGGER"

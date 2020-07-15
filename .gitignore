@@ -19,6 +19,10 @@ skynet/*
 *.dll
 *.tlog
 *.a
+*.bootflag
+*.log
+*.pid
+*.dport
 
 #############
 ## Cmake
