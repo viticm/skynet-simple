@@ -20,7 +20,7 @@ CFLAGS = -std=c11 -g -O2 -Wall -I$(LUA_INC) -I$(SKYNET_INC) $(MYCFLAGS)
 
 CSERVICE = logger
 LUA_CLIB = trace \
-					 print extend
+  print extend
 
 all : \
   $(SKYNET_PATH)/skynet \
