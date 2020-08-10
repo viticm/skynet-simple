@@ -1,0 +1,22 @@
+CREATE PROCEDURE `sp_convert`(in __userid int,in __ccode varchar(20),in __ckey varchar(10))
+BEGIN
+	declare olduserid int default 0;
+	declare newuserid int default 0;
+	declare err int default 0;	
+	select  userid,flag into olduserid,newuserid from t_convert where ccode=UPPER(__ccode) and ckey=UPPER(__ckey);
+	if(olduserid=0)then
+			#转换失败,转换码不存在
+			set err=2;
+			select err,0,0;
+	else
+			if(newuserid>0)THEN
+				#转换码已使用
+				set err=3;
+				select err,0,0;	
+			else
+				#成功
+				set err=4;
+				select err,olduserid,__userid;	
+			end if;
+	end if;
+end

@@ -1,0 +1,28 @@
+CREATE PROCEDURE `sp_social_agree`(IN `playerid` VARCHAR(50), IN `socialid` VARCHAR(50), IN `mymax` INT,IN `othermax` INT,IN `nowtime` INT)
+BEGIN
+	declare t int default 0;
+	proc:begin 
+		if not EXISTS(select 1 from t_social where player_id=playerid and social_id=socialid and social_type=1)THEN
+			#数据错误	
+			select 1;
+			leave proc;
+		end if;
+		#检查对方好友数量
+		select count(*) into t from t_social where player_id=socialid and social_type=2;
+		if t>=othermax then
+			select 2;
+			leave proc;
+		end if;
+		#检查我的好友数量
+		select count(*) into t from t_social where player_id=playerid and social_type=2;
+		if t>=othermax then
+			select 3;
+			leave proc;
+		end if;
+		#申请信息变好友
+		update t_social set social_type=2 where player_id=playerid and social_id=socialid;
+		#给申请者添加好友
+		insert t_social(player_id,social_id,social_type,created) values(socialid,playerid,2,nowtime);
+		select 0,playerid,socialid;
+	end;
+end

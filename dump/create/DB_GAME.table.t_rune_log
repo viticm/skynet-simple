@@ -1,0 +1,10 @@
+CREATE TABLE `t_rune_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `player_name` varchar(11) NOT NULL,
+  `runeid` int(11) NOT NULL,
+  `prerunelv` int(11) NOT NULL,
+  `currunelv` int(11) NOT NULL,
+  `items` varchar(11) NOT NULL,
+  `optime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

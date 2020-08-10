@@ -20,7 +20,7 @@ CFLAGS = -std=c11 -g -O2 -Wall -I$(LUA_INC) -I$(SKYNET_INC) $(MYCFLAGS)
 
 CSERVICE = logger
 LUA_CLIB = trace \
-  print extend
+  print extend minheap split uniq seri
 
 all : \
   $(SKYNET_PATH)/skynet \
@@ -54,6 +54,17 @@ $(LUA_CLIB_PATH)/print.so : lualib-src/lua-print.c | $(LUA_CLIB_PATH)
 $(LUA_CLIB_PATH)/extend.so : lualib-src/lua-extend.c | $(LUA_CLIB_PATH)
 	$(CC) $(CFLAGS) $(SHARED) $^ -o $@ 
 
+$(LUA_CLIB_PATH)/minheap.so : lualib-src/lua-minheap.c | $(LUA_CLIB_PATH)
+	$(CC) $(CFLAGS) $(SHARED) $^ -o $@ 
+
+$(LUA_CLIB_PATH)/split.so : lualib-src/lua-split.c | $(LUA_CLIB_PATH)
+	$(CC) $(CFLAGS) $(SHARED) $^ -o $@ 
+
+$(LUA_CLIB_PATH)/uniq.so : lualib-src/lua-uniq.c | $(LUA_CLIB_PATH)
+	$(CC) $(CFLAGS) $(SHARED) $^ -o $@ 
+
+$(LUA_CLIB_PATH)/seri.so : lualib-src/lua-seri.c | $(LUA_CLIB_PATH)
+	$(CC) $(CFLAGS) $(SHARED) $^ -o $@ 
 
 $(SKYNET_PATH)/skynet :
 	cd $(SKYNET_PATH) && $(MAKE) linux

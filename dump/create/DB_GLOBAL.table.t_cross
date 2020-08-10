@@ -1,0 +1,5 @@
+CREATE TABLE `t_cross` (
+  `gsid` int(11) NOT NULL DEFAULT '0',
+  `crossid` int(11) DEFAULT NULL,
+  PRIMARY KEY (`gsid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8

@@ -1,0 +1,7 @@
+CREATE PROCEDURE `sp_delplayer`(in _day int,in _playerlevel int)
+BEGIN
+	select "delplayers:",count(*) from t_player  where offlinetime<now()-_day*86400 and player_level<=_playerlevel and (vip is null or vip=0);
+	delete from t_social where player_id in ( select player_id from t_player as a  where a.offlinetime<now()-_day*86400 and a.player_level<=_playerlevel and (vip is null or vip=0));
+	delete from t_social where social_id in ( select player_id from t_player as a  where a.offlinetime<now()-_day*86400 and a.player_level<=_playerlevel and (vip is null or vip=0));
+	delete from t_player  where offlinetime<now()-_day*86400 and player_level<=_playerlevel and (vip is null or vip=0);
+END

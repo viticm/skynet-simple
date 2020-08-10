@@ -1,0 +1,16 @@
+CREATE TABLE `t_stallgoods` (
+  `stallId` varchar(50) DEFAULT '0',
+  `goodsId` int(11) DEFAULT '0',
+  `guid` varchar(50) NOT NULL DEFAULT '',
+  `color` int(11) DEFAULT '0',
+  `lv` int(11) DEFAULT '0',
+  `precious` int(11) DEFAULT '0',
+  `puttime` int(11) NOT NULL DEFAULT '0',
+  `goodsType` int(11) DEFAULT '0',
+  `goodsSubType` int(11) DEFAULT '0',
+  `num` int(11) NOT NULL DEFAULT '0',
+  `perPri` int(11) NOT NULL DEFAULT '0',
+  `goodspro` blob,
+  PRIMARY KEY (`guid`,`puttime`),
+  KEY `searchIndex` (`stallId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

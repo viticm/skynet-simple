@@ -1,0 +1,14 @@
+CREATE TABLE `t_stallaccount` (
+  `stallId` varchar(50) NOT NULL DEFAULT '',
+  `opType` int(11) DEFAULT '0',
+  `goodsId` int(11) DEFAULT NULL,
+  `goodsNum` int(11) DEFAULT '0',
+  `createtime` varchar(50) DEFAULT NULL,
+  `rtime` int(11) NOT NULL DEFAULT '0',
+  `money` int(11) DEFAULT '0',
+  `taxi` int(11) DEFAULT NULL,
+  `lv` int(11) DEFAULT NULL,
+  `quality` int(11) DEFAULT NULL,
+  PRIMARY KEY (`stallId`,`rtime`),
+  KEY `searchIndex` (`stallId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

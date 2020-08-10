@@ -1,0 +1,57 @@
+CREATE PROCEDURE `sp_name`(IN `tp` INT)
+    COMMENT '专业取名'
+BEGIN
+	declare i int default 0;
+	declare n varchar(6) default '';
+	declare cnt int default 0;
+	declare native int default 0;
+	declare prefix int default 100;
+	if tp<>1 and tp<>0 then
+		set tp=0;
+	end if;
+	loop_lable:loop
+		#随机外国名字或中国名字
+		set native=ceil(rand()*100)%2;
+		set n='';
+		if native=0 then
+			#中国名
+			case tp
+				when 1 then
+					select ceil(rand()*1000)%max(id)+1 into i from t_male;
+					select val into n from t_male where id=i;
+				when 0 then
+					select ceil(rand()*1000)%max(id)+1 into i from t_female;
+					select val into n from t_female where id=i;
+			end case;
+			select ceil(rand()*1000)%max(id)+1 into i from t_name;
+			select concat(val,n) into n from t_name where id=i;
+		ELSE
+			#外国名
+			case tp
+				when 1 then
+					select ceil(rand()*1000)%max(id)+1 into i from t_malefore;
+					select val into n from t_malefore where id=i;
+				when 0 then
+					select ceil(rand()*1000)%max(id)+1 into i from t_femalefore;
+					select val into n from t_femalefore where id=i;
+			end case;
+		end if;
+		#随机前缀
+		set prefix=ceil(rand()*1000)%100;
+		if prefix<40 then
+			select ceil(rand()*1000)%max(id)+1 into i from t_nameprefix;
+			select concat(val,n) into n from t_nameprefix where id=i;
+		end if;
+
+		if not exists(select * from t_player where player_name=n) then
+			leave loop_lable;
+		else
+			set cnt=cnt+1;
+			if cnt>=10 then
+				set n='';
+				leave loop_lable;
+			end if;
+		end if;
+	end loop;
+	select n;
+END

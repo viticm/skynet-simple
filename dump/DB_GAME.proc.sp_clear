@@ -1,0 +1,25 @@
+CREATE PROCEDURE `sp_clear`()
+BEGIN
+	truncate table t_arenarank;
+	truncate table t_arenarank_enc;
+	truncate table t_battlerecord;
+	truncate table t_chargeorder;
+	truncate table t_chargerecord;
+	truncate table t_email;
+	truncate table t_faction;
+	truncate table t_factionblob;
+	truncate table t_factionmember;
+	truncate table t_hansel;
+	truncate table t_player;
+	truncate table t_pushsetting;
+	truncate table t_social;
+	truncate table t_sort;
+	truncate table t_sysboard;
+	truncate table t_value;
+	truncate table t_enc;
+	truncate table t_serverenc;
+	truncate table t_fabaomulct;
+	truncate table t_xiulian;
+	truncate table t_store;
+	truncate table t_storelimitvalue;
+END

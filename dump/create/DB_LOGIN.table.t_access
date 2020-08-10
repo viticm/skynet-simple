@@ -1,0 +1,7 @@
+CREATE TABLE `t_access` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `typeid` int(11) NOT NULL DEFAULT '0' COMMENT '服务器访问控制名单id',
+  `name` varchar(50) CHARACTER SET gbk NOT NULL DEFAULT '0' COMMENT '帐号名称',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `typeid` (`typeid`,`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

@@ -1,0 +1,22 @@
+CREATE TABLE `t_arena_ranking` (
+  `playerid` varchar(30) NOT NULL DEFAULT '',
+  `ranking` int(11) DEFAULT NULL COMMENT '竞技场排名',
+  `highest_ranking` int(11) DEFAULT NULL,
+  `wincount` int(11) DEFAULT NULL COMMENT '获胜次数',
+  `score` int(11) DEFAULT NULL COMMENT '竞技场积分',
+  `score_per_day` int(11) DEFAULT NULL,
+  `score_per_week` int(11) DEFAULT NULL,
+  `guildname` varchar(20) DEFAULT NULL COMMENT '帮会名',
+  `free_challenge_times` int(11) DEFAULT NULL,
+  `buy_challenge_times` int(11) DEFAULT NULL,
+  `today_challenge_times` int(11) DEFAULT '0',
+  `player_name` varchar(32) DEFAULT NULL,
+  `player_level` int(11) DEFAULT NULL,
+  `attrfactor` int(11) DEFAULT '1',
+  `is_machine` tinyint(4) DEFAULT NULL,
+  `power` bigint(20) DEFAULT NULL,
+  `player_job` tinyint(4) DEFAULT NULL,
+  `player_sex` tinyint(4) DEFAULT NULL,
+  PRIMARY KEY (`playerid`),
+  KEY `ranking` (`ranking`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

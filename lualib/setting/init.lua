@@ -41,6 +41,12 @@ end
 -- @param table t
 function _M.sets(t)
   local st = datacenter.get('SETTING')
+  if st then
+    for k, v in pairs(t) do
+      st[k] = v
+    end
+    datacenter.set('SETTING', st)
+  end
 end
 
 return _M

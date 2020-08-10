@@ -1,0 +1,16 @@
+CREATE PROCEDURE `sp_setconvertflag`(in _newuserid int,in _code varchar(15),in _key varchar(10))
+begin
+			declare olduserid int default 0;
+			declare err int default 0;	
+			select  userid into olduserid from t_convert where ccode=UPPER(_code) and ckey=UPPER(_key);
+			if(olduserid>0)then
+				#设置成新的userid
+				update t_userinfo set user_id=_newuserid where user_id=olduserid and user_gsid>1000;
+				#设置转换标记为新的userid
+				update t_convert set flag=_newuserid where ccode=UPPER(_code) and ckey=UPPER(_key);
+				set err=0;
+			ELSE
+				set err=5;
+			end if;
+			select err;
+end

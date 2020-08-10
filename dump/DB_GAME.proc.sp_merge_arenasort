@@ -1,0 +1,17 @@
+CREATE PROCEDURE `sp_merge_arenasort`(in _freetimes int)
+BEGIN 
+	delete from t_arena_challenge_record;
+	delete from t_arena_last_day_ranking;
+	delete from t_arena_last_week_score_ranking;
+	#删除玩家
+	delete from t_arena_ranking where is_machine is null or is_machine=0;
+	SET @rank=0;
+	#重新插入玩家数据,合服之后的
+	insert into t_arena_ranking(playerid,player_name,player_level,power,player_job,player_sex,free_challenge_times,today_challenge_times,ranking,highest_ranking) 
+	select player_id,player_name,player_level,power,player_job,player_sex,_freetimes,0,@rank:=(@rank +1),@rank from t_player ORDER BY power desc;
+	#重新计算和机器人的排名
+	set @row=0;
+	update t_arena_ranking as a join (
+	select @row:=(@row +1)as 'newrank',c.playerid from (select playerid,ranking from t_arena_ranking order by power desc )c
+	)d  on a.playerid=d.playerid set ranking=d.newrank;
+end

@@ -1,0 +1,8 @@
+1='id'	2='int(11)'	3='NO'	4='PRI'	6='auto_increment'
+1='user_name'	2='varchar(64)'	3='YES'	4='MUL'	6=''
+1='user_id'	2='bigint(20)'	3='YES'	4=''	6=''
+1='user_gsid'	2='int(11)'	3='YES'	4=''	6=''
+1='char_id'	2='varchar(32)'	3='YES'	4='MUL'	6=''
+1='encid'	2='int(11)'	3='YES'	4=''	6=''
+1='getflag'	2='tinyint(4)'	3='YES'	4=''	6=''
+1='optime'	2='int(11)'	3='YES'	4=''	6=''

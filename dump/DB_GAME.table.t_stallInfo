@@ -1,0 +1,3 @@
+Field='stallId'	Type='varchar(50)'	Null='NO'	Key='PRI'	Default='NULL'	Extra=''	prev=''
+Field='createtime'	Type='bigint(11)'	Null='YES'	Key=''	Default='NULL'	Extra=''	prev='stallId'
+Field='ownerName'	Type='varchar(50)'	Null='YES'	Key=''	Default='NULL'	Extra=''	prev='createtime'

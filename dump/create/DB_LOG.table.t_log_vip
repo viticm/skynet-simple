@@ -1,0 +1,18 @@
+CREATE TABLE `t_log_vip` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `zid` int(11) DEFAULT NULL,
+  `sid` int(11) DEFAULT NULL,
+  `platform` int(32) DEFAULT NULL,
+  `sdk` varchar(11) DEFAULT NULL,
+  `uid` int(11) DEFAULT NULL,
+  `uname` varchar(32) DEFAULT NULL,
+  `rid` varchar(32) DEFAULT NULL,
+  `rname` varchar(32) DEFAULT NULL,
+  `level` int(11) DEFAULT NULL,
+  `oldtq` int(11) DEFAULT NULL,
+  `oldvip` int(11) DEFAULT NULL,
+  `newtq` int(11) DEFAULT NULL,
+  `newvip` int(11) DEFAULT NULL,
+  `optime` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

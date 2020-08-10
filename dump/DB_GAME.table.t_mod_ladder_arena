@@ -1,0 +1,3 @@
+field='id' type='varchar(50)' collation='utf8_general_ci' null='NO' key='PRI' default='__NULL__' extra='' comment='' the_index='1'
+field='val' type='mediumblob' collation='__NULL__' null='YES' key='' default='__NULL__' extra='' comment='' the_index='2'
+field='ver' type='int(11)' collation='__NULL__' null='YES' key='' default='0' extra='' comment='' the_index='3'

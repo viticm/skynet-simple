@@ -1,0 +1,5 @@
+CREATE PROCEDURE `sp_social_search`(in _self varchar(30),in _playerid varchar(30),in _playername varchar(30))
+BEGIN
+select player_id,player_name,player_level,icon,vip,power,player_job,player_sex,factionname,offlinetime from t_player  as a left join (select social_id from t_social where player_id=_self)b 
+on a.player_id=b.social_id where (player_id=_playerid or player_name like _playername )and deletetime=0 and b.social_id is null limit 500;
+end

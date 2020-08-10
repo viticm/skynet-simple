@@ -1,0 +1,22 @@
+CREATE PROCEDURE `player_rename`(in _main_svrid int)
+BEGIN
+	drop table if exists t_temprename;
+	create temporary table if not exists t_temprename( 
+		id int unsigned auto_increment,
+		gsid int,
+		playerid VARCHAR(32),
+		playername VARCHAR(32),
+		newname VARCHAR(32),
+		primary key (id)
+	);
+	SET @id=0;
+	insert into t_temprename(gsid,playerid,playername,newname) 
+	select a.game_id,a.player_id,a.player_name,CONCAT(a.player_name,"@",a.game_id) from t_player as a inner join(
+	select player_name from t_player GROUP BY player_name HAVING count(player_name)>1)b on a.player_name=b.player_name where a.game_id<>_main_svrid order by a.player_name;
+	#改表
+	update t_player a right join t_temprename b on a.player_id=b.playerid set a.player_name=b.newname where b.playerid is not null;
+  update t_guild a right join t_temprename b on a.masterid=b.playerid set a.mastername=b.newname where b.playerid is not null;
+	update t_chargeorder a right join t_temprename b on a.playerid=b.playerid set a.playername=b.newname where b.playerid is not null;
+	update t_chargerecord a right join t_temprename b on a.playerid=b.playerid set a.playername=b.newname where b.playerid is not null;
+	select playerid from t_temprename;
+END

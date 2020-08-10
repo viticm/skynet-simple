@@ -1,0 +1,7 @@
+CREATE PROCEDURE `sp_faction_rename`(id varchar(40),newname varchar(40))
+BEGIN
+		declare oldname varchar(64) default "";
+		select name into oldname from t_faction where facguid=id;
+		update t_faction set name=newname where facguid=id;
+		update t_player set factionname=newname where factionname=oldname;
+END

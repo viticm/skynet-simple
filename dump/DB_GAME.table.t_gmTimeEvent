@@ -1,0 +1,6 @@
+Field='id'	Type='int(11)'	Null='NO'	Key='PRI'	Default='NULL'	Extra='auto_increment'	prev=''
+Field='sendtime'	Type='int(11)'	Null='YES'	Key=''	Default='NULL'	Extra=''	prev='id'
+Field='opType'	Type='int(11)'	Null='YES'	Key=''	Default='NULL'	Extra=''	prev='sendtime'
+Field='content'	Type='blob'	Null='YES'	Key=''	Default='NULL'	Extra=''	prev='opType'
+Field='times'	Type='int(11)'	Null='YES'	Key=''	Default='NULL'	Extra=''	prev='content'
+Field='sdk'	Type='varchar(11)'	Null='YES'	Key=''	Default='NULL'	Extra=''	prev='times'

@@ -1,0 +1,24 @@
+CREATE PROCEDURE `sp_add_player_ranking`(IN `_player_id` varchar(30),IN `_guild_name` varchar(30),IN `_player_job` int, IN `_player_sex` int, IN `_player_name` varchar(32),IN `_player_level` int, IN `_player_power` int,IN `_is_machine` int,IN `_attrfactor` int)
+BEGIN
+	#添加玩家到竞技场
+	DECLARE _my_ranking,_max_ranking,_wincount,_score,_free_challenge_times int;
+	DECLARE _default_challenge_times int DEFAULT 5;
+
+	SELECT ranking,highest_ranking,wincount,score,free_challenge_times INTO _my_ranking,_max_ranking,_wincount,_score,_free_challenge_times FROM t_arena_ranking WHERE playerid=_player_id;
+	if( _my_ranking is NULL) THEN		#不存在
+		SELECT MAX(ranking) INTO _max_ranking from t_arena_ranking;
+		if _max_ranking is NULL THEN
+			set _my_ranking = 1;
+		ELSE
+			set _my_ranking = _max_ranking + 1;
+		end if;
+
+		insert INTO t_arena_ranking(playerid,ranking,highest_ranking,wincount,score,score_per_day,score_per_week,guildname,free_challenge_times,buy_challenge_times,player_name,player_level,is_machine,power,player_job,player_sex,attrfactor) 
+      VALUES(_player_id,_my_ranking,_my_ranking,0,0,0,0,_guild_name,_default_challenge_times,0,_player_name,_player_level,_is_machine,_player_power,_player_job,_player_sex,_attrfactor);
+		SELECT _my_ranking,_my_ranking,0,0,_default_challenge_times;
+	ELSE
+		select _my_ranking,_max_ranking,_wincount,_score,_free_challenge_times ;
+	end if;
+		
+
+END

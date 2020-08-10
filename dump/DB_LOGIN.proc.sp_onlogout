@@ -1,0 +1,7 @@
+CREATE PROCEDURE `sp_onlogout`(IN `_user_id` int(20), IN `_user_gsid` int(11), IN `_user_head` int(11), IN `_user_level` int(11), IN `_user_name` varchar(64), IN `_char_name` varchar(64))
+BEGIN
+	update t_userinfo set user_name=_user_name,char_job=_user_head,char_level=_user_level,char_name=_char_name where user_id=_user_id and user_gsid=_user_gsid;
+	if row_count()=0 then
+		insert ignore t_userinfo(user_id,user_gsid,user_name,char_job,char_level,char_name,created) values(_user_id,_user_gsid,_user_name,_user_head,_user_level,_char_name,unix_timestamp());
+	end if;
+END

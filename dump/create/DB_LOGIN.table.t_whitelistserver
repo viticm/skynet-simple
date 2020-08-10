@@ -1,0 +1,5 @@
+CREATE TABLE `t_whitelistserver` (
+  `sid` int(11) NOT NULL DEFAULT '0',
+  `access` int(11) DEFAULT NULL COMMENT '需要白名单访问的服务器',
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

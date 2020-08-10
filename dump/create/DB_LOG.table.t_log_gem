@@ -1,0 +1,21 @@
+CREATE TABLE `t_log_gem` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `zid` int(11) NOT NULL,
+  `sid` int(11) NOT NULL,
+  `platform` int(11) NOT NULL,
+  `sdk` varchar(11) NOT NULL,
+  `uid` int(11) NOT NULL,
+  `uname` varchar(11) NOT NULL,
+  `rid` varchar(32) NOT NULL,
+  `rname` varchar(32) NOT NULL,
+  `level` int(11) DEFAULT NULL,
+  `viplv` int(11) NOT NULL,
+  `pos` int(11) NOT NULL,
+  `gemid` int(11) NOT NULL,
+  `gemlv` int(11) NOT NULL,
+  `pro` varchar(32) NOT NULL,
+  `items` varchar(32) NOT NULL,
+  `diamond` int(32) NOT NULL,
+  `optime` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

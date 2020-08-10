@@ -1,0 +1,12 @@
+CREATE TABLE `t_ladder_arena` (
+  `playerid` varchar(30) NOT NULL DEFAULT '',
+  `score` int(11) DEFAULT NULL COMMENT '积分',
+  `guildname` varchar(20) DEFAULT NULL COMMENT '帮会名',
+  `player_name` varchar(32) DEFAULT NULL COMMENT '名称',
+  `player_level` int(11) DEFAULT NULL COMMENT '等级',
+  `is_machine` tinyint(4) DEFAULT NULL,
+  `power` bigint(20) DEFAULT NULL COMMENT '战力',
+  `player_job` tinyint(4) DEFAULT NULL COMMENT '职业',
+  `player_sex` tinyint(4) DEFAULT NULL COMMENT '性别',
+  PRIMARY KEY (`playerid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

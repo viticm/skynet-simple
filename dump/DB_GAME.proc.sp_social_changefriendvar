@@ -1,0 +1,5 @@
+CREATE PROCEDURE `sp_social_changefriendvar`(IN `playerid` VARCHAR(50), IN `socialid` VARCHAR(50), IN `_var` INT)
+begin
+	update t_social set friendvar=_var where player_id=playerid and social_id=socialid;
+	update t_social set friendvar=_var where player_id=socialid and social_id=playerid;
+end

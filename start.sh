@@ -34,7 +34,7 @@ done
 
 SVR_NAME="$SVR_TYPE"_"$SVR_ID"
 
-export SETTING_HOST=$SETTING_HOST:-"https://cyd2184.oicp.vip/download/game/"
+export SETTING_HOST=${SETTING_HOST:-"https://cyd2184.oicp.vip/download/game/skynet-simple"}
 
 RUN_PATH=$ROOT"/bin"
 export LOGPATH=$RUN_PATH"/log"

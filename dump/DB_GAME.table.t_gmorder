@@ -1,0 +1,5 @@
+field='id' type='int(11)' collation='__NULL__' null='NO' key='PRI' default='__NULL__' extra='auto_increment' comment='' the_index='1'
+field='player_id' type='varchar(40)' collation='utf8_general_ci' null='NO' key='' default='0' extra='' comment='玩家ID' the_index='2'
+field='productname' type='varchar(40)' collation='utf8_general_ci' null='YES' key='' default='__NULL__' extra='' comment='商品ID' the_index='3'
+field='money' type='float unsigned' collation='__NULL__' null='YES' key='' default='0' extra='' comment='充值金额' the_index='4'
+field='coin' type='int(11)' collation='__NULL__' null='YES' key='' default='__NULL__' extra='' comment='' the_index='5'

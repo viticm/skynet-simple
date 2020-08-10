@@ -1,0 +1,4 @@
+CREATE PROCEDURE `sp_delrole`(in _playerid varchar(64),in _deltime int)
+BEGIN
+	update t_player set deletetime=_deltime  where player_id=_playerid;
+end

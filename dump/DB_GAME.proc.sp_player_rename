@@ -1,0 +1,26 @@
+CREATE PROCEDURE `sp_player_rename`(IN `playerid` varchar(40), IN `newname` varchar(40))
+BEGIN
+		
+		update t_arenarank set player_name=newname where player_id=playerid;
+		
+#		update t_auction set saleplayername=newname where saleplayerid=playerid;
+#		update t_auction set bidplayername=newname where bidplayerid=playerid;
+		
+		update t_email set resive_name=newname where resive_guid=playerid;
+		update t_email set send_name=newname where send_guid=playerid;
+		
+#		update t_emailback set resive_name=newname where resive_guid=playerid;
+#		update t_emailback set send_name=newname where send_guid=playerid;
+		
+		update t_faction set mastername=newname where masterguid=playerid;
+		update t_factionmember set membername=newname where memberguid=playerid;
+		update t_fabaomulct set player_name=newname where player_id=playerid;
+
+		update t_xiulian set player_name=newname where player_id=playerid;
+
+		update t_sort set playername=newname where t_sort.playerid=playerid;
+
+#		update t_silverore set player_name=newname where player_id=playerid;
+
+		update t_player set player_name=newname where player_id=playerid;
+END

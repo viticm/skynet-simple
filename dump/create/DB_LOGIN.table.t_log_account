@@ -1,0 +1,15 @@
+CREATE TABLE `t_log_account` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` bigint(20) DEFAULT NULL,
+  `platform` varchar(20) DEFAULT NULL,
+  `sdk` varchar(32) DEFAULT NULL,
+  `imei` varchar(64) DEFAULT NULL,
+  `device` int(11) DEFAULT NULL,
+  `ip` varchar(20) DEFAULT NULL,
+  `osid` int(11) DEFAULT NULL,
+  `optime` int(11) DEFAULT NULL,
+  `white` int(11) DEFAULT NULL,
+  `isnew` int(11) DEFAULT NULL,
+  `seri` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

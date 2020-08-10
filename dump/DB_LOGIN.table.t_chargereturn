@@ -1,0 +1,5 @@
+1='user_id'	2='int(64)'	3='NO'	4='PRI'	6=''
+1='sid'	2='int(10) unsigned'	3='NO'	4='MUL'	5='0'	6=''
+1='day1'	2='int(10) unsigned'	3='NO'	4=''	5='0'	6=''
+1='day2'	2='int(10) unsigned'	3='NO'	4=''	5='0'	6=''
+1='day3'	2='int(10) unsigned'	3='NO'	4=''	5='0'	6=''

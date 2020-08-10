@@ -1,0 +1,7 @@
+CREATE TABLE `t_value` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) DEFAULT '',
+  `val` varchar(7000) DEFAULT '',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=gbk

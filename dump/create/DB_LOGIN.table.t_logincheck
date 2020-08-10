@@ -1,0 +1,6 @@
+CREATE TABLE `t_logincheck` (
+  `userid` bigint(20) NOT NULL DEFAULT '0',
+  `verifycode` varchar(40) DEFAULT NULL,
+  `args` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`userid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8

@@ -1,0 +1,13 @@
+CREATE FUNCTION `func_gencode`(_num int) RETURNS varchar(15) CHARSET utf8
+BEGIN
+	DECLARE i int default 0;
+	declare v_result varchar(200) default '';
+	declare v_dict varchar(200) default '';
+	set v_dict='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+	while i<_num
+	do
+		set v_result=CONCAT(v_result,substr(v_dict,ceil(rand()*36),1));
+		set i=i+1;
+	end while;
+	return v_result;
+end

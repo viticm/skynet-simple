@@ -1,0 +1,22 @@
+CREATE PROCEDURE `sp_arena_checkout_score_per_hour`()
+BEGIN
+	#每小时更新积分
+	#1	20
+	#2	15
+	#3	10
+	#4~10	8
+	#11~50	5
+	#51~200	2
+	#201~500	1
+	#501以下	0
+
+	UPDATE t_arena_ranking set score_per_day=score_per_day+20,score_per_week=score_per_week+20 WHERE ranking=1;
+	UPDATE t_arena_ranking set score_per_day=score_per_day+15,score_per_week=score_per_week+15 WHERE ranking=2;
+	UPDATE t_arena_ranking set score_per_day=score_per_day+10,score_per_week=score_per_week+10 WHERE ranking=3;
+	UPDATE t_arena_ranking set score_per_day=score_per_day+8,score_per_week=score_per_week+8 WHERE ranking>=4 and ranking<=10;
+	UPDATE t_arena_ranking set score_per_day=score_per_day+5,score_per_week=score_per_week+5 WHERE ranking>=11 and ranking<=50;
+	UPDATE t_arena_ranking set score_per_day=score_per_day+2,score_per_week=score_per_week+2 WHERE ranking>=51 and ranking<=200;
+	UPDATE t_arena_ranking set score_per_day=score_per_day+1,score_per_week=score_per_week+1 WHERE ranking>=201 and ranking<=500;
+
+
+END

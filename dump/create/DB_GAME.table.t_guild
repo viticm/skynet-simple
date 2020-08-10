@@ -1,0 +1,18 @@
+CREATE TABLE `t_guild` (
+  `id` bigint(20) NOT NULL DEFAULT '0',
+  `name` varchar(32) DEFAULT NULL,
+  `masterid` varchar(20) DEFAULT NULL,
+  `mastername` varchar(20) DEFAULT NULL,
+  `createname` varchar(20) DEFAULT NULL,
+  `createtime` int(11) DEFAULT NULL,
+  `deletetime` int(11) DEFAULT NULL,
+  `game_id` int(11) DEFAULT NULL,
+  `baseinfo` mediumblob,
+  `memberlist` mediumblob,
+  `applylist` mediumblob,
+  `loglist` mediumblob,
+  `depot` mediumblob,
+  `guard` mediumblob,
+  PRIMARY KEY (`id`),
+  KEY `name_index` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

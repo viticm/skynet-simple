@@ -185,5 +185,5 @@ int32_t luaopen_trace_c(lua_State *L) {
     { NULL, NULL }
   };
   luaL_newlib(L, t);
-  return 0;
+  return 1;
 }

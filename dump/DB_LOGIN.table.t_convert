@@ -1,0 +1,4 @@
+1='userid'	2='int(11)'	3='NO'	4='PRI'	5='0'	6=''
+1='ccode'	2='varchar(15)'	3='YES'	4=''	6=''
+1='ckey'	2='varchar(10)'	3='YES'	4=''	6=''
+1='flag'	2='int(4)'	3='YES'	4=''	6=''

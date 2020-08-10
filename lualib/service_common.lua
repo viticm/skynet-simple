@@ -9,10 +9,11 @@
  - @uses The base service for all server.
 --]]
 
-local skynet = require "skynet"
-local sharetable = require "skynet.sharetable"
-local setting = require "setting"
-local log = require "log"
+local skynet = require 'skynet'
+local sharetable = require 'skynet.sharetable'
+local setting = require 'setting'
+local setting_loader = require 'setting.loader'
+local log = require 'log'
 
 local _M = {}
 
@@ -26,8 +27,18 @@ function _M.start()
   local proto_loader = skynet.uniqueservice('proto_loader')
   skynet.call(proto_loader, 'lua', 'load', { 'c2s', 's2c' })
 
+  local stype = skynet.getenv('svr_type')
+  local sid = skynet.getenv('svr_id')
+
+  -- Platform settings.
+  setting_loader.load_platform(stype, sid)
+
+  print('setting port', setting.get('port'))
+
+  local port = setting.get('port')
+
   -- Debug service.
-  local dport = skynet.getenv('dport')
+  local dport = setting.get('dport') or (port + 10000)
   local fp = assert(io.open(skynet.getenv('dport_file'), 'w'))
   fp:write(dport)
   fp:close()

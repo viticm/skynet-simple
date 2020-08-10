@@ -1,0 +1,17 @@
+CREATE PROCEDURE `sp_chargerecord`(in __orderno varchar(40),in money float,in timenow int)
+begin
+		declare _productname varchar(40);
+		declare _playerid varchar(30);
+		declare _playername varchar(20);
+		declare _extra varchar(32);
+		declare _channel int;
+		select productname,playerid,playername,channelId,extra into _productname,_playerid,_playername,_channel,_extra from t_chargeorder where orderno=__orderno;
+		
+		if EXISTS(select 1 from t_chargerecord where orderno=__orderno) THEN
+			#重复订单返回,不处理
+			select 0,"",0;
+		else
+			insert into t_chargerecord(orderno,productname,money,playerid,playername,channel,flag,optime,extra) values(__orderno,_productname,money,_playerid,_playername,_channel,NULL,timenow,_extra);
+			select __orderno,_productname,_playerid,money;
+		end if;
+end

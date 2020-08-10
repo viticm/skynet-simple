@@ -1,0 +1,8 @@
+CREATE PROCEDURE `sp_onlogin`(IN `_userid` INT, IN `_gsid` INT)
+BEGIN
+	update t_userinfo set logtime=unix_timestamp() where user_id=_userid and user_gsid=_gsid;
+	#if not EXISTS (select 1 from t_convert where user_id=_userid)THEN
+		#新用户生成转化码
+		#insert ignore t_convert(userid,ccode,ckey) values(_userid,func_gencode(8),func_gencode(5));
+	#end if;
+END

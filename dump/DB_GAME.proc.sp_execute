@@ -1,0 +1,11 @@
+CREATE PROCEDURE `sp_execute`(in _mysql varchar(512))
+begin
+	DECLARE outmsg varchar(512);
+	#set outmsg=CONCAT("EXECUTE:",_mysql,"...BEGIN");
+	#select outmsg;
+	set @tmpsql=_mysql;
+	PREPARE s from @tmpsql;
+	execute s;
+	set outmsg=CONCAT("EXECUTE:[",_mysql,"]...OK");
+	select outmsg as info;
+end

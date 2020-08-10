@@ -1,0 +1,19 @@
+CREATE PROCEDURE `faction_rename`(in _main_svrid int)
+BEGIN
+	drop table if exists t_temprenamefac;
+	create temporary table if not exists t_temprenamefac( 
+		id int unsigned auto_increment,
+		facid VARCHAR(40),
+		facname VARCHAR(40),
+		masterid VARCHAR(40),
+		newname VARCHAR(40),
+		primary key (id)
+	);
+	SET @id=0;
+	insert into t_temprenamefac(facid,facname,masterid) 
+	select a.id,a.name,a.masterid from t_guild as a inner join(select name from t_guild GROUP BY name HAVING count(name)>1)b on a.name=b.name order by a.name;
+	#生成新名字
+	update t_temprenamefac as a,t_guild as b set a.newname=CONCAT(a.facname,"@",b.game_id) where a.facid=b.id and b.game_id<>_main_svrid;
+	update t_guild as a,t_temprenamefac as b set a.name=b.newname where a.id=b.facid and a.game_id<>_main_svrid;
+	select masterid from t_temprenamefac where newname is not null;
+END

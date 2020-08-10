@@ -1,0 +1,36 @@
+CREATE PROCEDURE `sp_update_arena_ranking`(IN `_attacker_id` varchar(30),IN `_defender_id` varchar(30))
+BEGIN
+	#更新攻击者和防守者的排名，并返回他们的最新排名
+	#返回 <排名是否有变化(布尔值),攻击者最新排名, 攻击者原历史最高排名, 攻击者最新历史最高排名, 防守者最新排名, 防守者原历史最高排名, 防守者最新历史最高排名 >
+
+	# 只有攻方获胜并且对方名次高于自己，才交换排名，这里已经假设攻方获胜
+	DECLARE _attacker_old_ranking,_attacker_new_ranking,_attacker_old_highest_ranking,_attacker_new_highest_ranking int;
+	DECLARE _defender_old_ranking,_defender_new_ranking,_defender_old_highest_ranking,_defender_new_highest_ranking int;
+	
+	SELECT ranking,highest_ranking into _attacker_old_ranking,_attacker_old_highest_ranking from t_arena_ranking WHERE playerid=_attacker_id;
+	SELECT ranking,highest_ranking into _defender_old_ranking,_defender_old_highest_ranking from t_arena_ranking WHERE playerid=_defender_id;
+	if _defender_old_ranking < _attacker_old_ranking THEN
+		set _attacker_new_ranking = _defender_old_ranking;
+
+		if _attacker_new_ranking < _attacker_old_highest_ranking THEN
+			set _attacker_new_highest_ranking = _attacker_new_ranking;
+		ELSE
+			set _attacker_new_highest_ranking = _attacker_old_highest_ranking;
+		end if;
+
+		update t_arena_ranking set ranking=_attacker_new_ranking,highest_ranking=_attacker_new_highest_ranking WHERE playerid=_attacker_id;
+
+		set _defender_new_ranking = _attacker_old_ranking;
+
+		set _defender_new_highest_ranking = _defender_old_highest_ranking;	#防守方的最高排名不变
+
+		update t_arena_ranking set ranking=_defender_new_ranking WHERE playerid=_defender_id;
+ 
+		SELECT true,_attacker_new_ranking,_attacker_old_highest_ranking,_attacker_new_highest_ranking,
+								_defender_new_ranking,_defender_old_highest_ranking,_defender_new_highest_ranking;
+	ELSE
+		SELECT false,_attacker_old_ranking,_attacker_old_highest_ranking,_attacker_old_highest_ranking,
+									_defender_old_ranking,_defender_old_highest_ranking,_defender_old_highest_ranking;
+	end if;
+
+END

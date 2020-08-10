@@ -1,0 +1,16 @@
+CREATE PROCEDURE `sp_newchar`(IN `uid` INT, IN `sid` INT, IN `_servertype` INT, IN `_servername` VARCHAR(32),IN `job` INT,IN `name` VARCHAR(50),IN `uname` VARCHAR(50))
+BEGIN
+#	declare t int;
+#	set t=unix_timestamp();
+#	insert ignore t_userinfo (user_id,user_name,user_gsid,servertype,servername,char_name,char_job,char_level,logtime,created) values(uid,uname,sid,_servertype,_servername,name,job,1,t,t);
+#	if row_count()=1 then
+#		select 1;	-- ok		ECreateRole_Ret_Succ
+#	else
+#		if exists(select 1 from t_userinfo where user_id=uid and user_gsid=sid) then
+#			select 2; -- has user already		ECreateRole_Ret_HasChar
+#		else
+#			select 1; -- other reg this name		ECreateRole_Ret_NameExists
+#		end if;
+#	end if;
+	select 1;
+END

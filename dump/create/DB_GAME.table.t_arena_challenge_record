@@ -1,0 +1,14 @@
+CREATE TABLE `t_arena_challenge_record` (
+  `playerid` varchar(30) DEFAULT NULL,
+  `result` tinyint(4) DEFAULT NULL COMMENT '胜(1)/负(0)',
+  `opponent_id` varchar(20) DEFAULT NULL COMMENT '对手id',
+  `opponent_name` varchar(32) DEFAULT NULL COMMENT '对手名',
+  `opponent_sex` tinyint(4) DEFAULT NULL COMMENT '对手性别',
+  `opponent_job` tinyint(4) DEFAULT NULL COMMENT '对手职业',
+  `opponent_level` int(11) DEFAULT NULL COMMENT '对手等级',
+  `my_ranking_before` int(11) DEFAULT NULL COMMENT '我的战前排名',
+  `my_ranking_after` int(11) DEFAULT NULL COMMENT '我的战后排名',
+  `attack_or_defend` tinyint(4) DEFAULT NULL COMMENT '攻(1)/守(0)',
+  `end_time` int(11) DEFAULT NULL COMMENT '战斗结束时间',
+  KEY `playerid` (`playerid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

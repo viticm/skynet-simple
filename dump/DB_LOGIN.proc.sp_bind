@@ -1,0 +1,21 @@
+CREATE PROCEDURE `sp_bind`(in _tplayerid varchar(32), in _btplayerid varchar(32),in _servertype int,in _optime int)
+BEGIN
+	DECLARE tmplevel int default 0;
+	DECLARE maxnum int default 0;
+	select count(*) into maxnum from t_tuiguang where tuiplayerid=_tplayerid;
+	#最大只能推荐200个
+	if(maxnum>=200)THEN	
+		select 2;
+	else
+		select char_level into tmplevel from t_userinfo where char_id=_tplayerid and servertype=_servertype and char_level>=30;	
+		if(tmplevel>=1)then
+				if not EXISTS(select 1 from t_tuiguang where tuiplayerid=_tplayerid and beituiplayerid=_btplayerid) THEN
+					insert into t_tuiguang(tuiplayerid,beituiplayerid,optime) values(_tplayerid,_btplayerid,_optime);
+					insert ignore into t_tuiguangenc(playerid,charge,enc1,enc2,enc3,enc4,enc5,enc6,enc7,enc8,enc9,enc10) values(_tplayerid,0,0,0,0,0,0,0,0,0,0,0);
+				end if;
+				select 1;#成功
+		ELSE	
+				select 0;#失败
+		end if;
+	end if;
+END

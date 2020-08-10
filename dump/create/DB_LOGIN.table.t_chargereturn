@@ -1,0 +1,9 @@
+CREATE TABLE `t_chargereturn` (
+  `user_id` int(64) NOT NULL,
+  `sid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '大区id',
+  `day1` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '登陆第1天返回测试充值的元宝数',
+  `day2` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '登陆第2天返回测试充值的元宝数',
+  `day3` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '登陆第3天返回测试充值的元宝数',
+  PRIMARY KEY (`user_id`),
+  KEY `sid_index` (`sid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

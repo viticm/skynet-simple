@@ -1,0 +1,7 @@
+CREATE PROCEDURE `sp_hansel_addnew`(IN `_objid` VARCHAR(50), IN `_code` VARCHAR(50), IN `_args` VARCHAR(128))
+BEGIN
+	declare ret int default 0;
+	insert ignore t_hansel(guid,code,args,usetime,logtime) values (_objid,_code,_args,unix_timestamp(),unix_timestamp());
+	set ret=row_count();
+	select ret,guid,code,args,usetime from t_hansel where guid=_objid and code=_code;
+END

@@ -1,0 +1,11 @@
+CREATE PROCEDURE `sp_query_special_arena_opponent`(IN `_first_id` varchar(30),IN `_second_id` varchar(30),IN `_third_id` varchar(30))
+BEGIN
+	#查询指定竞技对手用户信息
+	#返回玩家数组{{玩家id(1),玩家当前排名(2),历史最高排名(3),获胜次数(4),竞技场积分(5),今日累计积分(6),帮会名(7),玩家名(8),玩家等级(9),周积分(10),剩余挑战次数(11),已够买的挑战次数(12),玩家职业(13),玩家性别(14),玩家战斗力(15),是否机器(16),...  }
+	
+
+	#SELECT playerid,ranking,highest_ranking,wincount,score,score_per_day,guildname,b.player_name,b.player_level,score_per_week,free_challenge_times,buy_challenge_times,b.player_job,b.player_sex,b.power FROM t_arena_ranking as a LEFT JOIN(SELECT player_id,player_name,player_level,player_job,player_sex,power from t_player)b on a.playerid=b.player_id  WHERE(playerid=_first_id or playerid=_second_id or playerid=_third_id);
+	SELECT playerid,ranking,highest_ranking,wincount,score,score_per_day,guildname,player_name,player_level,score_per_week,free_challenge_times,buy_challenge_times,
+     player_job,player_sex,power,attrfactor,is_machine FROM t_arena_ranking WHERE(playerid=_first_id or playerid=_second_id or playerid=_third_id) ORDER BY ranking asc;
+
+END

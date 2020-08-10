@@ -1,0 +1,8 @@
+CREATE PROCEDURE `sp_arena_add_last_day_history`()
+BEGIN
+	#添加上一天的竞技场排名到历史表中
+	TRUNCATE TABLE t_arena_last_day_ranking;
+	INSERT INTO t_arena_last_day_ranking(playerid,ranking,player_name,player_level,is_machine,power,player_job,player_sex)
+	 SELECT playerid,ranking,player_name,player_level,is_machine,power,player_job,player_sex FROM t_arena_ranking ORDER BY ranking ASC LIMIT 50;
+
+END

@@ -1,0 +1,99 @@
+CREATE PROCEDURE `sp_mergedb`(in _dbname varchar(32))
+BEGIN
+	declare tmpsql varchar(512);
+	declare msg varchar(512);
+	declare facnum int;
+	
+	#==========帮会 begin
+	#修改主库帮会数据,添加factionblob facid
+	alter table t_factionblob add column facguid varchar(40) default NULL ;
+	update t_factionblob as a join t_faction as b on a.facid=b.facid set a.facguid=b.facguid;
+	#修改被合库帮会数据,添加factionblob facid
+	set tmpsql=CONCAT("alter table ",_dbname,". t_factionblob add column facguid varchar(40) default NULL");
+	call sp_execute(tmpsql);
+	set tmpsql=CONCAT("update ",_dbname,".t_factionblob as a join ",_dbname,".t_faction as b on a.facid=b.facid set a.facguid=b.facguid");
+	call sp_execute(tmpsql);
+	#先去掉主键
+	alter table t_factionblob drop PRIMARY key;
+	#帮会数据
+	ALTER TABLE `t_faction` DROP INDEX `name_UNIQUE`;
+	set tmpsql=CONCAT("insert into t_faction(facid,facguid,tips,iconid,name,masterguid,mastername,createtime,xuanyan,faclevel,facexp) select facid,facguid,tips,iconid,name,masterguid,mastername,createtime,xuanyan,faclevel,facexp from ",_dbname,".t_faction");
+	call sp_execute(tmpsql);
+	set tmpsql=CONCAT("insert into t_factionblob select * from ",_dbname,".t_factionblob");
+	call sp_execute(tmpsql);
+	set tmpsql=CONCAT("insert into t_factionmember(facguid,facid,memberguid,membername,position,level,job,lasttime,mp_defineid,dressid,viplevel,zdl,jtgx,entertime) select facguid,facid,memberguid,membername,position,level,job,lasttime,mp_defineid,dressid,viplevel,zdl,jtgx,entertime from ",_dbname,".t_factionmember");
+	call sp_execute(tmpsql);
+
+
+	#修改帮会facid
+	SET @_facid = 10000;
+	update t_faction as a inner join(select *,@_facid:=(@_facid +1) AS 'newfacid'  from t_faction order by createtime)b on a.facguid=b.facguid set a.facid=b.newfacid;
+	update t_factionblob as a join t_faction as b on a.facguid=b.facguid set a.facid=b.facid;
+	update t_factionmember as a join t_faction as b on a.facguid=b.facguid set a.facid=b.facid;
+	alter table t_factionblob drop column facguid;
+	#添加主键
+	alter table t_factionblob add PRIMARY key(facid);
+	#==========帮会 END
+
+
+	
+	#充值数据
+	set tmpsql=CONCAT("insert into t_chargeorder select * from ",_dbname,".t_chargeorder");
+	call sp_execute(tmpsql);
+	set tmpsql=CONCAT("insert into t_chargerecord select * from ",_dbname,".t_chargerecord");
+	call sp_execute(tmpsql);
+	#领奖中心
+	set tmpsql=CONCAT("insert into t_enc select * from ",_dbname,".t_enc");
+	call sp_execute(tmpsql);
+	#排行榜
+	set tmpsql=CONCAT("insert into t_sort select * from ",_dbname,".t_sort");
+	call sp_execute(tmpsql);
+	#寻宝
+	set tmpsql=CONCAT("insert into t_xiulian select * from ",_dbname,".t_xiulian");
+	call sp_execute(tmpsql);
+	#好友
+	set tmpsql=CONCAT("insert into t_social select * from ",_dbname,".t_social");
+	call sp_execute(tmpsql);
+	#夺宝
+	set tmpsql=CONCAT("insert into t_fabaomulct(fabao_id,create_time,player_id,player_level,player_fabaosp1_count,player_fabaosp2_count,player_fabaosp3_count,player_fabaosp4_count,player_fabaosp5_count,player_name,player_formation)  select  fabao_id,create_time,player_id,player_level,player_fabaosp1_count,player_fabaosp2_count,player_fabaosp3_count,player_fabaosp4_count,player_fabaosp5_count,player_name,player_formation from ",_dbname,".t_fabaomulct");
+	call sp_execute(tmpsql);
+
+	#角色主表
+	ALTER TABLE `t_player` DROP INDEX `player_name`;
+	set tmpsql=CONCAT("insert into t_player select * from ",_dbname,".t_player");
+	call sp_execute(tmpsql);
+	#合服后操作=======================================
+	#创建临时表
+	drop table if exists t_tmp_rename;
+	CREATE TABLE `t_tmp_rename` (
+		`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+		`playername` varchar(64) NOT NULL,
+		`playerguid` varchar(64) NOT NULL,
+		`type` int(10) unsigned not NULL,
+		PRIMARY KEY (`id`),
+		UNIQUE KEY `playerguid` (`playerguid`)
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	select "player rename begin" as info;
+	#玩家重命名
+	call player_rename(".");
+	select "player rename end" as info;
+	# [[TIPS]]  如果这一步失败了 请修改上一部的 split 然后重新合并服务器
+	ALTER TABLE `t_player` ADD UNIQUE INDEX `player_name`(`player_name`);
+	select "t_player addindex end" as info;
+	#帮会重命名
+	call faction_rename(".");
+	select "faction rename end" as info;
+	# [[TIPS]]  如果这一步失败了 请修改上一部的 split 然后重新合并服务
+	ALTER TABLE `t_faction` ADD UNIQUE INDEX `name_UNIQUE` (`name`);
+	select "t_faction addindex end" as info;
+	#正确就删除临时表
+	drop table if exists t_tmp_rename;
+	#按战斗力生成竞技场名单 
+	delete from t_arenarank;
+	SET @row = 0;
+	select "gen t_arenarank begin" as info;
+	insert into t_arenarank(player_id,player_name,player_job,player_level,last_enc_rank_time,last_enc_rank,rank) 
+	select *,0,0,@row:=(@row +1) AS 'rank' from (select player_id,player_name,player_job,player_level from t_player ORDER BY power desc)c;
+	select "gen t_arenarank end" as info;
+	select "mergecomplete" as result;
+end

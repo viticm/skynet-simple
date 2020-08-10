@@ -1,0 +1,6 @@
+CREATE TABLE `t_mod_guildinfo` (
+  `id` varchar(50) NOT NULL DEFAULT '',
+  `val` mediumblob,
+  `ver` int(11) DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

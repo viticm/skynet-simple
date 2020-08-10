@@ -1,0 +1,13 @@
+CREATE PROCEDURE `sp_arena_add_challenge_record`(IN `_player_id` varchar(30),IN `_result` int,IN `_opponent_id` varchar(30),IN `_opponent_name` varchar(48),IN `_opponent_sex` int,IN `_opponent_job` int,IN `_opponent_level` int,IN `_my_ranking_before` int,IN `_my_ranking_after` int,IN `_attack_or_defend` int,IN `_end_time` int)
+BEGIN
+	#保存玩家对战记录
+	
+	DECLARE _cnt,_min_time int;
+	SELECT COUNT(playerid),min(end_time) into _cnt,_min_time from t_arena_challenge_record WHERE playerid=_player_id;
+	if _cnt > 30 THEN
+		delete FROM t_arena_challenge_record WHERE playerid=_player_id and end_time=_min_time;
+	end if;
+	INSERT INTO t_arena_challenge_record(playerid,result,opponent_id,opponent_name,opponent_sex,opponent_job,opponent_level,my_ranking_before,my_ranking_after,attack_or_defend,end_time) 
+                                VALUES(_player_id,_result,_opponent_id,_opponent_name,_opponent_sex,_opponent_job,_opponent_level,_my_ranking_before,_my_ranking_after,_attack_or_defend,_end_time );
+
+END

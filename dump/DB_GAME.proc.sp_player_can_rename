@@ -1,0 +1,10 @@
+CREATE PROCEDURE `sp_player_can_rename`(player_guid varchar(40),newname varchar(40))
+BEGIN
+		declare ret int default 0;
+		declare count int default 0;
+		select count(*) into count from t_player where player_name=newname;
+		if(count>0)then
+				set ret=1;
+		end	if;
+		select ret;
+END

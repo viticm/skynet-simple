@@ -1,0 +1,38 @@
+CREATE PROCEDURE `sp_social_update`(IN `playerid` VARCHAR(50), IN `socialid` VARCHAR(50), IN `sotype` INT)
+BEGIN
+	#Routine body goes here...
+	declare t int default 0;
+	declare _oldtp int default 0;
+	-- sotype : 1.申请 2.好友
+	-- errcode : 0.操作正确 1.没有关系 2.已是目标关系 3.只支持黑->友操作 999.其它逻辑错误
+
+	proc:begin 
+		-- 1.没有关系
+		select count(*) into t from t_social where player_id=playerid and social_id=socialid;
+		if t=0 then
+			select 1,playerid,socialid;
+			leave proc;
+		end if;
+		-- 2.已是目标关系
+		select count(*) into t from t_social where player_id=playerid and social_id=socialid and social_type=sotype;
+		if t=1 then 
+			select 2,playerid,socialid;
+			leave proc;
+		end if; 
+		-- 3.申请状态变成好友状态
+		#if sotype<>2 then 
+		#	select 3,playerid,socialid;
+		#	leave proc;
+		#end if; 
+		-- 0.操作正确
+		select social_type into _oldtp from t_social where player_id=playerid and social_id=socialid;
+		update t_social set social_type=sotype where player_id=playerid and social_id=socialid;
+		if sotype=4 THEN
+				update t_social set social_type=sotype where player_id=socialid and social_id=playerid;
+		end if;
+		if _oldtp=4 THEN
+				update t_social set social_type=sotype where player_id=socialid and social_id=playerid;
+		end if;
+		select 0,playerid,socialid;
+	end proc;
+END

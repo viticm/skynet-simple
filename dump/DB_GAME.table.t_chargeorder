@@ -1,0 +1,8 @@
+field='orderno' type='varchar(40)' collation='utf8_general_ci' null='NO' key='PRI' default='' extra='' comment='' the_index='1'
+field='playerid' type='varchar(30)' collation='utf8_general_ci' null='YES' key='MUL' default='__NULL__' extra='' comment='' the_index='2'
+field='playername' type='varchar(20)' collation='utf8_general_ci' null='YES' key='' default='__NULL__' extra='' comment='' the_index='3'
+field='productname' type='varchar(40)' collation='utf8_general_ci' null='YES' key='' default='__NULL__' extra='' comment='' the_index='4'
+field='serverId' type='int(11)' collation='__NULL__' null='YES' key='' default='__NULL__' extra='' comment='' the_index='5'
+field='channelId' type='int(11)' collation='__NULL__' null='YES' key='' default='__NULL__' extra='' comment='' the_index='6'
+field='extra' type='varchar(32)' collation='utf8_general_ci' null='YES' key='' default='__NULL__' extra='' comment='' the_index='7'
+field='optime' type='int(11)' collation='__NULL__' null='YES' key='' default='__NULL__' extra='' comment='' the_index='8'

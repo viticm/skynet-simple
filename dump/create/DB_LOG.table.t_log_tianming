@@ -1,0 +1,22 @@
+CREATE TABLE `t_log_tianming` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `zid` int(11) DEFAULT NULL,
+  `sid` int(11) DEFAULT NULL,
+  `platform` int(11) DEFAULT NULL,
+  `sdk` varchar(32) DEFAULT NULL,
+  `uid` int(11) DEFAULT NULL,
+  `uname` varchar(32) DEFAULT NULL,
+  `rid` varchar(32) DEFAULT NULL,
+  `rname` varchar(32) DEFAULT NULL,
+  `level` int(11) DEFAULT NULL,
+  `success` int(11) DEFAULT NULL,
+  `page_id` int(11) DEFAULT NULL,
+  `acupoint_num` int(11) DEFAULT NULL,
+  `guantong_level` int(11) DEFAULT NULL,
+  `old_upbound_wish_value` int(11) DEFAULT NULL,
+  `new_upbound_wish_value` int(11) DEFAULT NULL,
+  `added_wish_value` int(11) DEFAULT NULL,
+  `exchange_wish_value` int(11) DEFAULT NULL,
+  `optime` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

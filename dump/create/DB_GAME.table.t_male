@@ -1,0 +1,5 @@
+CREATE TABLE `t_male` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `val` varchar(2) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

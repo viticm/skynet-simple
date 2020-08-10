@@ -1,0 +1,9 @@
+CREATE PROCEDURE `sp_getyybenc`(in _username varchar(64),in _playerid varchar(32))
+BEGIN
+	#查询安装礼包,只能领取一次
+	DECLARE __encid int default 0;
+	select encid into __encid from t_yybenc where user_name=_username and char_id is NULL and getflag=0;
+	update t_yybenc set getflag=1 where user_name=_username and char_id is NULL and getflag=0;
+	#查询等级礼包,达到等级要求的角色都可以领取
+	select __encid union all select encid from t_yybenc where char_id=_playerid;
+END

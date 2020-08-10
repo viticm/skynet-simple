@@ -1,0 +1,5 @@
+CREATE TABLE `t_active` (
+  `userid` bigint(20) NOT NULL DEFAULT '0',
+  `activecode` varchar(10) DEFAULT NULL,
+  PRIMARY KEY (`userid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

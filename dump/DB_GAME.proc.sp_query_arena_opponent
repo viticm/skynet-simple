@@ -1,0 +1,8 @@
+CREATE PROCEDURE `sp_query_arena_opponent`(in _left_ranking int,in _mid_ranking int,in _right_ranking int)
+BEGIN
+	#SELECT playerid,ranking,highest_ranking,wincount,score,score_per_day,guildname,b.player_name,b.player_level,score_per_week,free_challenge_times,buy_challenge_times,b.player_job,b.player_sex,b.power FROM t_arena_ranking as a LEFT JOIN(SELECT player_id,player_name,player_level,player_job,player_sex,power from t_player)b on a.playerid=b.player_id  WHERE(playerid<>_player_id)and(ranking=_left_ranking or ranking=_middle_ranking or ranking=_right_ranking); 
+	SELECT playerid,ranking,highest_ranking,wincount,score,score_per_day,guildname,player_name,player_level,score_per_week,free_challenge_times,buy_challenge_times,player_job,player_sex,power,attrfactor,is_machine 
+    FROM t_arena_ranking WHERE(ranking=_left_ranking  or ranking=_mid_ranking  or ranking=_right_ranking ); 
+
+
+END

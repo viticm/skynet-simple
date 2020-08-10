@@ -1,0 +1,6 @@
+CREATE TABLE `t_value` (
+  `value_name` varchar(32) NOT NULL,
+  `value` bigint(20) unsigned NOT NULL,
+  `valueb` mediumblob,
+  PRIMARY KEY (`value_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

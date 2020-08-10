@@ -1,0 +1,16 @@
+CREATE PROCEDURE `sp_delect_email`(IN `inplayer_id` varchar(50),IN `inemail_id` int(11),IN `instatus` int(2))
+BEGIN
+	declare _id BIGINT;
+	declare _emailguid varchar(64);
+	IF inemail_id<>-1 THEN
+		select id,email_guid into _id,_emailguid from t_email_player where player_id=inplayer_id and id=inemail_id ;
+		delete from t_email_player where player_id=inplayer_id and id=inemail_id ;
+		delete from t_email_data where isshare=0 and guid=_emailguid;
+		select _id;
+	else
+		select id from t_email_player where player_id=inplayer_id  or  (player_id=inplayer_id and status=instatus) or (player_id=inplayer_id and type=4);
+		delete a from t_email_data as a join (select email_guid from t_email_player where player_id=inplayer_id  or (player_id=inplayer_id and status=instatus) or (player_id=inplayer_id and type=4))b on a.guid=b.email_guid where a.isshare=0;
+		delete from t_email_player where player_id=inplayer_id  or (player_id=inplayer_id and status=instatus) or (player_id=inplayer_id and type=4);
+	end if;
+
+END

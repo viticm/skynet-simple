@@ -1,0 +1,12 @@
+CREATE PROCEDURE `sp_logincheck`(IN `_userid` INT,IN `_code` varchar(40))
+BEGIN
+		declare ret int default 0;
+		declare _args varchar(256);
+		if EXISTS(select 1 from t_logincheck where userid=_userid and verifycode=_code)then
+				select args into _args from t_logincheck where userid=_userid and verifycode=_code;
+				set ret=1;
+				select ret,_args;
+		ELSE
+				select 0,"";
+	  end if;
+end

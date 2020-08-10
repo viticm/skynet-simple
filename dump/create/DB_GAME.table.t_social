@@ -1,0 +1,11 @@
+CREATE TABLE `t_social` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `social_type` int(10) NOT NULL DEFAULT '0',
+  `player_id` varchar(45) NOT NULL DEFAULT '',
+  `social_id` varchar(45) NOT NULL DEFAULT '',
+  `group` int(10) DEFAULT '0' COMMENT 'player_id 赠送给 social_di 标志',
+  `friendvar` int(11) NOT NULL DEFAULT '0',
+  `created` int(10) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `guid` (`player_id`,`social_id`,`social_type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

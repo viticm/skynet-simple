@@ -1,0 +1,12 @@
+CREATE TABLE `t_log_guildmoney` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `gid` bigint(20) DEFAULT NULL,
+  `gname` varchar(20) DEFAULT NULL,
+  `moneytype` varchar(5) DEFAULT NULL,
+  `old` int(11) DEFAULT NULL,
+  `new` int(11) DEFAULT NULL,
+  `val` int(11) DEFAULT NULL,
+  `flag` varchar(100) DEFAULT NULL,
+  `optime` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

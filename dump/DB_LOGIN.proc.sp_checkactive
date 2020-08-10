@@ -1,0 +1,9 @@
+CREATE PROCEDURE `sp_checkactive`(in __userid int)
+BEGIN
+		if EXISTS(select 1 from t_active where userid=__userid and not ISNULL(activecode))THEN
+				select 0;
+		ELSE
+				insert ignore into t_active values(__userid,NULL);
+				select 1;#需要激活
+		end if;
+end

@@ -1,0 +1,7 @@
+field='id' type='int(10) unsigned' collation='__NULL__' null='NO' key='PRI' default='0' extra='' comment='' the_index='1'
+field='content' type='varchar(1024)' collation='utf8_general_ci' null='YES' key='' default='__NULL__' extra='' comment='' the_index='2'
+field='flag' type='int(10) unsigned' collation='__NULL__' null='YES' key='' default='0' extra='' comment='' the_index='3'
+field='starttime' type='int(10) unsigned' collation='__NULL__' null='YES' key='' default='0' extra='' comment='' the_index='4'
+field='endtime' type='int(10) unsigned' collation='__NULL__' null='YES' key='' default='0' extra='' comment='' the_index='5'
+field='tick' type='int(10) unsigned' collation='__NULL__' null='YES' key='' default='1' extra='' comment='' the_index='6'
+field='mode' type='int(10) unsigned' collation='__NULL__' null='YES' key='' default='0' extra='' comment='模式，控制显示相关' the_index='7'

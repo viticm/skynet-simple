@@ -1,0 +1,6 @@
+CREATE PROCEDURE `sp_serverenc_init`(in now int)
+BEGIN
+		select now;
+		delete from t_serverenc where time<now;
+		select guid,title,`desc`,time,enclist,gsid from t_serverenc;
+END

@@ -1,0 +1,6 @@
+CREATE PROCEDURE `sp_createrole`(IN `_user_id` int(20), IN `_user_gsid` int(11), IN _servertype int, IN _servername varchar(32),IN `_user_job` int(11), IN `_user_sex` int(11), IN `_user_level` int(11), IN `_user_name` varchar(64), IN `_char_name` varchar(64), IN `_player_id` varchar(32),in _channel varchar(20),in _sdk varchar(32),in _imei varchar(64))
+BEGIN
+	declare t int;
+	set t=unix_timestamp();
+	insert ignore t_userinfo(uid,gsid,servertype,servername,uname,rjob,rsex,rlevel,rid,rname,created,logtime,platform,sdk,imei) values(_user_id,_user_gsid,_servertype,_servername,_user_name,_user_job,_user_sex,_user_level,_player_id,_char_name,t,t,_channel,_sdk,_imei);
+END

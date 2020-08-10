@@ -52,7 +52,10 @@ if(NOT LUA_INCLUDE_DIR OR (WIN32 AND NOT LUA_LIBRARIES))
 endif()
 
 if (NOT RAPIDJSON_INCLUDE_DIRS)
-    set(RAPIDJSON_INCLUDE_DIRS rapidjson/include)
+    set(RAPIDJSON_INCLUDE_DIRS
+          rapidjson/include
+          ../../skynet/3rd/lua
+        )
 endif()
 
 include_directories(${LUA_INCLUDE_DIR} ${RAPIDJSON_INCLUDE_DIRS})

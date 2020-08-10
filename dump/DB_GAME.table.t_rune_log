@@ -1,0 +1,7 @@
+Field='id'	Type='int(11)'	Null='NO'	Key='PRI'	Default='NULL'	Extra='auto_increment'	prev=''
+Field='player_name'	Type='varchar(11)'	Null='NO'	Key=''	Default='NULL'	Extra=''	prev='id'
+Field='runeid'	Type='int(11)'	Null='NO'	Key=''	Default='NULL'	Extra=''	prev='player_name'
+Field='prerunelv'	Type='int(11)'	Null='NO'	Key=''	Default='NULL'	Extra=''	prev='runeid'
+Field='currunelv'	Type='int(11)'	Null='NO'	Key=''	Default='NULL'	Extra=''	prev='prerunelv'
+Field='items'	Type='varchar(11)'	Null='NO'	Key=''	Default='NULL'	Extra=''	prev='currunelv'
+Field='optime'	Type='timestamp'	Null='NO'	Key=''	Default='NULL'	Extra=''	prev='items'

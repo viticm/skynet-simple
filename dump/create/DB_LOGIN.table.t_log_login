@@ -1,0 +1,13 @@
+CREATE TABLE `t_log_login` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `uid` int(10) DEFAULT '0' COMMENT '帐号id',
+  `uname` varchar(50) DEFAULT '' COMMENT '帐号名称',
+  `ugrp` int(11) DEFAULT '0' COMMENT '帐号组',
+  `imei` varchar(50) DEFAULT '' COMMENT '唯一标识服',
+  `upf` int(11) DEFAULT '0' COMMENT '媒体码',
+  `ip` varchar(50) DEFAULT '' COMMENT '登录ip',
+  `osid` int(50) DEFAULT '0' COMMENT '系统id',
+  `isnew` int(50) DEFAULT '0' COMMENT '是否新激活玩家1:新激活;0:已激活玩家;2:未激活玩家',
+  `logtime` int(11) DEFAULT '0' COMMENT 'log时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

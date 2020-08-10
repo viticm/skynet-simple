@@ -1,0 +1,2 @@
+Field='gsid'	Type='int(11)'	Null='NO'	Key='PRI'	Default='NULL'	Extra=''
+Field='crossid'	Type='int(11)'	Null='YES'	Key=''	Default='NULL'	Extra=''

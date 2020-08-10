@@ -1,0 +1,94 @@
+CREATE PROCEDURE `sp_social_insert`(IN `playerid` VARCHAR(50), IN `socialid` VARCHAR(50), IN `sotype` INT, IN `maxnum` INT,in `nowtime` INT)
+    MODIFIES SQL DATA
+    COMMENT '添加社会关系'
+BEGIN
+	declare t int default 0;
+	declare u varchar(40);
+	declare numTotal  int default 0;
+
+	-- sotype : 1.好友申请 2.好友
+	-- errcode : 0.操作正确 1.自己最大上限 2.对方最大上限 3.已是好友或黑友 4.自己不能和自己产生关系 999.其它逻辑错误
+	#删除多余申请
+	if(sotype=1)THEN
+		select count(*) into numTotal from t_social where player_id=playerid and social_type=sotype;
+		set numTotal=numTotal-59;	
+		if(numTotal>0)then	
+					prepare selectstmt1 from "delete from t_social where player_id=? and social_type=sotype ORDER BY created asc limit ?";
+					set @__retmax = numTotal;	
+					set @__resiveid = playerid;	
+					execute selectstmt1 using @__resiveid, @__retmax;
+		end if;
+	end if;
+
+	proc:begin 
+		-- 1.自己最大上限
+		select count(*) into t from t_social where player_id=playerid and social_type=sotype;
+		if t>=maxnum then
+			select 1,playerid,socialid;
+			leave proc;
+		end if;
+		-- 2.对方最大上限
+		#select count(*) into t from t_social where player_id=socialid and social_type=sotype;
+		#if t>=maxnum then
+		#	select 2,playerid,socialid;
+		#	leave proc;
+		#end if;
+		-- 3.已是好友或黑友
+		select count(*) into t from t_social where player_id=playerid and social_id=socialid;
+		if t>0 then
+			select 3,playerid,socialid;
+			leave proc;
+		end if;
+		#select count(*) into t from t_social where player_id=socialid and social_id=playerid;
+		#if t>0 then
+		#	select 3,playerid,socialid;
+		#	leave proc;
+		#end if;
+		-- 4.自己不能和自己产生关系
+		if playerid=socialid then 
+			select 4,playerid,socialid;
+			leave proc;
+		end if;
+		#只要不是申请就直接插入数据库
+		if sotype=1 THEN
+			if EXISTS(select 1 from t_social where player_id=socialid and social_id=playerid and (social_type=6 or social_type=5))THEN
+				#是对方的黑名单或仇人
+				select 5,playerid,socialid;
+				leave proc;
+			end if;
+			#给对方添加申请信息
+			insert ignore t_social(player_id,social_id,social_type,created) values(socialid,playerid,sotype,nowtime);
+		else
+			insert ignore t_social(player_id,social_id,social_type,created) values(playerid,socialid,sotype,nowtime);
+		end if;
+
+		-- 尝试产生关系
+		#set u=uuid(),t=unix_timestamp();
+		#直接加好友
+		#if not EXISTS(select 1 from t_social where player_id=playerid and social_id=socialid and social_type=sotype)THEN
+		#	insert t_social(player_id,social_id,social_type,created) values(playerid,socialid,sotype,nowtime);	
+		#end if;
+		#给对方添加申请信息
+		#if(sotype=2)then
+			#if not EXISTS(select 1 from t_social where player_id=socialid and social_id=playerid)THEN
+				#insert t_social(player_id,social_id,social_type,created) values(socialid,playerid,sotype,nowtime);	
+		#	end if;
+	#	end if;
+		#if(sotype<>2)then
+		#	insert t_social(player_id,social_id,social_type,created) values(socialid,u,sotype,t);
+		#end if;
+		-- 修改关系者
+		#begin 
+		#	declare continue handler for sqlexception delete from t_social where player_id=socialid and social_id=u;
+		#	update t_social set social_id=playerid where player_id=socialid and social_id=u;
+		#end;
+	#	begin
+		#	declare continue handler for sqlexception delete from t_social where player_id=playerid and social_id =u;
+	#		update t_social set social_id=socialid where player_id=playerid and social_id=u;
+		#end;
+		-- 0.操作正确
+		#select 0,playerid,socialid;
+		#select 0,b.social_id,a.player_name,a.icon,a.vip,a.player_level,a.power,b.social_type,b.`group` from t_player as a INNER join (select player_id,social_id,social_type,`group` from t_social where player_id=playerid)b on a.player_id=b.social_id
+		select 0,player_id,player_name,icon,vip,player_level,power,player_job,player_sex from t_player where player_id=socialid;
+	end proc; 
+END

@@ -1,0 +1,11 @@
+CREATE FUNCTION `func_delete_str`(`_str` varchar(1024),_pos int, _count int) RETURNS varchar(1024) CHARSET utf8
+BEGIN
+	#函数功能为删除指定参数str中的字符串
+	#pos从1开始
+	#count表示删除个数
+	DECLARE left1,right2 VARCHAR(1024);
+	set left1 = LEFT(_str, _pos-1);
+	set right2 = SUBSTRING(_str, _pos+_count, LENGTH(_str));
+
+	RETURN CONCAT(left1, right2);
+END

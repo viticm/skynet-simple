@@ -1,0 +1,18 @@
+CREATE TABLE `t_log_times` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `zid` int(11) DEFAULT NULL,
+  `sid` int(11) DEFAULT NULL,
+  `platform` int(11) DEFAULT NULL,
+  `sdk` varchar(32) DEFAULT NULL,
+  `uid` int(11) DEFAULT NULL,
+  `uname` varchar(32) DEFAULT NULL,
+  `rid` varchar(32) DEFAULT NULL,
+  `rname` varchar(32) DEFAULT NULL,
+  `level` int(11) DEFAULT NULL,
+  `timestp` int(11) DEFAULT NULL,
+  `freetimes` int(11) DEFAULT NULL,
+  `buytimes` int(11) DEFAULT NULL,
+  `usetimes` int(11) NOT NULL DEFAULT '0',
+  `optime` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`,`usetimes`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

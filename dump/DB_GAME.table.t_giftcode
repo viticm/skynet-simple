@@ -1,0 +1,3 @@
+field='serial' type='varchar(32)' collation='utf8_general_ci' null='NO' key='PRI' default='__NULL__' extra='' comment='' the_index='1'
+field='playerid' type='varchar(30)' collation='utf8_general_ci' null='YES' key='' default='__NULL__' extra='' comment='' the_index='2'
+field='giftcode' type='varchar(16)' collation='utf8_general_ci' null='YES' key='' default='__NULL__' extra='' comment='' the_index='3'

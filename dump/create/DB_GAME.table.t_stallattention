@@ -1,0 +1,12 @@
+CREATE TABLE `t_stallattention` (
+  `playerId` varchar(50) NOT NULL DEFAULT '',
+  `stallId` varchar(50) DEFAULT '0',
+  `goodsId` int(11) DEFAULT '0',
+  `goodsguid` varchar(50) NOT NULL DEFAULT '',
+  `goodsNum` int(11) DEFAULT NULL,
+  `price` int(11) DEFAULT NULL,
+  `color` int(11) DEFAULT NULL,
+  `puttime` int(11) DEFAULT NULL,
+  `precious` int(11) DEFAULT NULL,
+  PRIMARY KEY (`playerId`,`goodsguid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

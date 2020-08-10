@@ -1,0 +1,21 @@
+CREATE PROCEDURE `sp_rename_email`()
+BEGIN
+	DECLARE playerid varchar(40) DEFAULT '';
+	declare stop int default 0;
+	DECLARE tmpname varchar(40) DEFAULT '';
+	DECLARE sendtype INT DEFAULT 0;
+	declare rs cursor for(select playername,playerguid,type from t_tmp_rename GROUP BY playerguid,type);
+	declare CONTINUE HANDLER FOR SQLSTATE '02000' SET stop=1;
+	open rs;
+	FETCH rs INTO tmpname,playerid,sendtype;
+	WHILE stop<>1 DO	
+		if sendtype=1 then
+			insert into t_enc(guid,playerid,playername,enclist,time,encname,encdesc,flag) values (uuid(),playerid,'','4-40161-1',UNIX_TIMESTAMP(),'改名','玩家改名道具',"system");
+			end if;
+		if sendtype=2 then
+			insert into t_enc(guid,playerid,playername,enclist,time,encname,encdesc,flag) values (uuid(),playerid,'','4-40162-1',UNIX_TIMESTAMP(),'改名','帮会改名道具',"system");
+			end if;
+		FETCH rs INTO tmpname,playerid,sendtype;
+	END WHILE;
+	CLOSE rs;
+END

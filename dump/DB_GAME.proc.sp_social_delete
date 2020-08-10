@@ -1,0 +1,5 @@
+CREATE PROCEDURE `sp_social_delete`(in _playerid varchar(30),in _socialid varchar(30))
+BEGIN
+	delete from t_social where player_id=_playerid and social_id=_socialid;
+	delete from t_social where player_id=_socialid and social_id=_playerid;
+end

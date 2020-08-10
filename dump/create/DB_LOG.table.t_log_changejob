@@ -1,0 +1,21 @@
+CREATE TABLE `t_log_changejob` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `zid` int(11) DEFAULT NULL,
+  `sid` int(11) DEFAULT NULL,
+  `platform` int(32) DEFAULT NULL,
+  `sdk` varchar(11) NOT NULL DEFAULT '',
+  `uid` int(11) DEFAULT NULL,
+  `uname` varchar(32) DEFAULT NULL,
+  `rid` varchar(32) DEFAULT NULL,
+  `rname` varchar(32) DEFAULT NULL,
+  `level` int(11) DEFAULT NULL,
+  `old` int(11) DEFAULT NULL,
+  `new` int(11) DEFAULT NULL,
+  `old_point` int(11) DEFAULT NULL,
+  `new_point` int(11) DEFAULT NULL,
+  `mission` int(11) DEFAULT NULL,
+  `typed` int(11) DEFAULT NULL,
+  `unbind` int(11) DEFAULT NULL,
+  `optime` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`,`sdk`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

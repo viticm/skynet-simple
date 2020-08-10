@@ -1,0 +1,8 @@
+CREATE PROCEDURE `sp_arena_add_last_week_score_history`()
+BEGIN
+	#把上周得到的竞技场积分保存到历史中
+	TRUNCATE TABLE t_arena_last_week_score_ranking;
+	INSERT INTO t_arena_last_week_score_ranking(playerid,week_score_ranking,player_name,player_level,is_machine,power,player_job,player_sex)
+	  select playerid,score_per_week,player_name,player_level,is_machine,power,player_job,player_sex FROM t_arena_ranking ORDER BY score_per_week DESC LIMIT 50;
+
+END

@@ -1,0 +1,23 @@
+CREATE PROCEDURE `sp_arena_update_score`()
+BEGIN
+	#更新竞技场积分和累计周积分，并重置每日积分
+	#1	1000
+	#2	800
+	#3	700
+	#4~10	500
+	#11~50	400
+	#51~200	300
+	#201~500	250
+	#501~2000	200
+	#2000以下	150
+	UPDATE t_arena_ranking set score=score+score_per_day+1000,score_per_week=score_per_week+1000,score_per_day=0 WHERE ranking=1;
+	UPDATE t_arena_ranking set score=score+score_per_day+800,score_per_week=score_per_week+800,score_per_day=0 WHERE ranking=2;
+	UPDATE t_arena_ranking set score=score+score_per_day+700,score_per_week=score_per_week+700,score_per_day=0 WHERE ranking=3;
+	UPDATE t_arena_ranking set score=score+score_per_day+500,score_per_week=score_per_week+500,score_per_day=0 WHERE ranking>=4 and ranking<=10;
+	UPDATE t_arena_ranking set score=score+score_per_day+400,score_per_week=score_per_week+400,score_per_day=0 WHERE ranking>=11 and ranking<=50;	
+	UPDATE t_arena_ranking set score=score+score_per_day+300,score_per_week=score_per_week+300,score_per_day=0 WHERE ranking>=51 and ranking<=200;	
+	UPDATE t_arena_ranking set score=score+score_per_day+250,score_per_week=score_per_week+250,score_per_day=0 WHERE ranking>=201 and ranking<=500;	
+	UPDATE t_arena_ranking set score=score+score_per_day+200,score_per_week=score_per_week+200,score_per_day=0 WHERE ranking>=501 and ranking<=2000;
+	UPDATE t_arena_ranking set score=score+score_per_day+150,score_per_week=score_per_week+150,score_per_day=0 WHERE ranking>2000;
+
+END

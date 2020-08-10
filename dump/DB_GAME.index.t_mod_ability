@@ -1,0 +1,1 @@
+table='t_mod_ability' non_unique='0' key_name='PRIMARY' seq_in_index='1' column_name='id' collation='A' null='' index_type='BTREE' comment=''

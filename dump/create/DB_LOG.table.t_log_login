@@ -1,0 +1,20 @@
+CREATE TABLE `t_log_login` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `zid` int(11) DEFAULT NULL,
+  `sid` int(11) DEFAULT NULL,
+  `platform` int(11) DEFAULT NULL,
+  `sdk` varchar(32) DEFAULT NULL,
+  `uid` int(11) DEFAULT NULL,
+  `uname` varchar(32) DEFAULT NULL,
+  `rid` varchar(32) DEFAULT NULL,
+  `rname` varchar(32) DEFAULT NULL,
+  `level` int(11) DEFAULT NULL,
+  `logintime` int(11) DEFAULT NULL,
+  `logouttime` int(11) DEFAULT NULL,
+  `seri` varchar(20) DEFAULT NULL,
+  `mins` int(11) DEFAULT NULL,
+  `flag` tinyint(4) DEFAULT NULL,
+  `optime` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `seri_index` (`seri`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

@@ -1,0 +1,12 @@
+CREATE PROCEDURE `sp_write_global_key_value`(IN `_key` varchar(32),IN `_value` bigint(20))
+BEGIN
+	#
+	if EXISTS(SELECT 1 FROM t_value WHERE value_name=_key)THEN
+		update t_value set value=_value WHERE value_name=_key;
+	
+	ELSE
+		INSERT into t_value(value_name,value) VALUES(_key,_value);
+	end if;
+
+
+END

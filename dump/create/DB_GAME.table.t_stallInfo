@@ -1,0 +1,7 @@
+CREATE TABLE `t_stallInfo` (
+  `stallId` varchar(50) NOT NULL DEFAULT '',
+  `createtime` bigint(11) DEFAULT '0',
+  `ownerName` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`stallId`),
+  KEY `searchIndex` (`stallId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

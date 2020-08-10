@@ -1,0 +1,5 @@
+CREATE PROCEDURE `sp_getchargereturn`(IN `_user_id` int(20), IN `_user_gsid` int(11))
+BEGIN
+	update t_chargereturn set sid = _user_gsid where user_id = _user_id and sid = 0;
+	select sid, day1, day2, day3 from t_chargereturn where user_id = _user_id;
+END

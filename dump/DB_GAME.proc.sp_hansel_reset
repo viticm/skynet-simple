@@ -1,0 +1,7 @@
+CREATE PROCEDURE `sp_hansel_reset`(IN `_objid` VARCHAR(50), IN `_code` varCHAR(50))
+BEGIN
+	declare ret int default 0;
+	update t_hansel set usetime=0 where guid=_objid and code=_code;
+	set ret=row_count();
+	select ret;
+END

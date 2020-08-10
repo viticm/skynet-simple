@@ -1,0 +1,10 @@
+CREATE PROCEDURE `sp_existplayer`(in _playerid varchar(40),in _serverid int,in _uid int)
+BEGIN
+	if EXISTS(select 1 from t_player where player_id=_playerid)THEN
+		select 1;
+	elseif EXISTS(select 1 from t_player where game_id=_serverid and user_id=_uid)THEN
+		select 2;
+	ELSE
+		select 0;
+	end if;	
+end

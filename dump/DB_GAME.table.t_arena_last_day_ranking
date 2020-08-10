@@ -1,0 +1,8 @@
+field='playerid' type='varchar(30)' collation='utf8_general_ci' null='NO' key='PRI' default='' extra='' comment='' the_index='1'
+field='ranking' type='int(11)' collation='__NULL__' null='YES' key='MUL' default='__NULL__' extra='' comment='上一天排名' the_index='2'
+field='player_name' type='varchar(32)' collation='utf8_general_ci' null='YES' key='' default='__NULL__' extra='' comment='' the_index='3'
+field='player_level' type='int(11)' collation='__NULL__' null='YES' key='' default='__NULL__' extra='' comment='' the_index='4'
+field='is_machine' type='tinyint(4)' collation='__NULL__' null='YES' key='' default='__NULL__' extra='' comment='' the_index='5'
+field='power' type='int(11)' collation='__NULL__' null='YES' key='' default='__NULL__' extra='' comment='' the_index='6'
+field='player_job' type='tinyint(4)' collation='__NULL__' null='YES' key='' default='__NULL__' extra='' comment='' the_index='7'
+field='player_sex' type='tinyint(4)' collation='__NULL__' null='YES' key='' default='__NULL__' extra='' comment='' the_index='8'

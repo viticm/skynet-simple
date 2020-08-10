@@ -1,0 +1,9 @@
+CREATE TABLE `t_gmTimeEvent` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `sendtime` int(11) DEFAULT NULL,
+  `opType` int(11) DEFAULT NULL,
+  `content` blob,
+  `times` int(11) DEFAULT NULL,
+  `sdk` varchar(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

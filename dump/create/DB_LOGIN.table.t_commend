@@ -1,0 +1,6 @@
+CREATE TABLE `t_commend` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `sid` int(10) DEFAULT '0' COMMENT '推荐服务器id',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `sid` (`sid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

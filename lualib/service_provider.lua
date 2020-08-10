@@ -13,6 +13,8 @@ local skynet = require 'skynet'
 local skynetdebug = require 'skynet.debug'
 local trace = require 'trace.c'
 
+local traceback = trace.traceback
+
 skynetdebug.reg_debugcmd('RELOAD', function(f)
   local _LOADED = debug.getregistry()._LOADED
   if _LOADED[f] then
@@ -92,20 +94,10 @@ function _M.init(mod, arg1, arg2, arg3, arg4)
     if mod.init then
       mod.init(arg1, arg2, arg3, arg4)
     end
-    if mod.quit then -- quit regiter.
+    if mod.quit then -- quit register.
 
     end
   end)
 end
-
--- Auto start model.
-
-local args = table.pack(...)
-
-assert(#args >= 1)
-
-local mod = require(args[1])
-
-_M.init(mod, select(2, ...))
 
 return _M

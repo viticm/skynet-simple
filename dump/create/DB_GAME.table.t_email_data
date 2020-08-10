@@ -1,0 +1,11 @@
+CREATE TABLE `t_email_data` (
+  `guid` varchar(32) NOT NULL DEFAULT '',
+  `title` varchar(50) DEFAULT NULL,
+  `content` varchar(255) DEFAULT NULL,
+  `goods` varchar(255) DEFAULT NULL,
+  `send_end_time` int(11) DEFAULT NULL,
+  `create_time` int(11) DEFAULT NULL,
+  `gsid` varchar(20) DEFAULT NULL,
+  `isshare` tinyint(4) DEFAULT NULL,
+  PRIMARY KEY (`guid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

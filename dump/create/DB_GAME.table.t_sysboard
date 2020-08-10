@@ -1,0 +1,10 @@
+CREATE TABLE `t_sysboard` (
+  `id` int(10) unsigned NOT NULL DEFAULT '0',
+  `content` varchar(1024) DEFAULT NULL,
+  `flag` int(10) unsigned DEFAULT '0',
+  `starttime` int(10) unsigned DEFAULT '0',
+  `endtime` int(10) unsigned DEFAULT '0',
+  `tick` int(10) unsigned DEFAULT '1',
+  `mode` int(10) unsigned DEFAULT '0' COMMENT '模式，控制显示相关',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='GM工具世界公告'

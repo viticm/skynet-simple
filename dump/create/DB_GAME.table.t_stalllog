@@ -1,0 +1,16 @@
+CREATE TABLE `t_stalllog` (
+  `logid` int(11) NOT NULL AUTO_INCREMENT,
+  `opType` int(11) DEFAULT '0',
+  `opTime` varchar(50) DEFAULT NULL,
+  `stallId` varchar(50) DEFAULT '0',
+  `operatorId` varchar(50) DEFAULT '0',
+  `goodsId` int(11) DEFAULT '0',
+  `goodsNum` int(11) DEFAULT '0',
+  `tPri` int(11) DEFAULT '0',
+  `opGoldNum` int(11) DEFAULT '0',
+  `opPundage` int(11) DEFAULT '0',
+  `cellNum` int(11) DEFAULT '0',
+  `fluctuate` varchar(50) DEFAULT NULL,
+  `precious` int(11) DEFAULT '0',
+  PRIMARY KEY (`logid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

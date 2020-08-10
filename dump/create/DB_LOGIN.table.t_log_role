@@ -1,0 +1,16 @@
+CREATE TABLE `t_log_role` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` bigint(20) DEFAULT NULL,
+  `gsid` int(11) DEFAULT NULL,
+  `uname` varchar(20) DEFAULT NULL,
+  `rid` varchar(20) DEFAULT NULL,
+  `rname` varchar(20) DEFAULT NULL,
+  `rjob` int(11) DEFAULT NULL,
+  `rlevel` int(11) DEFAULT NULL,
+  `optime` int(11) DEFAULT NULL,
+  `platform` varchar(20) DEFAULT NULL,
+  `sdk` varchar(32) DEFAULT NULL,
+  `imei` varchar(64) DEFAULT NULL,
+  `seri` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

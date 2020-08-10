@@ -1,0 +1,12 @@
+CREATE TABLE `t_auction_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `provider` varchar(50) DEFAULT NULL,
+  `providerName` varchar(50) DEFAULT NULL,
+  `providerType` int(5) DEFAULT NULL,
+  `buyerName` varchar(50) DEFAULT NULL,
+  `goodsInfo` varchar(100) DEFAULT NULL,
+  `buyTime` int(12) DEFAULT NULL,
+  `price` int(12) DEFAULT NULL,
+  `extra` blob,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

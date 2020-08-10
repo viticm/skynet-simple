@@ -1,0 +1,9 @@
+CREATE TABLE `t_zone` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `zid` int(10) NOT NULL COMMENT '大区id',
+  `name` varchar(50) CHARACTER SET gbk DEFAULT '' COMMENT '大区名字资源',
+  `ip` varchar(50) CHARACTER SET gbk DEFAULT '' COMMENT '大区服务器ip',
+  `code` varchar(50) CHARACTER SET gbk DEFAULT '' COMMENT '大区验证码',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `zid` (`zid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

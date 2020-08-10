@@ -1,0 +1,5 @@
+CREATE TABLE `t_systemmsg` (
+  `playerid` varchar(30) NOT NULL DEFAULT '',
+  `data` mediumblob,
+  PRIMARY KEY (`playerid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

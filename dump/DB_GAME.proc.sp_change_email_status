@@ -1,0 +1,14 @@
+CREATE PROCEDURE `sp_change_email_status`(IN `email_id` int,IN `email_status` int)
+BEGIN
+	#Routine body goes here...
+	declare codes  int default 0;
+	declare numTotal  int default 0;
+	select count(*) into  numTotal from t_email_player where id=email_id;
+	if numTotal <>0 THEN
+			UPDATE t_email_player set status=email_status where id=email_id ;
+		set	codes = 1;
+	else
+			set codes = 0;
+	end IF;
+	SELECT codes as recode;
+END

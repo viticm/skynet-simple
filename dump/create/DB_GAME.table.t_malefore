@@ -1,0 +1,5 @@
+CREATE TABLE `t_malefore` (
+  `id` int(11) NOT NULL,
+  `val` varchar(4) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

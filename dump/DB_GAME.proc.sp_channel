@@ -1,0 +1,8 @@
+CREATE PROCEDURE `sp_channel`(_player_id varchar(64),_channel_id int)
+BEGIN
+	#Routine body goes here...
+	update t_player set channel_id = _channel_id where player_id = _player_id;
+	update t_arenarank set channel_id = _channel_id where player_id = _player_id;
+	update t_submitarenarank set channel_id = _channel_id where player_id = _player_id;
+	update t_sort set channel_id = _channel_id where playerid = _player_id;
+END

@@ -1,0 +1,8 @@
+CREATE TABLE `t_gmorder` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `player_id` varchar(40) NOT NULL DEFAULT '0' COMMENT '玩家ID',
+  `productname` varchar(40) DEFAULT NULL COMMENT '商品ID',
+  `money` float unsigned DEFAULT '0' COMMENT '充值金额',
+  `coin` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='充值补单表'

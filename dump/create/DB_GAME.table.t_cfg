@@ -1,0 +1,5 @@
+CREATE TABLE `t_cfg` (
+  `cfgname` varchar(50) NOT NULL,
+  `cfgcontent` blob,
+  PRIMARY KEY (`cfgname`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

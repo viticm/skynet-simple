@@ -1,0 +1,15 @@
+CREATE TABLE `t_tuiguangenc` (
+  `playerid` varchar(32) NOT NULL DEFAULT '',
+  `charge` int(11) DEFAULT NULL COMMENT '充值积分',
+  `enc1` int(11) DEFAULT NULL,
+  `enc2` int(11) DEFAULT NULL,
+  `enc3` int(11) DEFAULT NULL,
+  `enc4` int(11) DEFAULT NULL,
+  `enc5` int(11) DEFAULT NULL,
+  `enc6` int(11) DEFAULT NULL,
+  `enc7` int(11) DEFAULT NULL,
+  `enc8` int(11) DEFAULT NULL,
+  `enc9` int(11) DEFAULT NULL,
+  `enc10` int(11) DEFAULT NULL,
+  PRIMARY KEY (`playerid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

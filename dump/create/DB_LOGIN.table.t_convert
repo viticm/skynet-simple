@@ -1,0 +1,7 @@
+CREATE TABLE `t_convert` (
+  `userid` int(11) NOT NULL DEFAULT '0',
+  `ccode` varchar(15) DEFAULT NULL,
+  `ckey` varchar(10) DEFAULT NULL,
+  `flag` int(4) DEFAULT NULL COMMENT '0:未转化,1:已转化',
+  PRIMARY KEY (`userid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8

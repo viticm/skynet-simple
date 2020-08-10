@@ -1,0 +1,8 @@
+CREATE PROCEDURE `sp_social_select`(IN `playerid` varCHAR(50),in `_deletetime` int)
+    READS SQL DATA
+BEGIN
+	#select player_id,social_id,social_type from t_social where player_id=playerid;
+	delete from t_social where player_id=playerid and social_type=1 and created<_deletetime;
+	select b.social_id,a.player_name,a.icon,a.vip,a.player_level,a.power,a.player_job,a.player_sex,b.social_type,b.`group`,b.friendvar from t_player as a INNER join 
+	(select player_id,social_id,social_type,`group`,friendvar from t_social where player_id=playerid)b on a.player_id=b.social_id;
+END

@@ -1,0 +1,6 @@
+CREATE TABLE `t_log_online` (
+  `zid` int(11) NOT NULL DEFAULT '0',
+  `sid` int(11) NOT NULL DEFAULT '0',
+  `online_num` int(11) NOT NULL DEFAULT '0',
+  `optime` int(11) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

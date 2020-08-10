@@ -1,0 +1,24 @@
+CREATE PROCEDURE `sp_create_player`(IN `_user_id` bigint, IN `_game_id` INT, IN `_user_name` varchar(64), IN `_player_name` varchar(32), IN `_player_job` INT(11),IN `_player_sex` INT(11), IN `_createtime` int unsigned,IN `_platform` INT(11), IN `_sdk` varchar(32))
+begin
+	declare _tmpplayerid  VARCHAR(40);
+	declare _count int default 0;
+	declare _count1 int default 1;
+	if exists ( select 1 from t_player where player_name=_player_name and deletetime=0 )then
+		#角色名已存在
+		select 2,_game_id,"";
+	else
+		select count(player_id) into _count from t_player where user_id=_user_id and game_id=_game_id and deletetime=0;
+		select max(createno) into _count1 from t_player where user_id=_user_id and game_id=_game_id;
+		if(ISNULL(_count1))then
+			set _count1=0;
+		end if;
+		if(_count>=3)then
+			#角色数量已达上限
+			select 3,_game_id,"";
+		ELSE
+			set _tmpplayerid=CONCAT(_game_id,"-",_user_id,"-",_count1+1);
+			insert into t_player (user_id,game_id,user_name,player_id,player_name,player_level,player_job,player_sex,createno,createtime,color,platform,sdk) values (_user_id,_game_id,_user_name,_tmpplayerid,_player_name,1,_player_job,_player_sex,_count1+1,_createtime,3,_platform,_sdk);
+			select 1,_game_id,_tmpplayerid;
+		end if;
+	end if;
+end

@@ -1,0 +1,6 @@
+CREATE TABLE `t_giftcode` (
+  `serial` varchar(32) NOT NULL,
+  `playerid` varchar(30) DEFAULT NULL,
+  `giftcode` varchar(16) DEFAULT NULL,
+  PRIMARY KEY (`serial`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

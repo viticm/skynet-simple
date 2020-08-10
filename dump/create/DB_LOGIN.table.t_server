@@ -1,0 +1,16 @@
+CREATE TABLE `t_server` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `sid` int(11) NOT NULL COMMENT '服务器id',
+  `name` varchar(50) NOT NULL COMMENT '服务器名字资源',
+  `zone` int(11) NOT NULL COMMENT '大区id',
+  `access` int(11) DEFAULT '0' COMMENT '访问控制列表名单id',
+  `flag` int(11) DEFAULT '0' COMMENT '访问控制参数:1开启白名单,名单外不可见;2开启白名单,名单外显示不可用;3开启白名单,名单外显示维护;4开启黑名单,名单内不可见;5开启黑名单,名单内显示不可用;6开启黑名单,名单内显示维护',
+  `busy` int(11) DEFAULT '1000' COMMENT '服务器正常繁忙人数阀值',
+  `created` int(11) NOT NULL DEFAULT '0' COMMENT '服务器开启时间 计算新服务器',
+  `opentime` int(10) DEFAULT '0' COMMENT '服务器在维护的时候显式下次开服的时间',
+  `force_stat` int(10) DEFAULT '-1' COMMENT '服务器强制状态 -1:真实状态, 0:新服,1:爆满,2:正常,3:维护,4:不可用,5:不可见',
+  `force_endt` int(10) DEFAULT '0' COMMENT '服务器强制状态结束时间,这个时间之后是真实状态',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `sid` (`sid`),
+  KEY `zone` (`zone`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

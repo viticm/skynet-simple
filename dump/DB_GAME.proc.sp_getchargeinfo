@@ -1,0 +1,5 @@
+CREATE PROCEDURE `sp_getchargeinfo`(in _playerid varchar(30),in _now int,in _guid varchar(20))
+BEGIN
+		update t_chargerecord set flag=_guid,gettime=_now where playerid=_playerid and flag is NULL;
+		select productname,money,orderno,extra from t_chargerecord where playerid=_playerid and flag=_guid;
+end

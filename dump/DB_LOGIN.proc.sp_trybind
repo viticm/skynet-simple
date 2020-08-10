@@ -1,0 +1,9 @@
+CREATE PROCEDURE `sp_trybind`(in _tplayerid varchar(32),in _servertype int)
+BEGIN
+	DECLARE tmplevel int default 0;
+	DECLARE tmpgsid int default 0;
+	DECLARE tmpservername varchar(32) default "";
+	DECLARE tmpplayername varchar(32) default "";
+	select char_level,servername,char_name,user_gsid into tmplevel,tmpservername,tmpplayername,tmpgsid from t_userinfo where char_id=_tplayerid and char_level>=30;
+	select tmplevel,tmpservername,tmpplayername,tmpgsid;
+END

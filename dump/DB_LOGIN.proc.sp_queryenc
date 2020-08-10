@@ -1,0 +1,7 @@
+CREATE PROCEDURE `sp_queryenc`(in _playerid varchar(32))
+begin
+	DECLARE num int default 0;
+	select count(*) into num from t_tuiguang where tuiplayerid=_playerid;
+	select num,charge,enc1,enc2,enc3,enc4,enc5,enc6,enc7,enc8,enc9,enc10 from t_tuiguangenc where playerid=_playerid;
+	update t_tuiguangenc set charge=0,enc1=0,enc2=0,enc3=0,enc4=0,enc5=0,enc6=0,enc7=0,enc8=0,enc9=0,enc10=0 where playerid=_playerid;
+end

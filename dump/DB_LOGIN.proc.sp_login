@@ -1,0 +1,4 @@
+CREATE PROCEDURE `sp_login`(IN `_userid` INT,IN `_servertype` INT,IN `_code` varchar(40),IN `_args` varchar(256))
+BEGIN
+	select uid,gsid,rname,rjob,rlevel,logtime,rsex from t_userinfo where uid=_userid  and deletetime is null order by rlevel desc,logtime desc;
+END

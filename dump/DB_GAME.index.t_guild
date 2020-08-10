@@ -1,0 +1,2 @@
+table='t_guild' non_unique='0' key_name='PRIMARY' seq_in_index='1' column_name='id' collation='A' null='' index_type='BTREE' comment=''
+table='t_guild' non_unique='1' key_name='name_index' seq_in_index='1' column_name='name' collation='A' null='YES' index_type='BTREE' comment=''

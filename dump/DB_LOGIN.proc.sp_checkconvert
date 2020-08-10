@@ -1,0 +1,8 @@
+CREATE PROCEDURE `sp_checkconvert`(in __userid int)
+BEGIN
+		if EXISTS(select 1 from t_convert where flag=__userid)THEN
+				select 0;
+		ELSE
+				select 1;#需要激活
+		end if;
+end

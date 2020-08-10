@@ -1,0 +1,3 @@
+Field='value_name'	Type='varchar(32)'	Null='NO'	Key='PRI'	Default='NULL'	Extra=''	prev=''
+Field='value'	Type='bigint(20) unsigned'	Null='NO'	Key=''	Default='NULL'	Extra=''	prev='value_name'
+Field='valueb'	Type='mediumblob'	Null='YES'	Key=''	Default='NULL'	Extra=''	prev='value'

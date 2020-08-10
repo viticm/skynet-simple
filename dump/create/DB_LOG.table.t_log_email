@@ -1,0 +1,12 @@
+CREATE TABLE `t_log_email` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `player_id` varchar(32) DEFAULT NULL,
+  `email_id` int(11) DEFAULT NULL,
+  `title` varchar(100) DEFAULT NULL,
+  `content` varchar(500) DEFAULT NULL,
+  `goods` varchar(255) DEFAULT NULL,
+  `flag` varchar(100) DEFAULT NULL,
+  `param` varchar(64) DEFAULT NULL,
+  `optime` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

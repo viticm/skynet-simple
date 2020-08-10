@@ -1,0 +1,5 @@
+CREATE PROCEDURE `sp_genconvertcode`()
+begin
+	delete from t_convert;
+	insert into t_convert(userid,ccode,ckey,flag) (select user_id,func_gencode(8),func_gencode(5),0 from t_userinfo GROUP BY user_id);
+end

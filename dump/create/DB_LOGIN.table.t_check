@@ -1,0 +1,7 @@
+CREATE TABLE `t_check` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) DEFAULT '' COMMENT '检测内容',
+  `value` varchar(50) DEFAULT '' COMMENT '检测值',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

@@ -1,0 +1,12 @@
+CREATE TABLE `t_chargeorder` (
+  `orderno` varchar(40) NOT NULL DEFAULT '',
+  `playerid` varchar(30) DEFAULT NULL,
+  `playername` varchar(20) DEFAULT NULL,
+  `productname` varchar(40) DEFAULT NULL,
+  `serverId` int(11) DEFAULT NULL,
+  `channelId` int(11) DEFAULT NULL,
+  `extra` varchar(32) DEFAULT NULL,
+  `optime` int(11) DEFAULT NULL,
+  PRIMARY KEY (`orderno`),
+  KEY `playerid_index` (`playerid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

@@ -1,0 +1,6 @@
+CREATE TABLE `t_kfconfig` (
+  `gsid` int(11) NOT NULL DEFAULT '0',
+  `kfserverip` varchar(32) NOT NULL DEFAULT '',
+  `kfserverport` int(11) DEFAULT NULL,
+  PRIMARY KEY (`gsid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

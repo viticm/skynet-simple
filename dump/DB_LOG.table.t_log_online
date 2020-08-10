@@ -1,0 +1,4 @@
+Field='zid'	Type='int(11)'	Null='NO'	Key=''	Default='NULL'	Extra=''	prev=''
+Field='sid'	Type='int(11)'	Null='NO'	Key=''	Default='NULL'	Extra=''	prev='zid'
+Field='online_num'	Type='int(11)'	Null='NO'	Key=''	Default='NULL'	Extra=''	prev='sid'
+Field='optime'	Type='int(11)'	Null='NO'	Key=''	Default='NULL'	Extra=''	prev='online_num'

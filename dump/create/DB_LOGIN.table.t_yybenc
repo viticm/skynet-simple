@@ -1,0 +1,13 @@
+CREATE TABLE `t_yybenc` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_name` varchar(64) DEFAULT NULL,
+  `user_id` bigint(20) DEFAULT NULL,
+  `user_gsid` int(11) DEFAULT NULL,
+  `char_id` varchar(32) DEFAULT NULL,
+  `encid` int(11) DEFAULT NULL,
+  `getflag` tinyint(4) DEFAULT NULL,
+  `optime` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `user_name_index` (`user_name`),
+  KEY `char_id_index` (`char_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

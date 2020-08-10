@@ -1,0 +1,14 @@
+CREATE PROCEDURE `sp_arena_reset_week_score`()
+BEGIN
+	#重置周积分，并记录为上周积分榜
+
+	#记录上周积分榜，待处理。。。
+
+
+	#重置周积分
+	update t_arena_ranking set score_per_week=0;
+
+
+	
+
+END

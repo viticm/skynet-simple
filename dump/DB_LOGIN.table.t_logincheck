@@ -1,0 +1,3 @@
+Field='userid'	Type='bigint(20)'	Null='NO'	Key='PRI'	Default='NULL'	Extra=''
+Field='verifycode'	Type='varchar(40)'	Null='YES'	Key=''	Default='NULL'	Extra=''
+Field='args'	Type='varchar(256)'	Null='YES'	Key=''	Default='NULL'	Extra=''

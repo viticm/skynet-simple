@@ -1,0 +1,27 @@
+CREATE PROCEDURE `sp_active`(in __userid int,in __code varchar(20))
+BEGIN
+#	if EXISTS(select 1 from t_code where activecode=__code)THEN
+#			if EXISTS (select 1 from t_code where activecode=__code and codestate=0)THEN
+#				update t_code set codestate=1 where activecode=__code;#改为已使用
+#				update t_active set activecode=__code where userid=__userid;#改为已激活
+#				select 4;#激活成功
+#			ELSE
+#				select 3;#激活码已被使用
+#			end if;
+#	ELSE
+#		select 2;#激码不存在
+#	end if;
+	DECLARE _codestate INT default -1;
+	select codestate into _codestate from t_code where activecode=LOWER(__code);
+	if(_codestate<0)THEN
+			select 2;#激码不存在
+	ELSE
+			if(_codestate=0)THEN
+				update t_code set codestate=1 where activecode=__code;#改为已使用
+				update t_active set activecode=__code where userid=__userid;#改为已激活
+				select 4;#激活成功
+			ELSE
+				select 3;#激活码已被使用
+			end if;
+	end if;
+END

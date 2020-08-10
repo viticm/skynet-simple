@@ -1,0 +1,14 @@
+CREATE PROCEDURE `sp_createguild`(in _sid bigint,in _name varchar(20), in _masterid varchar(20),in _mastername varchar(20),in _svrid int,in _createtime int)
+BEGIN
+	declare _id int;
+	#帮会名字已存在
+	pro:
+	begin
+		if EXISTS(select 1 from t_guild where `name`=_name)THEN
+				select 1;
+				leave pro;
+		end if;
+		insert into t_guild(id,`name`,game_id,masterid,mastername,createname,createtime) values(_sid,_name,_svrid,_masterid,_mastername,_mastername,_createtime);
+		select 0,_id;
+	end;
+end

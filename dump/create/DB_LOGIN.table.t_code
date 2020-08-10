@@ -1,0 +1,5 @@
+CREATE TABLE `t_code` (
+  `activecode` varchar(10) NOT NULL DEFAULT '',
+  `codestate` int(11) DEFAULT NULL,
+  PRIMARY KEY (`activecode`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

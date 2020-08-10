@@ -1,0 +1,16 @@
+CREATE TABLE `t_gem_log` (
+  `logid` int(11) NOT NULL AUTO_INCREMENT,
+  `serid` int(11) NOT NULL,
+  `rname` varchar(11) NOT NULL,
+  `playerlv` int(11) NOT NULL,
+  `viplv` int(11) NOT NULL,
+  `pos` int(11) NOT NULL,
+  `gemid` int(11) NOT NULL,
+  `gemlv` int(11) NOT NULL,
+  `pro` varchar(11) NOT NULL,
+  `items` varchar(11) NOT NULL,
+  `diamond` int(11) NOT NULL,
+  `optime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `rid` varchar(11) NOT NULL,
+  PRIMARY KEY (`logid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

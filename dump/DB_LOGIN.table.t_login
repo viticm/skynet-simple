@@ -1,0 +1,3 @@
+Field='id'	Type='int(10)'	Null='NO'	Key='PRI'	Default='NULL'	Extra='auto_increment'
+Field='uid'	Type='int(11)'	Null='YES'	Key='UNI'	Default='NULL'	Extra=''
+Field='sid'	Type='int(11)'	Null='YES'	Key=''	Default='NULL'	Extra=''

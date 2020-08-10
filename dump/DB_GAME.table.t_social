@@ -1,0 +1,7 @@
+field='id' type='int(10)' collation='__NULL__' null='NO' key='PRI' default='__NULL__' extra='auto_increment' comment='' the_index='1'
+field='social_type' type='int(10)' collation='__NULL__' null='NO' key='' default='0' extra='' comment='' the_index='2'
+field='player_id' type='varchar(45)' collation='utf8_general_ci' null='NO' key='MUL' default='' extra='' comment='' the_index='3'
+field='social_id' type='varchar(45)' collation='utf8_general_ci' null='NO' key='' default='' extra='' comment='' the_index='4'
+field='group' type='int(10)' collation='__NULL__' null='YES' key='' default='0' extra='' comment='player_id 赠送给 social_di 标志' the_index='5'
+field='friendvar' type='int(11)' collation='__NULL__' null='NO' key='' default='0' extra='' comment='' the_index='6'
+field='created' type='int(10)' collation='__NULL__' null='NO' key='' default='0' extra='' comment='' the_index='7'

@@ -1,0 +1,4 @@
+1='id'	2='int(11)'	3='NO'	4='PRI'	6='auto_increment'
+1='tuiplayerid'	2='varchar(32)'	3='YES'	4='MUL'	6=''
+1='beituiplayerid'	2='varchar(32)'	3='YES'	4=''	6=''
+1='optime'	2='int(11)'	3='YES'	4=''	6=''

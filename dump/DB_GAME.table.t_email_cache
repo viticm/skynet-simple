@@ -1,0 +1,4 @@
+field='guid' type='varchar(32)' collation='utf8_general_ci' null='NO' key='PRI' default='__NULL__' extra='' comment='' the_index='1'
+field='gsid' type='int(11)' collation='__NULL__' null='YES' key='' default='__NULL__' extra='' comment='' the_index='2'
+field='emailData' type='blob' collation='__NULL__' null='YES' key='' default='__NULL__' extra='' comment='' the_index='3'
+field='create_time' type='int(11)' collation='__NULL__' null='YES' key='' default='__NULL__' extra='' comment='' the_index='4'

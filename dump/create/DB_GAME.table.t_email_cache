@@ -1,0 +1,7 @@
+CREATE TABLE `t_email_cache` (
+  `guid` varchar(32) NOT NULL,
+  `gsid` int(11) DEFAULT NULL,
+  `emailData` blob,
+  `create_time` int(11) DEFAULT NULL,
+  PRIMARY KEY (`guid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

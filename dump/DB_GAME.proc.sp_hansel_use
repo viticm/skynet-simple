@@ -1,0 +1,17 @@
+CREATE PROCEDURE `sp_hansel_use`(IN `_objid` VARCHAR(50), IN `_code` varCHAR(128))
+BEGIN
+	declare ret int default 0;
+	update t_hansel set usetime=unix_timestamp() where guid=_objid and code=_code and usetime=0;
+	if row_count()>0 then
+		set ret=2;
+		select ret,_objid,_code,args from t_hansel where guid=_objid and code=_code;
+	else
+		begin
+			declare r_guid varchar(50) default '';
+			declare r_code varchar(50) default '';
+			select 1 into ret from t_hansel where guid=_objid and code=_code;
+			set r_guid=_objid,r_code=_code;
+			select ret,r_guid,r_code,'';
+		end;
+	end if;
+END

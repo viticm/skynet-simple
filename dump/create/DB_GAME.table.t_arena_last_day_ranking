@@ -1,0 +1,12 @@
+CREATE TABLE `t_arena_last_day_ranking` (
+  `playerid` varchar(30) NOT NULL DEFAULT '',
+  `ranking` int(11) DEFAULT NULL COMMENT '上一天排名',
+  `player_name` varchar(32) DEFAULT NULL,
+  `player_level` int(11) DEFAULT NULL,
+  `is_machine` tinyint(4) DEFAULT NULL,
+  `power` int(11) DEFAULT NULL,
+  `player_job` tinyint(4) DEFAULT NULL,
+  `player_sex` tinyint(4) DEFAULT NULL,
+  PRIMARY KEY (`playerid`),
+  KEY `ranking_index` (`ranking`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

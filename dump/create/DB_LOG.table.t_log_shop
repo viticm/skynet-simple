@@ -1,0 +1,19 @@
+CREATE TABLE `t_log_shop` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `zid` int(11) DEFAULT NULL,
+  `sid` int(11) DEFAULT NULL,
+  `platform` int(11) DEFAULT NULL,
+  `sdk` varchar(32) DEFAULT NULL,
+  `uid` int(11) DEFAULT NULL,
+  `uname` varchar(32) DEFAULT NULL,
+  `rid` varchar(32) DEFAULT NULL,
+  `rname` varchar(32) DEFAULT NULL,
+  `level` int(11) DEFAULT NULL,
+  `goodsid` int(11) DEFAULT NULL,
+  `num` int(11) DEFAULT NULL,
+  `shoptype` int(11) DEFAULT NULL,
+  `shopsubtype` int(11) DEFAULT NULL,
+  `seri` varchar(32) DEFAULT NULL,
+  `optime` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

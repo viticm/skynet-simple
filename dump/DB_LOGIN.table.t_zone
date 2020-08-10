@@ -1,0 +1,5 @@
+1='id'	2='int(10)'	3='NO'	4='PRI'	6='auto_increment'
+1='zid'	2='int(10)'	3='NO'	4='UNI'	6=''
+1='name'	2='varchar(50)'	3='YES'	4=''	5=''	6=''
+1='ip'	2='varchar(50)'	3='YES'	4=''	5=''	6=''
+1='code'	2='varchar(50)'	3='YES'	4=''	5=''	6=''

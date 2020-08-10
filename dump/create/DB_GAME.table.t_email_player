@@ -1,0 +1,16 @@
+CREATE TABLE `t_email_player` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `player_id` varchar(32) DEFAULT NULL,
+  `status` int(2) DEFAULT NULL,
+  `type` int(2) DEFAULT NULL,
+  `flag` varchar(100) DEFAULT NULL,
+  `param` varchar(64) DEFAULT NULL,
+  `seri` varchar(50) DEFAULT NULL,
+  `source` int(11) DEFAULT '0',
+  `create_time` int(11) DEFAULT NULL,
+  `email_guid` varchar(32) DEFAULT NULL,
+  `extra` blob,
+  PRIMARY KEY (`id`),
+  KEY `playerid` (`player_id`),
+  KEY `guid` (`email_guid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

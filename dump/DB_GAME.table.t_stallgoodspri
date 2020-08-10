@@ -1,0 +1,2 @@
+field='id' type='int(11)' collation='__NULL__' null='NO' key='PRI' default='0' extra='' comment='' the_index='1'
+field='price' type='int(11)' collation='__NULL__' null='NO' key='' default='0' extra='' comment='' the_index='2'
