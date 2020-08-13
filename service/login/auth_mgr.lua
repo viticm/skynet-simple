@@ -32,7 +32,7 @@ local function clear_timeout()
   local now = skynet.now()
   local clears = {}
   for k, v in pairs(tokens) do
-    if v.item + 30000 < now then -- 5min clear
+    if v.time + 30000 < now then -- 5min clear
       table.insert(clears, k)
     end
   end

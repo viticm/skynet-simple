@@ -48,7 +48,7 @@ local function forward_msg(self, name, response, args)
   local ok, r = xpcall(f, traceback, self, name, self.rid, args)
   if ok then
     if response then
-      local msg = response(r):pack('>s2')
+      local msg = string.pack('>s2', response(r))
       if not socketdriver.send(self.fd, msg) then
         log:warn('forward_msg response msg[%s] failed')
       end
@@ -80,13 +80,15 @@ local function handle_msg(self, name, response, f, args)
         if r.e and type(r.e) ~= 'number' then
           log:warn('handle_msg fd[%d] msg[%s] response error', self.fd, name)
         end
-        local msg = response(r):pack('>s2')
+        -- Like: local s = '>s2' s:pack(response(r))
+        local msg = string.pack('>s2', response(r))
         if not socketdriver.send(self.fd, msg) then
           log:warn('handle_msg fd[%d] msg[%s] response failed', self.fd, name)
         end
       end
     end
   else
+    local _ = r and log:error(r)
     log:warn('handle_msg fd[%d] msg[%s] raise error', self.fd, name)
   end
   local use_t = skynet.now() - start_t
@@ -189,7 +191,7 @@ function _M.push_fd(rid, fd, name, data)
   if node then
     cluster.send(node, '@.transit', 'client_push', rid, fd, name, data)
   else
-    local msg = sender(name, data):pack('>s2')
+    local msg = string.pack('>s2', sender(name, data))
     socketdriver.send(fd, msg)
     print_m(name, 'send >>>')
   end
@@ -200,7 +202,7 @@ end
 -- @param string name
 -- @param table data
 function _M.push_fds(fds, name, data)
-  local msg = sender(name, data):pack('>s2')
+  local msg = string.pack('>s2', sender(name, data))
   print_m(name, 'send >>>')
   for fd, rid in pairs(fds) do
     local node = attach_info.get(rid)
@@ -217,7 +219,7 @@ end
 -- @param string name
 -- @param table data
 function _M.push_objs(objs, name, data)
-  local msg = sender(name, data):pack('>s2')
+  local msg = pack('>s2', sender(name, data))
   print_m(name, 'send >>>')
   for _, obj in pairs(objs) do
     if obj.is_player then

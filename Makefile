@@ -2,6 +2,7 @@ LUA_CLIB_PATH ?= luaclib
 CSERVICE_PATH ?= cservice
 SKYNET_PATH ?= ./skynet
 LUA_RAPIDJSON ?= rapidjson
+LUA_LFS ?= lfs
 
 # platform
 # PLAT ?= linux
@@ -25,6 +26,7 @@ LUA_CLIB = trace \
 all : \
   $(SKYNET_PATH)/skynet \
 	$(LUA_RAPIDJSON) \
+	$(LUA_LFS) \
   $(foreach v, $(CSERVICE), $(CSERVICE_PATH)/$(v).so) \
   $(foreach v, $(LUA_CLIB), $(LUA_CLIB_PATH)/$(v).so) 
 
@@ -35,8 +37,13 @@ $(CSERVICE_PATH) :
 	mkdir $(CSERVICE_PATH)
 
 $(LUA_RAPIDJSON) :
-	cd 3rd/lua-rapidjson/ && cmake ./ && $(MAKE)
+	cd 3rd/lua-rapidjson/ && $(MAKE)
 	cp 3rd/lua-rapidjson/rapidjson.so $(LUA_CLIB_PATH)
+
+$(LUA_LFS) :
+	cd 3rd/lua-filesystem/ && $(MAKE)
+	cp 3rd/lua-filesystem/src/lfs.so $(LUA_CLIB_PATH)
+
 
 define CSERVICE_TEMP
   $$(CSERVICE_PATH)/$(1).so : service-src/service_$(1).c | $$(CSERVICE_PATH)
@@ -77,3 +84,4 @@ cleanall :
 	cd $(SKYNET_PATH) && $(MAKE) cleanall
 	rm -f $(CSERVICE_PATH)/*.so $(LUA_CLIB_PATH)/*.so
 	cd 3rd/lua-rapidjson/ && $(MAKE) clean
+	cd 3rd/lua-filesystem/ && $(MAKE) clean

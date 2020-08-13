@@ -9,7 +9,7 @@
  - @uses The util functions tool for lua.
 --]]
 
-local split = require 'split.c'
+local split_core = require 'split.c'
 
 -- Table utils
 local tostring = tostring
@@ -21,6 +21,7 @@ local load = load
 local pcall = pcall
 local setmetatable = setmetatable
 local print = print
+local os = os
 
 -- Create the module table here
 -- Data.
@@ -59,7 +60,7 @@ function t2s(t)
   local result = {}
   do
     rL[rL.cL]._f, rL[rL.cL]._s, rL[rL.cL]._var = pairs(t)
-    --result[#result + 1] =  "{\n"..string.rep("\t", levels + 1)
+    --result[#result + 1] =  "{\n"..string.rep("  ", levels + 1)
     result[#result + 1] = "{"    -- Non pretty version
     rL[rL.cL].t = t
     while true do
@@ -81,7 +82,7 @@ function t2s(t)
         -- levels = levels - 1
         rL.cL = rL.cL - 1
         rL[rL.cL + 1] = nil
-        --rL[rL.cL].str = rL[rL.cL].str..", \n"..string.rep("\t", levels + 1)
+        --rL[rL.cL].str = rL[rL.cL].str..", \n"..string.rep("  ", levels + 1)
       else
         -- Handle the key and value here
         if type(k) == "number" or type(k) == "boolean" then
@@ -112,22 +113,22 @@ function t2s(t)
             rL.cL = rL.cL + 1
             rL[rL.cL] = {}
             rL[rL.cL]._f, rL[rL.cL]._s, rL[rL.cL]._var = pairs(v)
-            --result[#result + 1] = "{\n"..string.rep("\t", levels + 1)
+            --result[#result + 1] = "{\n"..string.rep("  ", levels + 1)
             result[#result + 1] = "{"  -- non pretty version
             rL[rL.cL].t = v
           else
             --result[#result + 1] =
-            -- "\""..tostring(v).."\", \n"..string.rep("\t", levels + 1)
+            -- "\""..tostring(v).."\", \n"..string.rep("  ", levels + 1)
             -- non pretty version
             result[#result + 1] = "\""..tostring(v).."\", "
           end
         elseif type(v) == "number" or type(v) == "boolean" then
           --result[#result + 1] =
-          -- tostring(v)..", \n"..string.rep("\t", levels + 1)
+          -- tostring(v)..", \n"..string.rep("  ", levels + 1)
           result[#result + 1] = tostring(v)..", "  -- non pretty version
         else
           --result[#result + 1] = string.format(
-          -- "%q", tostring(v))..", \n"..string.rep("\t", levels + 1)
+          -- "%q", tostring(v))..", \n"..string.rep("  ", levels + 1)
           -- non pretty version
           result[#result + 1] = string.format("%q", tostring(v))..", "
         end    -- if type(v) == "table" then ends
@@ -156,7 +157,7 @@ function t2spp(t)
   local result = {}
   do
     rL[rL.cL]._f, rL[rL.cL]._s, rL[rL.cL]._var = pairs(t)
-    result[#result + 1] =  "{\n"..string.rep("\t", levels + 1)
+    result[#result + 1] =  "{\n"..string.rep("  ", levels + 1)
     --result[#result + 1] = "{"    -- Non pretty version
     rL[rL.cL].t = t
     while true do
@@ -177,7 +178,7 @@ function t2spp(t)
         levels = levels - 1
         rL.cL = rL.cL - 1
         rL[rL.cL + 1] = nil
-        result[#result + 1] = "}, \n"..string.rep("\t", levels + 1) -- for pretty
+        result[#result + 1] = "}, \n"..string.rep("  ", levels + 1) -- for pretty
                                                                   -- printing
       else
         -- Handle the key and value here
@@ -210,24 +211,24 @@ function t2spp(t)
             rL[rL.cL] = {}
             rL[rL.cL]._f, rL[rL.cL]._s, rL[rL.cL]._var = pairs(v)
             -- For pretty printing
-            result[#result + 1] = "{\n"..string.rep("\t", levels + 1)
+            result[#result + 1] = "{\n"..string.rep("  ", levels + 1)
             --result[#result + 1] = "{"  -- non pretty version
             rL[rL.cL].t = v
           else
             -- For pretty printing
             result[#result + 1] =
-              "\""..tostring(v).."\", \n"..string.rep("\t", levels + 1)
+              "\""..tostring(v).."\", \n"..string.rep("  ", levels + 1)
             -- non pretty version
             --result[#result + 1] = "\""..tostring(v).."\", "
           end
         elseif type(v) == "number" or type(v) == "boolean" then
           -- For pretty printing
-          result[#result + 1] = tostring(v)..", \n"..string.rep("\t", levels + 1)
+          result[#result + 1] = tostring(v)..", \n"..string.rep("  ", levels + 1)
           --result[#result + 1] = tostring(v)..", "  -- non pretty version
         else
           -- For pretty printing
           result[#result + 1] = string.format("%q",
-            tostring(v))..", \n"..string.rep("\t", levels + 1)
+            tostring(v))..", \n"..string.rep("  ", levels + 1)
           -- non pretty version
           --result[#result + 1] = string.format("%q", tostring(v))..", "
         end    -- if type(v) == "table" then ends
@@ -446,7 +447,7 @@ end
 -- If it returns true then the values are considered equal
 function in_array(t1, v, equal)
   equal = (type(equal) == "function" and equal) or function(v1, v2)
-    return v1==v2
+    return v1 == v2
   end
   for i = 1, #t1 do
     if equal(t1[i], v) then
@@ -808,7 +809,7 @@ end
 -- @param mixed fold
 -- @param mixed flag
 -- @return mixed
-function _M.dump(value, fold, flag)
+function dump(value, fold, flag)
   local the_type = type(value)
   if 'table' == the_type then
     local str = t2spp(value)
@@ -821,23 +822,34 @@ function _M.dump(value, fold, flag)
 end
 
 -- Get now unix time.
-function _M.time()
+function time()
   return os.time()
 end
 
 -- Split string.
-function _M.split_row(str, seq)
-  return split.split_row(str, seq)
+function split_row(str, seq)
+  return split_core.splitrow(str, seq)
+end
+
+-- Split string.
+function split(str, seq)
+  return split_core.split(str, seq)
 end
 
 -- Generate a save sql string.
 -- @param string name The table name.
 -- @param table data The save table.
+-- @param string key Update the column key(default `id`)
 -- @param mixed replace_keys Need replace column name list.
 -- @param mixed new If insert.
--- @return string
-function _M.gen_save_sql(name, data, replace_keys, new)
+-- @return mixed
+function gen_save_sql(name, data, key, replace_keys, new)
   replace_keys = replace_keys or {}
+  key = key or 'id'
+  local key_value = data[key]
+  if not key_value then
+    return
+  end
   local format_str
   if new then
     format_str = 'insert ignore ' .. name .. ' ('
@@ -846,17 +858,28 @@ function _M.gen_save_sql(name, data, replace_keys, new)
   end
   local values = {}
   for k, v in pairs(data) do
-    local column_name = replace_keys[k] or k
-    if 'number' == type(v) then
-      format_str = format_str + ' ' + column_name + ' = %d,'
-    else
-      format_str = format_str + ' ' + column_name + ' = "%s",'
+    if k ~= key or new then
+      local column_name = replace_keys[k] or k
+      if 'number' == type(v) then
+        format_str = format_str + ' ' + column_name + ' = %d,'
+      else
+        format_str = format_str + ' ' + column_name + ' = "%s",'
+      end
+      table.insert(values, v)
     end
-    table.insert(values, v)
   end
   format_str = string.sub(format_str, 1, string.len(format_str) - 1)
   if new then
     format_str = format_str .. ')'
+  end
+  if not new then
+    local where
+    if is_number(key_value) then
+      where = string.format(' where %s = %d', key, key_value)
+    else
+      where = string.format(' where %s = "%s"', key, key_value)
+    end
+    format_str = format_str .. where
   end
   return string.format(format_str, table.unpack(values))
 end
@@ -1508,4 +1531,8 @@ function arguments(args)
       print(k)
     end
   end
+end
+
+function time_zone()
+  return 1
 end

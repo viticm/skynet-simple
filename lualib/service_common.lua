@@ -20,7 +20,7 @@ local _M = {}
 function _M.start()
 
   -- Setting.
-  local def_setting = dofile('bin/def_setting.lua')
+  local def_setting = dofile('bin/setting/default.lua')
   setting.init(def_setting)
   
   -- Proto load.

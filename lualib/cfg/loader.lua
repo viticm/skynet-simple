@@ -10,6 +10,8 @@
 --]]
 
 local log = require 'log'
+local lfs = require 'lfs'
+local cfg_list = require 'cfg.list'
 
 local tostring = tostring
 local type = type
@@ -20,8 +22,9 @@ local load = load
 local pcall = pcall
 local setmetatable = setmetatable
 local print = print
+local assert = assert
+local next = next
 
--- Create the module table here
 -- Data.
 -------------------------------------------------------------------------------
 
@@ -46,5 +49,61 @@ local function set_cfg(method, data)
 end
 
 local function load_list(list)
+  local r = {}
+  local function load(root)
+    for f in lfs.dir(root) do
+      if string.sub(f, 1, 1) ~- '.' then
+        local path = root .. '/' .. f
+        local attr = lfs.attributes(path)
+        if 'directory' == attr.mode then
+
+        else
+          local pos = string.find(f, '.lua$')
+          if pos then
+            local name = string.sub(f, 1, pos - 1)
+            assert(#name > 0)
+            assert(r[name], string.format('dumplicate filename %s', path))
+            if list then
+              r[name] = list[name] and path
+            else
+              r[name] = path
+            end
+          end
+        end
+      end
+    end -- for
+  end
+end
+
+local function load_map_obj(list)
+
+end
+
+local function load_map(method, name)
+
+end
+
+local function load_allmap(method, list)
+
+end
+
+-- API.
+-------------------------------------------------------------------------------
+
+function loadall(stype)
+  local list = cfg_list[stype]
+  assert(list, 'unkown server type: ' .. (stype or "unkown"))
+  if not next(list) then
+    return
+  end
+  set_cfg(sharetable.loadfile, load_list(list))
+  -- Load map
+end
+
+function reload(name)
+
+end
+
+function get(name)
 
 end

@@ -16,7 +16,7 @@ function die(){
 
 export ROOT=$(cd `dirname $0`; pwd)
 export OP_TYPE=0
-while getopts "dki:h:t:p:" arg
+while getopts "dki:h:t:p:s:n:m:" arg
 do
   case $arg in
     i) export SVR_ID=$OPTARG;;
@@ -25,6 +25,9 @@ do
     h) export SETTING_HOST=$OPTARG;;
     t) export SVR_TYPE=$OPTARG;;
     p) export CFGPATH=$OPTARG;;
+    s) export SVR_START=$OPTARG;;
+    n) export SVR_NUM=$OPTARG;;
+    m) export SVR_MOD=$OPTARG;;
   esac
 done
 

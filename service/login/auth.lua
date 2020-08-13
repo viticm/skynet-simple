@@ -45,6 +45,7 @@ end
 -- @param table msg The login msg.
 -- @return mixed
 local function login_local(self, msg)
+  print('login_local====================')
   local op = 'login'
   local json_msg = {
     device = msg.device,
@@ -55,8 +56,9 @@ local function login_local(self, msg)
     },
     channel = msg.channel,
     partner = msg.partner,
-    ip = util.slite_row(self.addr, ':')
+    ip = util.split_row(self.addr, ':')
   }
+  log:dump(json_msg, 'json_msg')
   log:info('login_local partner = %s', msg.partner)
   return pcl_msg[op](self, msg)
 end
@@ -66,6 +68,7 @@ end
 -- @param table msg The login msg.
 -- @return mixed
 local function login_3rd(self, msg)
+  print('login_3rd')
   local op = 'create_user'
   local json_msg = {
     device = msg.device,
@@ -76,7 +79,7 @@ local function login_3rd(self, msg)
     },
     channel = msg.channel,
     partner = msg.partner,
-    ip = util.slite_row(self.addr, ':')
+    ip = util.split_row(self.addr, ':')
   }
   log:info('login_local partner = %s', msg.partner)
   return pcl_msg[op](self, msg)
@@ -86,7 +89,7 @@ local function loop_error(self, fd, what)
   local close_timer = self.close_timer
   if close_timer then
     self.close_timer = nil
-    timer.del(close_timer)
+    timer.remove(close_timer)
   end
   if self.fd then
     self.fd = nil
@@ -122,7 +125,7 @@ local function msg_loop(self)
       else
         skynet.fork(function()
           in_dispatch = true
-          client.disptach(self, msg, sz)
+          client.dispatch(self, msg, sz)
           in_dispatch = nil
           if self.exit then
             loop_error(self, fd, 'exit')
@@ -153,7 +156,7 @@ function _CH:signup(msg)
       time = util.time()
     },
     channel = msg.channel,
-    ip = util.slite_row(self.addr, ':')
+    ip = util.split_row(self.addr, ':')
   }
   return pcl_msg[op](self, json_msg)
 end
@@ -182,7 +185,6 @@ function _CH:signin(msg)
   end
 end
 
-
 -- API.
 -------------------------------------------------------------------------------
 
@@ -192,10 +194,10 @@ function _M.auth(fd, addr)
 end
 
 function _M.update_player(info)
-  local sql = util.gen_save_sql('t_player', info, { time = 'last' })
+  local sql = util.gen_save_sql('t_player', info, 'uid', { time = 'last' })
   local r = login_db(sql)
   if 0 == r.affected_rows then
-    sql = util.gen_save_sql('t_player', info, { time = 'last'  }, true)
+    sql = util.gen_save_sql('t_player', info, 'uid', { time = 'last'  }, true)
     login_db(sql)
   end
 end

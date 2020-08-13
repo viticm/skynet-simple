@@ -14,3 +14,54 @@ mytest 1 {
     text 0 : string
   }
 }
+
+# Signup
+signup 2 {
+  request {
+    channel   0 : integer
+    devive    1 : string
+    imei      2 : string
+    user_name 3 : string
+    password  4 : string
+    mobile    5 : string
+    email     6 : string
+    model     7 : string
+  }
+  response {
+    e   0 : integer
+    m   1 : string
+  }
+}
+
+.signin_role {
+  level       0 : integer
+  icon        1 : integer
+  icon_frame  2 : integer
+  sid         3 : integer
+  last        4 : integer
+}
+
+# Signin
+signin 3 {
+  request {
+    channel     0 : integer
+    devive      1 : string
+    imei        2 : string
+    user_name   3 : string
+    password    4 : string
+    model       5 : string
+    partner_id  6 : integer
+    game_id     7 : integer
+  }
+  response {
+    e           0 : integer
+    m           1 : string
+    uid         2 : string
+    token       3 : string
+    roles       4 : *signin_role
+    auth        5 : integer
+    is_white    6 : integer
+    server_time 7 : integer
+    time_zone   8 : integer
+  }
+}

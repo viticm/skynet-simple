@@ -10,7 +10,7 @@
 --]]
 
 local client = require 'client'
-local socket = 'skynet.socket'
+local socket = require 'skynet.socket'
 
 -- Read a message by table.
 -- @param table self The socket table.
@@ -24,7 +24,7 @@ function client.read_message(self)
   if not s then
     return
   end
-  local len = s:unpack('>H')
+  local len = string.unpack('>H', s)
   return socket.read(fd, len), len
 end
 -- Start read a socket.

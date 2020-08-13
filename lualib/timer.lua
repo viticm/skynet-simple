@@ -55,13 +55,13 @@ end
 function update(min)
   local now = skynet.now()
   repeat
-    local id = heap.pop(HEAP)
+    local id = heap.pop(HEAP, 99999999)
     if not id then
       break
     end
     safe_call(id)
   until false
-  roll_with_skynet(now)
+  poll_with_skynet(now)
 end
 
 -- API.
@@ -69,7 +69,7 @@ end
 
 function _M.re_calc_min_timeout()
   MIN_TI = math.huge
-  roll_with_skynet(skynet.now())
+  poll_with_skynet(skynet.now())
 end
 
 function _M.add(time, cb)
@@ -83,7 +83,7 @@ function _M.add_expire(expire, cb)
   ID_GEN = ID_GEN + 1
   ids[id] = cb
   heap.add(HEAP, id, expire)
-  roll_with_skynet(skynet.now())
+  poll_with_skynet(skynet.now())
   return id
 end
 

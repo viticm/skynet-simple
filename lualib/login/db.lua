@@ -21,6 +21,7 @@ local build_player_sql = [[
 create table if not exists `t_player` (
   `rid` varchar(50) not null,
   `rname` varchar(50) not null,
+  `uid` varchar(50) not null,
   `icon` int(11) not null,
   `icon_frame` int(11) not null,
   `sid` int(11) not null,
@@ -29,7 +30,7 @@ create table if not exists `t_player` (
   primary key (`rid`),
   KEY `rname` (`rname`) using hash,
   KEY `uid` (`uid`) using hash,
-  KEY `sid` (`sid`) using hash,
+  KEY `sid` (`sid`) using hash
 ) engine=InnoDB default charset=utf8
 ]]
 
@@ -53,9 +54,9 @@ local function query(...)
   end
   if d.errno then
     if 1146 == d.errno then
-      query(proxy, build_user_sql)
-      query(proxy, build_player_sql)
-      return query(proxy, ...)
+      query(build_user_sql)
+      query(build_player_sql)
+      return query(...)
     else
       error(format('%s[%s]', d.err, table.concat({...})))
     end

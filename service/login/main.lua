@@ -15,7 +15,7 @@ local service_common = require 'service_common'
 local setting = require 'setting'
 
 local function init()
-  skynet.error('** login server starting **')
+  skynet.error('--- login server starting ---')
 
   service_common.start()
 
