@@ -28,7 +28,8 @@ for pat in string.gmatch(LUA_SERVICE, '([^;]+);*') do
     pattern = pat
     local is_user_service = string.find(pat, '/service') and 
       not string.find(pat, '/skynet/service/')
-    if is_user_service and SERVICE_NAME ~= 'wgate' then
+    if is_user_service and SERVICE_NAME ~= 'wgate' and 
+      SERVICE_NAME ~= 'world/gate' then
       f, msg = loadfile('./lualib/service_init.lua')
       if not f then
         table.insert(err, msg)

@@ -11,7 +11,6 @@
 
 local split_core = require 'split.c'
 
--- Table utils
 local tostring = tostring
 local type = type
 local pairs = pairs

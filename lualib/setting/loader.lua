@@ -75,7 +75,8 @@ end
 -- Update the cluster node info.
 function _M.refresh_cluster_node()
   local host, uri = getUri()
-  local r = request(host, uri .. '/clusternode.json', '')
+  local r = request(host, uri .. '/cluster.json', '')
+  log:dump(r, "cluster========")
   return cluster.reload(r)
 end
 
@@ -83,6 +84,8 @@ end
 function _M.load_platform(stype, sid)
   
   log:debug('load_platform begin')
+
+  _M.refresh_cluster_node()
 
   -- _M.refresh_cluster_node()
   local node = request_node_info(stype, sid)

@@ -20,6 +20,8 @@ local log = require 'log'
 -- Local defines.
 local math = math
 local xpcall = xpcall
+local pcall = pcall
+local print = print
 
 -- Data.
 -------------------------------------------------------------------------------
@@ -185,10 +187,54 @@ end
 
 -- Auth account and enter game(not role then create).
 function auth_game(self)
+  local account = self.account
+  local time = math.random(1000000000, 9999999999)
+  local msg = {
+    uid = account.uid,
+    time = time,
+    token = md5.sumhexa(account.token .. time),
+    sid = self.sid,
+    version = '20200826'
+  }
+  local r = client.request(self, 500, 'auth_game', msg)
+  if 0 == r.e then
+    log:info('auth game success[%s]', account.uid)
+  else
+    log:warn('auth game failed[%s], err[%d]', account.uid, r.e)
+    return false
+  end
 
+  skynet.sleep(100)
+
+  local roles = self.roles
+
+  print('auth game roles', roles)
+
+  return true
 end
 
 -- Auth game and enter(connect game server).
+-- @return bool
 function login_game(self)
-
+  skynet.sleep(100)
+  local pid = self.ppid
+  local sid = self.sid
+  local cfg = setting.get('world')
+  local game_host = cfg.ip
+  local game_port = cfg.port
+  local fd = socket.open(game_host, game_port)
+  if not fd then return false end
+  log:info('login game open fd: %d', fd)
+  self.fd = fd
+  skynet.fork(function() 
+    local ok, err = pcall(client.dispatch, self)
+    if not ok then
+      log:warn('login game dispatch error %d', err or -1)
+    end
+  end)
+  local r = self:auth_game()
+  if not r then
+    return self:login_game()
+  end
+  return r
 end

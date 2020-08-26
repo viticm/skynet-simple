@@ -23,7 +23,7 @@ local function init()
   cluster.register('auth_mgr', auth_mgr)
 
   local count = setting.get('auth_count')
-  local ip = setting.get('net_ip')
+  local ip = setting.get('ip') or '0.0.0.0'
   local port = setting.get('port')
 
   skynet.call(auth_mgr, 'lua', 'start_auth', count)

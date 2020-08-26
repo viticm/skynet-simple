@@ -65,3 +65,21 @@ signin 3 {
     time_zone   8 : integer
   }
 }
+
+# Auth game.
+auth_game 6 {
+  request {
+    uid               0 : string
+    time              1 : string
+    token             2 : string
+    auth              3 : integer
+    sid               4 : integer
+    version           5 : string
+  }
+  response {
+    e                 0 : integer
+    m                 1 : string
+    server_time       2 : integer
+    server_open_time  3 : integer
+  }
+}

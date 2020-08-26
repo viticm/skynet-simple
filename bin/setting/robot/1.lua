@@ -17,7 +17,7 @@ return {
   },
   world = {
     ip = '127.0.0.1',
-    port = 3000 + sid,
+    port = 2999,
   },
   log_flag = 1,
   log_level = 5,

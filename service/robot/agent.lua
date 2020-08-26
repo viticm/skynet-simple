@@ -30,6 +30,9 @@ local function loop()
   skynet.sleep(20)
   local r = obj:login_account()
   print('login_account:', r)
+  if r then
+    obj:login_game()
+  end
 end
 
 -- API.
