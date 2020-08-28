@@ -15,11 +15,14 @@ local client = require 'client'
 local queue = require 'skynet.queue'
 local cluster = require 'skynet.cluster'
 local login = require 'world.login'
+local auth_tool = require 'login.auth_tool'
 local util = require 'util'
 local trace = require 'trace.c'
 local service_pool = require 'service_pool'
 local log = require 'log'
 local setting = require 'setting'
+local server = require 'server'
+local e_error = require 'enum.error'
 
 -- Data.
 -------------------------------------------------------------------------------
@@ -30,9 +33,13 @@ local _CH = client.handler()
 local _M = {}
 local _S = {}
 
-local agent_pool = agent_pool or {}
+local c_online_max <const> = 3000
+
+local agent_pool = agent_pool or nil
 local sockets = sockets or {}
-local cache = cache or {}
+local cache = cache or { 
+  online = 0
+}
 local onlines = onlines or {}
 
 -- Local functions.
@@ -51,6 +58,7 @@ local function gc()
         xpcall(skynet.call, traceback, addr, 'debug', "GC")
         skynet.error('gc called')
       end
+      -- local _ = agent_pool and agent_pool:gc()
     end
     skynet.sleep(100)
   until false
@@ -160,8 +168,59 @@ end
 
 function _CH:auth_game(msg)
   log:dump(msg, 'auth_game======================')
+  
+  if cache.online >= c_online_max then
+    self.kick = true
+    return { e = e_error.server_full, m = 'Server full' }
+  end
 
-  return {e = 0}
+  if not msg.version then
+    self.kick = true
+    log:warn('Unknown version uid[%s]', msg.uid)
+    return { e = e_error.version_invalid, m = 'Invalid version' }
+  end
+  local c_version = tonumber(msg.version)
+  local s_version = tonumber(setting.get('version'))
+  if c_version < s_version then
+    self.kick = true
+    log:warn('Invalid version uid[%s], client version[%s], server version[%s]',
+      msg.uid, c_version, s_version)
+    return
+  end
+
+  -- Other check add here.
+
+  local r = false
+  if self.auth_info then
+    r = auth_tool.check(self.auth_info, msg.token, msg.time)
+  end
+  if not r then
+    local c_name = 'login_' .. msg.auth
+    -- print('c_name===============', c_name)
+    local auth_info, err = cluster.call(c_name, '@auth_mgr', 'check_token', 
+      msg.uid, msg.token, msg.time)
+    print('auth_info, err', auth_info, err)
+    if auth_info then
+      self.auth_info = auth_info
+      log:info('Check token success, fd[%d] uid[%s](%s)', 
+        self.fd, msg.uid, msg.token)
+    else
+      log:info('Check token failure, fd[%d] uid[%s](%s) error[%s]',
+        self.fd, self.uid, msg.uid, msg.token, err)
+        return { e = e_error.auth_failed, m = 'auth failed' }
+    end
+  end
+
+  -- Passed an set.
+  self.uid = msg.uid
+  self.auth = msg.auth
+  self.sid = msg.sid
+
+  if not self.roles then
+
+  end
+
+  return {e = e_error.none}
 end
 
 return {

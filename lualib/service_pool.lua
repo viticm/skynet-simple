@@ -102,3 +102,68 @@ function get(self, hid)
     return hash[hid]
   end
 end
+
+-- Foreach all service item.
+-- @param function func The foreach function handle (addr, index, ...)
+function foreach(self, func, ...)
+  for index, info in ipairs(self.list) do
+    func(info.addr, index, ...)
+  end
+end
+
+-- Stop all service in pool.
+function stop(self)
+  for index, info in ipairs(self.list) do
+    skynet.send(info.addr, 'lua', 'stop')
+  end
+end
+
+-- Reload one file.
+-- @param string filename
+function reload(self, filename)
+  for index, info in ipairs(self.list) do
+    skynet.send(info.addr, 'lua', 'reload', filename)
+  end
+end
+
+-- Garbage collect(keep one alive full free service when service more than def).
+function gc(self)
+  local count = #self.list
+  local frees = {}
+  for i = count, self.def + 1, -1 do
+    local info = self.list[i]
+    if 0 == info.count then
+      table.insert(frees, i)
+    else
+      break
+    end
+  end
+  if #frees <= 1 then return end
+  for i = 1, i < #frees -1 do
+    local index = frees[i]
+    local info = self.list[index]
+    log:info('gc index %d', index)
+    skynet.send(info.addr, 'lua', 'stop')
+    table.remove(self.list, index)
+  end
+end
+
+-- Send a message to all service.
+function broadcast(self, name, ...)
+  for _, info in ipairs(self.list) do
+    skynet.send(info.addr, 'lua', name, ...)
+  end
+end
+
+-- Free an service use count.
+-- @param number index The hash id.
+function free(self, hid)
+  local index = hash[hid]
+  if not index then return end
+  local info = self.list[index]
+  if info then
+    info.count = info.count - 1
+  end
+  hash[hid] = nil
+  self:gc()
+end

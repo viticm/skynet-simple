@@ -20,7 +20,8 @@ local _M = {
 -- @param string token The check token.
 -- @param number time The check time.
 function _M.check(token_info, token, time)
-  local check_token = md5.sumhexa(token_info.token, time)
+  local check_token = md5.sumhexa(token_info.token .. time)
+  -- print('token_info.token', token, time, token_info.token, check_token)
   return check_token == token
 end
 

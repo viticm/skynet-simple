@@ -66,8 +66,11 @@ local function request_node_info(stype, sid)
   local host, uri = getUri()
   local r = request(host, string.format('%s/%s.json', uri, name), '')
   log:dump(r, 'the request=================')
-  if r.clusternode and setting.clusternode() ~= s.clusternode then
-    cluster.open(r.clusternode)
+  local cluster_cfg = r.cluster
+  if cluster_cfg and setting.clusternode() ~= cluster_cfg.name then
+		local _, port = string.match(cluster_cfg.addr, "([^:]+):(.*)$")
+    log:info('Cluster open: ' .. cluster_cfg.name)
+    cluster.open(tonumber(port))
   end
   return r
 end
@@ -87,7 +90,6 @@ function _M.load_platform(stype, sid)
 
   _M.refresh_cluster_node()
 
-  -- _M.refresh_cluster_node()
   local node = request_node_info(stype, sid)
   setting.sets(node)
 

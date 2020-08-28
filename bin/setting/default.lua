@@ -11,4 +11,6 @@
 return {
   log_flag = 1,
   log_level = 5,
+
+  version = '20200825',
 }

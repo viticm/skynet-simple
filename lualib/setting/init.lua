@@ -49,4 +49,10 @@ function _M.sets(t)
   end
 end
 
+-- Get current cluster node.
+function _M.clusternode()
+  local cluster = _M.get('cluster')
+  return cluster and cluster.name
+end
+
 return _M

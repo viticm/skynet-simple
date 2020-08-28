@@ -121,6 +121,7 @@ function signin(self)
     self.account.uid = r.uid
     self.account.auth = r.auth
     self.account.token = r.token
+    print('self.account.auth', self.account.auth)
   else
     log:warn('signin uid[%d] failed[%d]', uid, r.e)
   end
@@ -191,6 +192,7 @@ function auth_game(self)
   local time = math.random(1000000000, 9999999999)
   local msg = {
     uid = account.uid,
+    auth = account.auth,
     time = time,
     token = md5.sumhexa(account.token .. time),
     sid = self.sid,

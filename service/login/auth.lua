@@ -169,12 +169,12 @@ function _CH:signin(msg)
       log:warn('attention!!! - special login with uid: %s', msg.imei)
       if msg.device ~= auth_tool.login_key then
         log:Info('special login with invalid login key')
-        return { e = 1, m = 'invalid login' }
+        return { e = e_error.unkown, m = 'invalid login' }
       end
       local uid = tonumber(msg.imei)
       if not uid then
         log:warn('special login with invalid uid')
-        return { e = 1, m = 'invalid login' }
+        return { e = e_error.unkown, m = 'invalid login' }
       end
       return login_special(self, uid)
     else

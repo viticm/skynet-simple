@@ -6,7 +6,7 @@
  - @license
  - @user viticm( viticm.ti@gmail.com )
  - @date 2020/08/21 19:55
- - @uses your description
+ - @uses Role manager.
 --]]
 
 local skynet = require 'skynet'

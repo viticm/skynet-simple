@@ -15,6 +15,7 @@ local setting = require 'setting'
 local pcl = require 'pcl'
 local login_db = require 'login.db'
 local log = require 'log'
+local e_error = require 'enum.error'
 
 local format = string.format
 local urandom = assert(io.open('/dev/urandom', 'r'))
@@ -105,14 +106,15 @@ local function on_login(self, msg, r)
     table.insert(roles, one)
   end
   return {
-    e = 0,
+    e = e_error.none,
     uid = uid,
     token = save_token.token,
     roles = roles,
     sid = sid,
     is_white = is_white,
     server_time = util.time(),
-    time_zone = util.time_zone()
+    time_zone = util.time_zone(),
+    auth = sid
   }
 end
 
