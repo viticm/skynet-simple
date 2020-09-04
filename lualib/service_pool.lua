@@ -65,14 +65,16 @@ end
 
 -- Get a service addr by hash id.
 -- @param mixed hid Hash id.
+-- @param mixed not_alloc Not alloc new when hasn't alloc.
 -- @return mixed
-function get(self, hid)
+function get(self, hid, not_alloc)
   local hash = self.hash
   local list = self.list
   if hash[hid] then
     local s = list[hash[hid]]
     return s and s.addr
   end
+  if not_alloc then return end
   if self.free then
     local s = list[self.free]
     if not s then return end

@@ -1,4 +1,4 @@
-table='t_player' non_unique='0' key_name='PRIMARY' seq_in_index='1' column_name='player_id' collation='A' null='' index_type='BTREE' comment=''
-table='t_player' non_unique='1' key_name='player_name_index' seq_in_index='1' column_name='player_name' collation='A' null='' index_type='BTREE' comment=''
-table='t_player' non_unique='1' key_name='userid_gameid_index' seq_in_index='1' column_name='user_id' collation='A' null='' index_type='BTREE' comment=''
-table='t_player' non_unique='1' key_name='userid_gameid_index' seq_in_index='2' column_name='game_id' collation='A' null='YES' index_type='BTREE' comment=''
+table='t_player' non_unique='0' key_name='PRIMARY' seq_in_index='1' column_name='id' collation='A' null='' index_type='BTREE' comment=''
+table='t_player' non_unique='1' key_name='name_index' seq_in_index='1' column_name='name' collation='A' null='' index_type='BTREE' comment=''
+table='t_player' non_unique='1' key_name='uid_appid_index' seq_in_index='1' column_name='uid' collation='A' null='' index_type='BTREE' comment=''
+table='t_player' non_unique='1' key_name='uid_appid_index' seq_in_index='2' column_name='app_id' collation='A' null='YES' index_type='BTREE' comment=''

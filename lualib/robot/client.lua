@@ -21,6 +21,7 @@ local string = string
 local assert = assert
 local coroutine = coroutine
 local print = print
+local pcall = pcall
 
 -- Data.
 -------------------------------------------------------------------------------

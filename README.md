@@ -18,7 +18,7 @@ sh sworld.sh -i 1
 
 ### Start robot like mini client.
 ```
-sh srobot.sh -i 1
+sh srobot.sh -i 1 -n 1 -m test -s 1
 ```
 
 ### Platfrom setting and tool.

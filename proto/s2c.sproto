@@ -11,3 +11,23 @@ hello 1 {
     text 0 : string
   }
 }
+
+# The role info structure.
+.role {
+  id      0 : string
+  name    1 : string
+  job     2 : integer
+  level   3 : integer
+}
+
+# The role list.
+roles 2 {
+  request {
+    list    0 : *role
+  }
+}
+
+# Other login.
+other_login 3 {
+  request {}
+}

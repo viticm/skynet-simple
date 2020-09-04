@@ -5,13 +5,12 @@
   ud      2 : integer
 }
 
-# Test
-mytest 1 {
+# Ping
+ping 1 {
   request {
-    text 0 : string
   }
   response {
-    text 0 : string
+    time 0 : integer # Current timestamp.
   }
 }
 
@@ -81,5 +80,19 @@ auth_game 6 {
     m                 1 : string
     server_time       2 : integer
     server_open_time  3 : integer
+  }
+}
+
+# Create role.
+create_role 7 {
+  request {
+    name              0 : string
+    job               1 : integer
+    sex               2 : integer # 0 female 1 male
+  }
+  response {
+    e                 0 : integer
+    rid               1 : string
+    create_time       2 : integer
   }
 }

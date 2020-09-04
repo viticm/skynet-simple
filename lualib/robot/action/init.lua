@@ -1,11 +1,11 @@
 --[[
  - SKYNET SIMPLE ( https://github.com/viticm/skynet-simple )
- - $Id action.lua
+ - $Id init.lua
  - @link https://github.com/viticm/skynet-simple for the canonical source repository
  - @copyright Copyright (c) 2020 viticm( viticm.ti@gmail.com )
  - @license
  - @user viticm( viticm.ti@gmail.com )
- - @date 2020/08/11 14:20
+ - @date 2020/08/31 19:49
  - @uses The robot action class.
 --]]
 
@@ -44,13 +44,13 @@ end
 -------------------------------------------------------------------------------
 
 -- Action none.
-_no_enter_t.none = true
-function _run_handler:none()
+no_enter_t.none = true
+function run_handler:none()
   print('none')
 end
 
 -- Action none is end handler.
-function _is_end_handler:none()
+function is_end_handler:none()
   return true
 end
 

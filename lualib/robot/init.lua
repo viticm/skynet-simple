@@ -16,6 +16,8 @@ local client = require 'robot.client'
 local md5 = require 'md5'
 local trace = require 'trace.c'
 local log = require 'log'
+local action = require 'robot.action'
+require 'robot.action.load' -- Load all actions.
 
 -- Local defines.
 local math = math
@@ -219,7 +221,7 @@ end
 -- @return bool
 function login_game(self)
   skynet.sleep(100)
-  local pid = self.ppid
+  local pid = self.pid
   local sid = self.sid
   local cfg = setting.get('world')
   local game_host = cfg.ip
@@ -239,4 +241,9 @@ function login_game(self)
     return self:login_game()
   end
   return r
+end
+
+-- Doing action with config.
+function do_action(self)
+
 end

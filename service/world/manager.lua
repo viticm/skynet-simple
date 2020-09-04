@@ -23,6 +23,7 @@ local log = require 'log'
 local setting = require 'setting'
 local server = require 'server'
 local e_error = require 'enum.error'
+local e_role_status = require 'enum.role_status'
 
 -- Data.
 -------------------------------------------------------------------------------
@@ -35,12 +36,8 @@ local _S = {}
 
 local c_online_max <const> = 3000
 
-local agent_pool = agent_pool or nil
-local sockets = sockets or {}
-local cache = cache or { 
-  online = 0
-}
-local onlines = onlines or {}
+local cache = login.cache
+local sockets = login.sockets
 
 -- Local functions.
 -------------------------------------------------------------------------------
@@ -58,8 +55,9 @@ local function gc()
         xpcall(skynet.call, traceback, addr, 'debug', "GC")
         skynet.error('gc called')
       end
-      -- local _ = agent_pool and agent_pool:gc()
+      -- local _ = login.agent_pool and login.agent_pool:gc()
     end
+    login.clear_timeout()
     skynet.sleep(100)
   until false
 end
@@ -117,7 +115,7 @@ function _S.close(gate, fd)
     cache.connection_count = cache.connection_count - 1
     local rid = socket.rid
     if rid then
-      local agent = onlines[rid]
+      local agent = agent_pool.get(rid)
       if agent then
         if not xpcall(skynet.call, traceback, agent, 'lua', 'afk', rid) then
           log:warn('call agent afk failed, rid %s', rid)
@@ -146,7 +144,7 @@ end
 
 -- Service init on open.
 function _M.init()
-  agent_pool = service_pool.new({ cap = 100, boot = 'world/agent' })
+  login.agent_pool = service_pool.new({ cap = 100, boot = 'world/agent' })
 end
 
 -- Open gate.
@@ -163,64 +161,9 @@ function _M.open(args)
   return true
 end
 
--- Client handler.
--------------------------------------------------------------------------------
-
-function _CH:auth_game(msg)
-  log:dump(msg, 'auth_game======================')
-  
-  if cache.online >= c_online_max then
-    self.kick = true
-    return { e = e_error.server_full, m = 'Server full' }
-  end
-
-  if not msg.version then
-    self.kick = true
-    log:warn('Unknown version uid[%s]', msg.uid)
-    return { e = e_error.version_invalid, m = 'Invalid version' }
-  end
-  local c_version = tonumber(msg.version)
-  local s_version = tonumber(setting.get('version'))
-  if c_version < s_version then
-    self.kick = true
-    log:warn('Invalid version uid[%s], client version[%s], server version[%s]',
-      msg.uid, c_version, s_version)
-    return
-  end
-
-  -- Other check add here.
-
-  local r = false
-  if self.auth_info then
-    r = auth_tool.check(self.auth_info, msg.token, msg.time)
-  end
-  if not r then
-    local c_name = 'login_' .. msg.auth
-    -- print('c_name===============', c_name)
-    local auth_info, err = cluster.call(c_name, '@auth_mgr', 'check_token', 
-      msg.uid, msg.token, msg.time)
-    print('auth_info, err', auth_info, err)
-    if auth_info then
-      self.auth_info = auth_info
-      log:info('Check token success, fd[%d] uid[%s](%s)', 
-        self.fd, msg.uid, msg.token)
-    else
-      log:info('Check token failure, fd[%d] uid[%s](%s) error[%s]',
-        self.fd, self.uid, msg.uid, msg.token, err)
-        return { e = e_error.auth_failed, m = 'auth failed' }
-    end
-  end
-
-  -- Passed an set.
-  self.uid = msg.uid
-  self.auth = msg.auth
-  self.sid = msg.sid
-
-  if not self.roles then
-
-  end
-
-  return {e = e_error.none}
+-- Get role agent.
+function _M.get_role_agent(rid, force)
+  return login.get_agent(rid, force)
 end
 
 return {

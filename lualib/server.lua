@@ -51,19 +51,47 @@ function is_self(self, node)
   return self.node == node
 end
 
+-- Get db query proxy.
+function db_query(self)
+  if not self.db_mgr then
+    self.db_mgr = skynet.queryservice('db_mgr')
+  end
+  return skynet.call(self.db_mgr, 'lua', 'query', self.db)
+end
+
+-- Get db query proxy list.
+function db_query_list(self)
+  if not self.db_mgr then
+    self.db_mgr = skynet.queryservice('db_mgr')
+  end
+  return skynet.call(self.db_mgr, 'lua', 'query_list', self.db)
+end
+
+-- Get db query unique proxy.
+-- @param string name
+function db_query_unique(self, name)
+  if not self.db_mgr then
+    self.db_mgr = skynet.queryservice('db_mgr')
+  end
+  return skynet.call(self.db_mgr, 'lua', 'query_unique', self.db, name)
+end
+
 -- Other.
 -------------------------------------------------------------------------------
 
 skynet.init(function()
   time_zone = util.time_zone()
   local server_type = setting.get('type')
+  app_id = setting.get('app_id')
   is_world = 'world' == server_type
   is_cross = 'cross' == server_type
   name = setting.get('server_name')
   local cluster = setting.get('cluster')
-  node = cluster.name
+  if cluster then
+    node = cluster.name
+  end
   
-  local dbs = setting.get('db')
+  local dbs = setting.get('db') or {}
   for k, v in ipairs(dbs) do
     if v.name ~= 'DB_LOG' then
       db = v.name

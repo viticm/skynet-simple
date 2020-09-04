@@ -12,4 +12,4 @@
 
 HOST="https://cyd2184.oicp.vip/download/game/skynet-simple/"
 
-. ./start.sh -t robot -h $HOST $@
+. ./start.sh -t robot -h $HOST -i 1 $@

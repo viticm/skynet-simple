@@ -1535,3 +1535,29 @@ end
 function time_zone()
   return 1
 end
+
+-- Query sql.
+-- @return table
+function query(proxy, ...)
+  local d
+  if 1 == select('#', ...) then
+    d = skynet.call(proxy, 'lua', 'query', ...)
+  else
+    d = skynet.call(proxy, 'lua', 'query', format(...))
+  end
+  if d.errno then
+    if 1146 == d.errno then
+      -- return query(proxy, ...)
+    else
+      error(format('%s[%s]', d.err, table.concat({...})))
+    end
+  end
+  return d
+end
+
+-- Get string length from utf8(CN word length is one).
+-- @return number
+function strlen(str)
+  local s, len = string.gsub(str, '[\228-\233][\128-\193][\128-\193]*', 'aa')
+  return string.len(s)
+end

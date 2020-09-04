@@ -20,6 +20,9 @@ local function init()
 
   service_common.start()
 
+  local db_mgr = skynet.uniqueservice('db_mgr')
+  skynet.name('db_mgr', db_mgr)
+
   local manager = skynet.uniqueservice('world/manager')
   skynet.name('.manager', manager)
 

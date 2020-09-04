@@ -15,4 +15,11 @@ return {
   server_full = 1,                        -- Server full.
   version_invalid = 2,                    -- Version invalid.
   auth_failed = 3,                        -- Auth fail.
+  invalid_operation = 4,                  -- Invalid operation.
+  invalid_arg = 5,                        -- Invalid arg.
+  name_exists = 6,                        -- Name exists.
+  max_limited = 7,                        -- Max limit.
+  name_size = 8,                          -- Name size error.
+  enter_fast = 9,                         -- Enter fast.
+  enter_repeat = 10,                      -- Enter repeat.
 }
