@@ -67,7 +67,7 @@ local function init()
   end
 end
 
-function _M.query(name)
+function _M.get_opt(name)
   local hash = _M.dbs[name]
   return hash and _M.cfg[hash[2]]
 end

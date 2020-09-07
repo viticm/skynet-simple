@@ -8,29 +8,42 @@
  - @date 2020/08/18 20:22
  - @uses The world login module(auth create and login).
          cn: 玩家登陆模块，主要负责玩家进入游戏前的逻辑处理
-             一个账号只支持一个角色在线，因为在重登时会下线当前登陆的角色，但
+             一个账号只支持一个角色在线，在重登时会下线当前登陆的角色，但
              不会从agent缓存中删除
 --]]
 
 local skynet = require 'skynet'
 local client = require 'client'
 local server = require 'server'
+local cluster = require 'skynet.cluster'
 local role_db = require 'world.role.db'
 local util = require 'util'
 local queue = require 'skynet.queue'
 local trace = require 'trace.c'
+local log = require 'log'
+local setting = require 'setting'
 local e_error = require 'enum.error'
+local e_role_status = require 'enum.role_status'
 
 -- Data.
 -------------------------------------------------------------------------------
+
+local pairs = pairs
+local ipairs = ipairs
+local table = table
+local tonumber = tonumber
+local print = print
+local next = next
+local xpcall = xpcall
 
 local _CH = client.handler()
 
 local traceback = trace.traceback
 
-local name_size_max <const> = 10          -- The role name length max.
+local name_size_max <const> = 15          -- The role name length max.
 local wait_kick_online <const> = true     -- Login wait kick when role online.
 local wait_kick_time <const> = 30         -- Login wait kick time(second).
+local c_online_max <const> = 3000
 
 local _M = {}
 package.loaded[...] = _M
@@ -70,6 +83,7 @@ local function get_uid_lock(uid)
     uid_locks[uid] = queue()
   end
   add_timeout_uid_lock(uid)
+  return uid_locks[uid]
 end
 
 -- Add rid lock timeout check to list.
@@ -83,9 +97,10 @@ end
 -- @return function
 local function get_rid_lock(rid)
   if not rid_locks[rid] then
-    rid_locks[uid] = queue()
+    rid_locks[rid] = queue()
   end
   add_timeout_rid_lock(rid)
+  return rid_locks[rid]
 end
 
 -- Clear timeout locks.
@@ -123,6 +138,9 @@ local function check_repeat_enter(uid)
   end
 end
 
+local enter_log <const> = 
+'world enter [agent:%08x] for fd[%d](rid: %s, rname: %s, sid: %d, sname: %s) online: %d'
+
 -- Enter to game world(to map).
 -- @param table self The socket table.
 -- @param table role The role object.
@@ -132,8 +150,10 @@ local function enter(self, role)
   local uid = role.uid
   local agent
   local lock = get_rid_lock(rid)
+  print('enter=========================', rid, 1)
   lock(function()
     check_repeat_enter(uid)
+  print('enter=========================', rid, 2)
 
     if self.login_time ~= enterings[rid] then
       return
@@ -143,27 +163,29 @@ local function enter(self, role)
     if not agent then
       return
     end
+  print('enter=========================', rid, 3, role.name)
 
     local fd = self.fd
-    local role = {}
     role.gate = self.gate
     role.addr = self.addr
     role.fd = fd
     role.uid = uid
-    role.sid = self.sid
+    role.sid = self.sid or server.id
     role.sname = server.name
     role.node = server.node
     role.auth = self.auth
     sockets[fd].rid = rid
 
     cache.online = cache.online + 1
+  print('enter=========================', rid, 4, agent)
 
-    log:info('world enter [agent:%08x] for '..
-    'fd[%d](rid: %d, rname: %s, sid: %d, sname: %s) online: %d', 
-      agent, rid, role.rname, role.sid, role.sname, cache.online)
+    print('enter_log', agent, role.fd, rid, role.name, role.sid, role.sname, cache.online)
+    log:info(enter_log, 
+      agent, role.fd, rid, role.name, role.sid, role.sname, cache.online)
+    print('enter=========================', rid, 5)
 
-    local r, err = 
-      xpcall(skynet.call, traceback, agent, 'lua', 'enter', rid, role)
+    local r, err = xpcall(skynet.call, traceback, agent, 'lua', 'enter', role)
+    print('enter=========================', rid, 6, r, err)
     if not r or not err then
       log:warn('try call agent enter failed, rid[%s], err: %s', rid, err)
       sockets[fd].rid = nil
@@ -173,6 +195,32 @@ local function enter(self, role)
     end
   end)
   return agent
+end
+
+-- Add to afk list.
+-- @param table info {
+-- rid,
+-- fd,
+-- agent,
+-- uid
+-- }
+local function _add_afk(info)
+  local uid = info.uid
+  if uid then -- Delete online.
+    onlines[uid] = nil
+  end
+  local rid = info.rid
+  if not rid then
+    log:warn('add_afk must have the rid')
+    return
+  end
+  if not afks[rid] then
+    info.time = util.time()
+    afks[rid] = info
+  end
+  if uid then
+    cache.online = cache.online - 1
+  end
 end
 
 -- API.
@@ -197,8 +245,12 @@ end
 function get_agent(rid, force)
   local agent = agent_pool:get(rid, true)
   if not agent then -- Auto login game.
+    local role = role_db.fetch_role(rid)
+    if not role then
+      log:warn('the role not exists rid[%s]', rid)
+      return
+    end
     agent = agent_pool:get(rid)
-    local role = { rid = rid }
     local r, err = 
       xpcall(skynet.call, traceback, agent, 'lua', 'enter', role)
     if not r or not err then
@@ -206,8 +258,15 @@ function get_agent(rid, force)
       agent = nil
       agent_pool:free(rid)
     end
+    -- System login to afk.
+    _add_afk({rid = rid})
   end
   return agent
+end
+
+-- Add role to afk.
+function add_afk(info)
+  _add_afk(info)
 end
 
 -- Message.
@@ -271,7 +330,7 @@ function _CH:auth_game(msg)
 
   print('====================================auth')
   if not self.roles then
-    self.db_proxy = server:db_query()
+    self.db_proxy = server:db_proxy()
     print('self.db_proxy', self.db_proxy)
     self.roles = role_db.fetch_roles(self.db_proxy, tonumber(self.uid))
   end
@@ -285,6 +344,8 @@ function _CH:auth_game(msg)
   log:dump(self.roles, 'current roles: ' .. self.uid)
 
   self.status = e_role_status.auth
+
+  self.authed = true
 
   return {e = e_error.none}
 end
@@ -306,18 +367,19 @@ function _CH:create_role(msg)
 
   -- Fliter.
 
-  msg.uid = self.uid
-  msg.sid = self.sid
+  msg.uid = tonumber(self.uid)
+  msg.sid = self.sid or server.id
   msg.platform = self.auth_info.platform or ''
+  msg.app_id = server.app_id
   local r = role_db.create_role(self.db_proxy, msg)
   if r ~= e_error.none then
-    log:warn('%s create role name[%s] failed! error[%d]')
+    log:warn('%s create role name[%s] failed! error[%d]', msg.name, r)
     return { e = r, m = 'create failed: ' .. r }
   end
 
   self.create_time = now
-  self.roles = role_db.fetch_roles(self.db_proxy, self)
-  self.status = role_status.create
+  self.roles = role_db.fetch_roles(self.db_proxy, self.uid)
+  self.status = e_role_status.create
 
   -- Auto enter.
   _CH.enter(self, msg)
@@ -343,13 +405,13 @@ function _CH:enter(msg)
   local rid = msg.rid
   local role = {}
   for _, info in ipairs(self.roles) do
-    if info.rid == rid then
-      role.uid = v.uid
-      role.id = v.id
-      role.name = v.name
-      role.forbid = v.forbid
+    if info.id == rid then
+      role.uid = info.uid
+      role.id = info.id
+      role.name = info.name
+      role.forbid_time = info.forbid_time
       role.base = {
-        job = v.job
+        job = info.job
       }
       break
     end
@@ -369,11 +431,29 @@ function _CH:enter(msg)
     return { e = e_error.enter_repeat, m = 'enter repeat' }
   end
 
+
   self.login_time = now
   enterings[rid] = now
 
   -- Get agent and try enter scene.
-  local lock = get_uid_lock(self.uid)
+  local uid = self.uid
+  local lock = get_uid_lock(uid)
   local agent = lock(enter, self, role)
+
+  enterings[rid] = nil
+
+  if agent then
+    afks[rid] = nil
+    self.status = e_role_status.online    
+    onlines[uid] = rid
+    log:info('%d enter success, fd[%d], rid[%s] rname[%s]', 
+      uid, self.fd, rid, role.name)
+    return { e = e_error.none, m = 'success' }
+  else
+    self.login_time = 0
+    log:warn('%d enter failed, fd[%d], rid[%s] rname[%s]',
+      uid, self.fd, rid, role.name)
+    return { e = e_error.enter_failed, m = 'enter failed' }
+  end
 
 end

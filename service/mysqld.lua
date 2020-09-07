@@ -94,7 +94,7 @@ function _M.query(sql, ...)
 end
 
 function _M.safe_query(sql, ...)
-  return result(error_check, sql, execute(conn.query, sql, ...))
+  return result(nil, sql, execute(conn.query, sql, ...))
 end
 
 function _M.stmt(sql, ...)

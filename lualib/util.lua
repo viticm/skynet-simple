@@ -10,6 +10,7 @@
 --]]
 
 local split_core = require 'split.c'
+local extend_core = require 'extend.c'
 
 local tostring = tostring
 local type = type
@@ -1560,4 +1561,8 @@ end
 function strlen(str)
   local s, len = string.gsub(str, '[\228-\233][\128-\193][\128-\193]*', 'aa')
   return string.len(s)
+end
+
+function quote_sql_str(str)
+  return extend_core.quote_sql_str(str)
 end

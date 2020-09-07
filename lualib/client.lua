@@ -88,6 +88,7 @@ local function handle_msg(self, name, response, f, args)
       end
     end
   else
+    print('r=============================', r)
     local _ = r and log:error(r)
     log:warn('handle_msg fd[%d] msg[%s] raise error', self.fd, name)
   end

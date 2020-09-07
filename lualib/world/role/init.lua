@@ -13,8 +13,12 @@ local skynet = require 'skynet'
 local socket = require 'skynet.socket'
 local client = require 'client'
 
+require 'world.role.load' -- Load all role script(mods)
+
 -- Enviroment.
 -------------------------------------------------------------------------------
+
+local setmetatable = setmetatable
 
 local _M = {}
 package.loaded[...] = _M
@@ -33,7 +37,7 @@ handler = handler or {}
 -- @param table data The role data.
 function new(self, data)
   local t = {
-    id = data.rid,
+    id = data.id,
     fd = data.fd,
     db_loaded = nil,
     addr = data.addr,

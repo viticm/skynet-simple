@@ -22,4 +22,5 @@ return {
   name_size = 8,                          -- Name size error.
   enter_fast = 9,                         -- Enter fast.
   enter_repeat = 10,                      -- Enter repeat.
+  enter_failed = 11,                      -- Enter failed.
 }

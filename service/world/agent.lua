@@ -27,6 +27,7 @@ return {
   command = _M,
   dispatch = {
     lua = function(session, source, cmd, rid, ...)
+      print("on lua msg=========================")
       role_mgr.on_lua_msg(session, cmd, rid, ...)
     end,
     client = function(fd, address, msg, sz)

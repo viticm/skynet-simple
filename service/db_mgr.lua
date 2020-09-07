@@ -30,7 +30,7 @@ local _M = {}
 
 local function start(name)
   if DB[name] then return end
-  local opt = assert(skynet.call(db_init, 'lua', 'query', name))
+  local opt = assert(skynet.call(db_init, 'lua', 'get_opt', name))
   local r = {}
   for i = 1, math.max(opt.count, 1) do
     local addr = skynet.newservice('mysqld', string.format('[%s.d]', name, i))
@@ -59,11 +59,11 @@ end
 -- API.
 -------------------------------------------------------------------------------
 
-function _M.query(name)
+function _M.proxy(name)
   local list = DB[name]
   if not list then
     LOCK(start, name)
-    return _M.query(name)
+    return _M.proxy(name)
   end
   local index = INDEX[name] or 1
   index = index % (#list)
@@ -73,20 +73,20 @@ function _M.query(name)
   return list[index]
 end
 
-function _M.query_list(name)
+function _M.proxy_list(name)
   local list = DB[name]
   if not list then
     LOCK(start, name)
-    return _M.query_list(name)
+    return _M.proxy_list(name)
   end
   return list
 end
 
-function _M.query_unique(name, flag)
+function _M.proxy_unique(name, flag)
   local str = string.format('%s@%s', name, flag)
   local r = UNIQUE[str]
   if not r then
-    r = _M.query(name)
+    r = _M.proxy(name)
     if not UNIQUE[name] then
       UNIQUE[str] = r
     else

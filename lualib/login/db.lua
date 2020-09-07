@@ -66,7 +66,7 @@ end
 
 skynet.init(function() 
   local db_mgr = skynet.uniqueservice('db_mgr')
-  proxy = assert(skynet.call(db_mgr, 'lua', 'query', 'DB_LOGIN'))
+  proxy = assert(skynet.call(db_mgr, 'lua', 'proxy', 'DB_LOGIN'))
 end)
 
 return function(...)

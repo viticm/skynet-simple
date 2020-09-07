@@ -50,9 +50,9 @@ function new(conf)
     max = conf.max or 99,
     cap = conf.cap or 999,
     def = conf.def or 5,
-    hash = {},  -- The hash key list.
-    list = {},  -- The service list {addr, count}.
-    free = 1,   -- The free service index, must be the min index.
+    hash = {},    -- The hash key list.
+    list = {},    -- The service list {addr, count}.
+    usable = 1,   -- The usable service index, must be the min index.
     boot = conf.boot,
   }
   for i = 1, t.def do
@@ -75,23 +75,23 @@ function get(self, hid, not_alloc)
     return s and s.addr
   end
   if not_alloc then return end
-  if self.free then
-    local s = list[self.free]
+  if self.usable then
+    local s = list[self.usable]
     if not s then return end
-    hash[hid] = self.free
+    hash[hid] = self.usable
     s.count = s.count + 1
-    if s.count >= self.cap and self.free < #list then -- Find next free index.
-      local find_free
-      for i = self.free + 1, #self.list do
+    if s.count >= self.cap and self.usable < #list then -- Find next usable index.
+      local find_usable
+      for i = self.usable + 1, #self.list do
         s = list[i]
         if s.count < self.cap then
-          find_free = i
+          find_usable = i
           break
         end
       end
-      self.free = find_free
+      self.usable = find_usable
     end
-    return list[self.free].addr
+    return list[self.usable].addr
   else
     if #list >= self.max then
       return
@@ -128,21 +128,21 @@ function reload(self, filename)
   end
 end
 
--- Garbage collect(keep one alive full free service when service more than def).
+-- Garbage collect(keep one alive full usable service when service more than def).
 function gc(self)
   local count = #self.list
-  local frees = {}
+  local usables = {}
   for i = count, self.def + 1, -1 do
     local info = self.list[i]
     if 0 == info.count then
-      table.insert(frees, i)
+      table.insert(usables, i)
     else
       break
     end
   end
-  if #frees <= 1 then return end
-  for i = 1, i < #frees -1 do
-    local index = frees[i]
+  if #usables <= 1 then return end
+  for i = 1, i < #usables -1 do
+    local index = usables[i]
     local info = self.list[index]
     log:info('gc index %d', index)
     skynet.send(info.addr, 'lua', 'stop')
@@ -160,6 +160,7 @@ end
 -- Free an service use count.
 -- @param number index The hash id.
 function free(self, hid)
+  local hash = self.hash
   local index = hash[hid]
   if not index then return end
   local info = self.list[index]

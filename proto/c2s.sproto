@@ -96,3 +96,13 @@ create_role 7 {
     create_time       2 : integer
   }
 }
+
+# Enter role
+enter 8 {
+  request {
+    rid               0 : string
+  }
+  response {
+    e                 0 : integer
+  }
+}

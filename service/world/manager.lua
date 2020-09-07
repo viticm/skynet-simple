@@ -34,8 +34,6 @@ local _CH = client.handler()
 local _M = {}
 local _S = {}
 
-local c_online_max <const> = 3000
-
 local cache = login.cache
 local sockets = login.sockets
 
@@ -115,7 +113,7 @@ function _S.close(gate, fd)
     cache.connection_count = cache.connection_count - 1
     local rid = socket.rid
     if rid then
-      local agent = agent_pool.get(rid)
+      local agent = login.agent_pool:get(rid)
       if agent then
         if not xpcall(skynet.call, traceback, agent, 'lua', 'afk', rid) then
           log:warn('call agent afk failed, rid %s', rid)

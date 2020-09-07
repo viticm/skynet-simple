@@ -1,3 +1,0 @@
-Field='id'	Type='varchar(50)'	Null='NO'	Key='PRI'	Default='NULL'	Extra=''
-Field='val'	Type='mediumblob'	Null='YES'	Key=''	Default='NULL'	Extra=''
-Field='ver'	Type='int(11)'	Null='YES'	Key=''	Default='NULL'	Extra=''

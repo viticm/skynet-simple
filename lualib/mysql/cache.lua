@@ -11,10 +11,17 @@
 
 local skynet = require 'skynet'
 local lock = require 'skynet.queue'
-local mysqlaux = require 'skynet.mysqlaux.c'
+local util = require 'util'
+local log = require 'log'
 
 -- Enviroment.
 -------------------------------------------------------------------------------
+
+local pairs = pairs
+local setmetatable = setmetatable
+local assert = assert
+local format = string.format
+local print = print
 
 local _M = {}
 package.loaded[...] = _M
@@ -32,12 +39,12 @@ CREATE TABLE IF NOT EXISTS `%s%s` (
   `id` varchar(50) NOT NULL,
   `val` mediumblob NULL,
   `ver` int(11) NULL DEFAULT 0,
-  PRIMARY KEY ("id")
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 ]]
 
 local select_sql <const> = 'select val, ver from %s%s where id = "%s"'
-local insert_sql <const> = 'insert ignore %s%s (id, val) values ("%s", "%s")'
+local insert_sql <const> = 'insert ignore %s%s (id, val) values ("%s", %s)'
 local update_sql <const> = 'update %s%s val = "%s", ver = "%s" where id = "%s"'
 local check_interval <const> = 1000 -- (base 10ms)
 
@@ -47,7 +54,7 @@ data = data or {} -- All cache table.
 -------------------------------------------------------------------------------
 
 local function pack(data)
-  return mysqlaux.quote_sql_str(skynet.packstring(data))
+  return util.quote_sql_str(skynet.packstring(data))
 end
 
 local function unpack(data)
@@ -63,12 +70,13 @@ local function query(id, proxy, sql)
 end
 
 local function load_record(id, key)
-  local d = data[id]
-  local proxy = data.proxy
-  local prefix = data.prefix
+  local info = data[id]
+  local proxy = info.proxy
+  local prefix = info.prefix
 
   local d = skynet.call(proxy, 'lua', 'safe_query', 
     format(select_sql, prefix, key, id))
+  print('#d==================', #d, pack({}), skynet.packstring({}))
   if d.errno then
     if 1146 == d.errno then
       query(id, proxy, format(build_sql, prefix, key))
@@ -77,15 +85,16 @@ local function load_record(id, key)
       skynet.error(d.err)
     end
   elseif 1 == #d then
+    log:dump(d, '===========================')
     d = d[1]
-    d[1] = unpack(d[1])
+    d.val = unpack(d.val)
   elseif 0 == #d then
     query(id, proxy, format(insert_sql, prefix, key, id, pack({})))
     return load_record(id, key)
   else
     assert(false)
   end
-  return d
+  return d and d.val or nil
 end
 
 local function save_record(id, key, val, ver)
@@ -100,6 +109,7 @@ local function load_one(id, key)
   if not d then
     data[id].save[key] = load_record(id, key)
     d = data[id].save[key]
+    print('d======================', d)
   end
   return d
 end
@@ -157,11 +167,11 @@ end
 
 function load(id, key, ...)
   local d = data[id].save[key]
-  if d then
-    return d[1]
+  if not d then
+    data[id].queue[key](load_one, id, key)
+    d = data[id].save[key]
   end
-  data[id].queue[key](load_one, id, key)
-  return data[id].save[key][1]
+  return d
 end
 
 function dirty(id, key)
@@ -172,7 +182,7 @@ function dirty(id, key)
 end
 
 function save(id)
-  data[id].save_lock(save, id)
+  data[id].save_lock(save_one, id)
 end
 
 function unload(id)
@@ -180,7 +190,7 @@ function unload(id)
     save(id)
     local dirty
     for _, d in pairs(data[id].save) do
-      if v.dirty then
+      if d.dirty then
         dirty = true
         break
       end

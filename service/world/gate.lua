@@ -123,6 +123,7 @@ function CMD.forward(source, fd, client, address)
 	c.agent = address or source
 	forwarding[c.agent] = c
 	gateserver.openclient(fd)
+  return c
 end
 
 function CMD.accept(source, fd)

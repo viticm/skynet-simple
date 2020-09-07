@@ -1,24 +1,24 @@
 CREATE PROCEDURE `sp_create_player`(IN `_uid` bigint, IN `_app_id` INT, IN `_uname` varchar(64), IN `_name` varchar(32), IN `_job` INT(11),IN `_sex` INT(11), IN `_create_time` int unsigned,IN `_platform` INT(11), IN `_sdk` varchar(32))
 begin
-	declare _tmpplayerid  VARCHAR(40);
+	declare _rid  VARCHAR(40);
 	declare _count int default 0;
 	declare _count1 int default 1;
-	if exists ( select 1 from t_player where name=_name and deletetime=0 )then
+	if exists ( select 1 from t_player where name=_name and delete_time=0 )then
 		#角色名已存在
-		select 2,_app_id,"";
+		select 2 as err,_app_id,"";
 	else
-		select count(id) into _count from t_player where uid=_uid and app_id=_app_id and deletetime=0;
+		select count(id) into _count from t_player where uid=_uid and app_id=_app_id and delete_time=0;
 		select max(create_no) into _count1 from t_player where uid=_uid and app_id=_app_id;
 		if(ISNULL(_count1))then
 			set _count1=0;
 		end if;
 		if(_count>=3)then
 			#角色数量已达上限
-			select 3,_app_id,"";
+			select 3 as err,_app_id,"";
 		ELSE
-			set _tmpplayerid=CONCAT(_app_id,"-",_uid,"-",_count1+1);
-			insert into t_player (uid,app_id,uname,id,name,level,job,sex,create_no,create_time,color,platform,sdk) values (_uid,_app_id,_uname,_tmpplayerid,_name,1,_job,_sex,_count1+1,_create_time,3,_platform,_sdk);
-			select 1,_app_id,_tmpplayerid;
+			set _rid=CONCAT(_app_id,"-",_uid,"-",_count1+1);
+			insert into t_player (uid,app_id,uname,id,name,level,job,sex,create_no,create_time,color,platform,sdk) values (_uid,_app_id,_uname,_rid,_name,1,_job,_sex,_count1+1,_create_time,3,_platform,_sdk);
+			select 1 as err,_app_id,_rid;
 		end if;
 	end if;
 end

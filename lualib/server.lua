@@ -16,6 +16,7 @@ local setting = require 'setting'
 
 local print = print
 local ipairs = ipairs
+local tonumber = tonumber
 
 -- Data.
 -------------------------------------------------------------------------------
@@ -52,28 +53,28 @@ function is_self(self, node)
 end
 
 -- Get db query proxy.
-function db_query(self)
+function db_proxy(self)
   if not self.db_mgr then
     self.db_mgr = skynet.queryservice('db_mgr')
   end
-  return skynet.call(self.db_mgr, 'lua', 'query', self.db)
+  return skynet.call(self.db_mgr, 'lua', 'proxy', self.db)
 end
 
 -- Get db query proxy list.
-function db_query_list(self)
+function db_proxy_list(self)
   if not self.db_mgr then
     self.db_mgr = skynet.queryservice('db_mgr')
   end
-  return skynet.call(self.db_mgr, 'lua', 'query_list', self.db)
+  return skynet.call(self.db_mgr, 'lua', 'proxy_list', self.db)
 end
 
 -- Get db query unique proxy.
 -- @param string name
-function db_query_unique(self, name)
+function db_proxy_unique(self, name)
   if not self.db_mgr then
     self.db_mgr = skynet.queryservice('db_mgr')
   end
-  return skynet.call(self.db_mgr, 'lua', 'query_unique', self.db, name)
+  return skynet.call(self.db_mgr, 'lua', 'proxy_unique', self.db, name)
 end
 
 -- Other.
@@ -85,6 +86,7 @@ skynet.init(function()
   app_id = setting.get('app_id')
   is_world = 'world' == server_type
   is_cross = 'cross' == server_type
+  id = tonumber(skynet.getenv('svr_id'))
   name = setting.get('server_name')
   local cluster = setting.get('cluster')
   if cluster then

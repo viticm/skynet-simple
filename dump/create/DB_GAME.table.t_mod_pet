@@ -1,6 +1,0 @@
-CREATE TABLE `t_mod_pet` (
-  `id` varchar(50) NOT NULL,
-  `val` mediumblob,
-  `ver` int(11) DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8

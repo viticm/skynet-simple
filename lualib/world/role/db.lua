@@ -23,13 +23,14 @@ local format = string.format
 local table = table
 local error = error
 local ipairs = ipairs
+local print = print
 
 local build_player_sql <const> = [[
 CREATE TABLE `t_player` (
   `uid` bigint(20) unsigned NOT NULL DEFAULT '0',
   `app_id` int(11) DEFAULT NULL,
   `uname` varchar(64) NOT NULL DEFAULT '',
-  `createno` int(11) NOT NULL DEFAULT '0',
+  `create_no` int(11) NOT NULL DEFAULT '0',
   `create_time` int(10) unsigned NOT NULL DEFAULT '0',
   `id` varchar(30) NOT NULL,
   `name` varchar(32) NOT NULL,
@@ -57,12 +58,17 @@ CREATE TABLE `t_player` (
 ]]
 
 local roles_sql <const> = [[
-select id, name, job, level
-from t_player where user_id = %d
+select id, name, job, level, forbid_time
+from t_player where uid = %d
 ]]
 
 local create_sql <const> = [[
 call sp_create_player(%d, %d, "%s", "%s", %d, %d, %d, "%s", "%s")
+]]
+
+local role_sql <const> = [[
+select id, name, job, level, forbid_time
+from t_player where id = %d
 ]]
 
 local create_errors = {
@@ -117,7 +123,7 @@ end
 
 -- Update game player.
 local function update_game_player(role, way)
-  local now = util.now()
+  local now = util.time()
   local sql
   if 1 == way then -- Login
     sql = format('update t_player set last = %d', now)
@@ -140,14 +146,27 @@ function fetch_roles(proxy, uid)
   local r = {}
   for k, v in ipairs(d) do
     table.insert(r, {
-      id = v.player_id,
-      name = v.player_name,
-      job = v.player_job,
-      level = v.player_level,
-      forbid = v.forbidtime,
+      id = v.id,
+      name = v.name,
+      job = v.job,
+      level = v.level,
+      forbid_time = v.forbid_time,
     })
   end
   log:dump(d, 'd========================')
+  return r
+end
+
+-- Fetch role by rid.
+-- @param number proxy The database proxy.
+-- @param string rid Role id.
+-- @return mixed
+function fetch_role(proxy, rid)
+  local d = query(proxy, role_sql, rid)
+  local r
+  if d[1] and next(d[1]) then
+    r = d[1]
+  end
   return r
 end
 
@@ -165,24 +184,26 @@ function create_role(proxy, info)
   if sex ~= 0 and sex ~= 1 then
     return e_error.invalid_arg
   end
-  if util.strlen(info.name) > 10 then
+  if util.strlen(info.name) > 20 then
     return e_error.invalid_arg
   end
 
   local time = util.time()
 
-  local sql = format(create_sql, info.uid, info.sid, 
-    info.uname, info.app_id, info.name, info.job, info.sex, time, 
+  log:dump(info, 'create_role info==============')
+  local sql = format(create_sql, info.uid, info.app_id, 
+    info.uname, info.name, info.job, info.sex, time, 
     info.platform or '', info.sdk or info.platform or '')
   log:info('create role: ' .. sql)
   local d = query(proxy, sql)
   local r = d[1][1]
-  local err, app_id, rid = table.unpack(r)
+  local err, app_id, rid = r.err, r._app_id, r._rid
   if 1 == err then
     info.create_time = time
     info.app_id = app_id
     info.rid = rid
   end
+  print('err============================', err)
   return create_errors[err]
 end
 

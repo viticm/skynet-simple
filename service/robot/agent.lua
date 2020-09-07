@@ -31,7 +31,14 @@ local function loop()
   local r = obj:login_account()
   print('login_account:', r)
   if r then
-    obj:login_game()
+    if obj:login_game() then
+      if not obj.roles or not next(obj.roles) then
+        r = obj:create_role()
+      end
+      if r then
+        obj:enter_game()
+      end
+    end
   end
 end
 

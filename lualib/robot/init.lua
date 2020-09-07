@@ -24,6 +24,7 @@ local math = math
 local xpcall = xpcall
 local pcall = pcall
 local print = print
+local next = next
 
 -- Data.
 -------------------------------------------------------------------------------
@@ -180,12 +181,39 @@ end
 
 -- Create role to world.
 function create_role(self)
-
+  local account = self.account
+  local index = #(self.roles or {}) + 1
+  local name = 'robot_' .. account.uid .. '_' .. index
+  local job = math.random(1, 3)
+  local sex = math.random(0, 1)
+  local msg = {name = name, job = job, sex = sex}
+  local r = client.request(self, 500, 'create_role', msg)
+  if 0 == r.e then
+    log:info('%d create role[%s] success', account.uid, name)
+    return true
+  else
+    log:warn('%d create role[%s] failed, err: %d', account.uid, name, r.e)
+    return false
+  end
 end
 
 -- Enter game.
 function enter_game(self)
-
+  local account = self.account
+  if not self.roles or not next(self.roles) then
+    log:warn('%d enter game have no role', account.uid)
+    return false
+  end
+  local role = self.roles[1]
+  local r = client.request(self, 1000, 'enter', {rid = role.id})
+  local name = role.name
+   if 0 == r.e then
+    log:info('%d enter game role[%s] success', account.uid, name)
+    return true
+  else
+    log:warn('%d enter game role[%s] failed, err: %d', account.uid, name, r.e)
+    return false
+  end
 end
 
 -- Auth account and enter game(not role then create).
