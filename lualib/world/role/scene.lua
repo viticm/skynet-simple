@@ -6,8 +6,12 @@
  - @license
  - @user viticm( viticm.ti@gmail.com )
  - @date 2020/09/04 19:23
- - @uses your description
+ - @uses The scene module.
 --]]
+
+local skynet = require 'skynet'
+local cache = require 'mysql.cache'
+local e_error = require 'enum.error'
 
 -- Enviroment.
 -------------------------------------------------------------------------------
@@ -28,4 +32,19 @@ end
 
 function enter_map(self)
   print('scene enter==============================', self.id)
+  local base = self.base
+  local map = base.map or {}
+  local id = map.id or 1
+  local line = map.line
+  local x, y = map.x, map.y
+  local args = { x = x, y = y, id = self.id }
+  local r, addr, line = skynet.call('.map_mgr', 'lua', 'enter', id, line, args)
+  if e_error.none ==  r then
+    base.map = base.map or {}
+    base.map.id = id
+    base.map.line = line
+    cache.dirty(self.id, 'base')
+    print('enter_map success11111111111111111111111111111111')
+  end
+  return r
 end

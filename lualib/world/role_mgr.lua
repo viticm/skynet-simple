@@ -20,6 +20,7 @@ local queue = require 'skynet.queue'
 local trace = require 'trace.c'
 local util = require 'util'
 local mod = require 'world.role.mod'
+local e_error = require 'enum.error'
 
 -- Data.
 -------------------------------------------------------------------------------
@@ -163,7 +164,7 @@ function _RH:enter()
   print('role enter=======================================', 1)
   local obj = hash[rid]
   if not obj then
-    obj = role:new(self)
+    obj = role.new(self)
   end
   local fd = self.fd
   if fd then

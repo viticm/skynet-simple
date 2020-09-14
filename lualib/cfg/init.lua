@@ -9,7 +9,7 @@
  - @uses The config file.
 --]]
 
-local sharetable = require 'skynet.sharetable'
+local cfg_loader = require 'cfg.loader'
 
 -- Data.
 -------------------------------------------------------------------------------
@@ -52,7 +52,7 @@ end
 -- @return mixed
 function get(name)
   if not _data[name] then
-    _data[name] = sharetable.query(name)
+    _data[name] = cfg_loader.get(name)
   end
   return _data[name]
 end

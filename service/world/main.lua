@@ -11,7 +11,7 @@
 
 local skynet = require 'skynet'
 local skynet_manager = require 'skynet.manager'
-local cfg = require 'cfg.loader'
+local cfg_loader = require 'cfg.loader'
 local setting = require 'setting'
 local service_common = require 'service_common'
 
@@ -20,11 +20,18 @@ local function init()
 
   service_common.start()
 
+  local stype = skynet.getenv('svr_type')
+  cfg_loader.loadall(stype)
+
   local db_mgr = skynet.uniqueservice('db_mgr')
   skynet.name('db_mgr', db_mgr)
 
+
   local manager = skynet.uniqueservice('world/manager')
   skynet.name('.manager', manager)
+
+  local map_mgr = skynet.uniqueservice('map_mgr')
+  skynet.name('.map_mgr', map_mgr)
 
   skynet.call(manager, 'lua', 'open', {
     address = setting.get('ip') or '0.0.0.0',

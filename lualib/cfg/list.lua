@@ -3,7 +3,7 @@ return {
 
   },
   ['world'] = {
-
+    ['map'] = 1,
   },
   ['robot'] = {
 

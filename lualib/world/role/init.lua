@@ -35,7 +35,7 @@ handler = handler or {}
 
 -- Create new role.
 -- @param table data The role data.
-function new(self, data)
+function new(data)
   local t = {
     id = data.id,
     fd = data.fd,
@@ -46,7 +46,7 @@ function new(self, data)
     auth = data.auth,
     platform = data.platform
   }
-  return setmetatable(t, { __index = self })
+  return setmetatable(t, { __index = _M })
 end
 
 -- Init.

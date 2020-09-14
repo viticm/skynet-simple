@@ -40,25 +40,30 @@ _VERSION = "0.0.1"
 
 -- New a pool.
 -- @param table conf {
--- max = number,  -- The service max count.
--- cap = number,  -- One service cap.
--- def = number,  -- The service default count.
--- boot = string, -- The service boot startup file name.
+-- max = number,      -- The service max count.
+-- cap = number,      -- One service cap.
+-- def = number,      -- The service default count.
+-- boot = string,     -- The service boot startup file name.
+-- boot_args = mixed, -- The service boot startup extend args.
 -- }
 function new(conf)
   local t = {
     max = conf.max or 99,
     cap = conf.cap or 999,
     def = conf.def or 5,
-    hash = {},    -- The hash key list.
-    list = {},    -- The service list {addr, count}.
-    usable = 1,   -- The usable service index, must be the min index.
+    hash = {},              -- The hash key list[hid] = {index}.
+    list = {},              -- The service list {addr, count}.
+    usable = nil,             -- The usable service index, must be the min index.
     boot = conf.boot,
+    boot_arg = conf.boot_arg or -1
   }
   for i = 1, t.def do
-    local addr = skynet.newservice(t.boot)
+    local addr = skynet.newservice(t.boot, t.boot_arg, i)
     local s = { addr = addr, count = 0 }
     table.insert(t.list, s)
+  end
+  if #t.list > 0 then
+    t.usable = 1
   end
   return setmetatable(t, { __index = _M })
 end
@@ -66,20 +71,26 @@ end
 -- Get a service addr by hash id.
 -- @param mixed hid Hash id.
 -- @param mixed not_alloc Not alloc new when hasn't alloc.
--- @return mixed
+-- @return addr?, index?, sub?
 function get(self, hid, not_alloc)
   local hash = self.hash
   local list = self.list
   if hash[hid] then
-    local s = list[hash[hid]]
-    return s and s.addr
+    local info = hash[hid]
+    local index, sub = info.index, info.sub
+    local s = list[index]
+    return s and s.addr, index, sub
   end
   if not_alloc then return end
   if self.usable then
     local s = list[self.usable]
     if not s then return end
-    hash[hid] = self.usable
+    local addr = list[self.usable].addr
+    local index = self.usable
+    local sub = s.count
+    hash[hid] = { index = index, sub = sub }
     s.count = s.count + 1
+    local sub = self.count
     if s.count >= self.cap and self.usable < #list then -- Find next usable index.
       local find_usable
       for i = self.usable + 1, #self.list do
@@ -91,18 +102,28 @@ function get(self, hid, not_alloc)
       end
       self.usable = find_usable
     end
-    return list[self.usable].addr
+    return addr, index, sub
   else
+    print('get1====================', hid, #list, self.max)
     if #list >= self.max then
       return
     end
-    local addr = skynet.newservice(self.boot)
+    print('get====================', hid, #list, self.max)
+    local addr = skynet.newservice(self.boot, self.boot_arg, #list + 1)
     local s = { addr = addr, count = 0 }
     table.insert(list, s)
-    hash[hid] = #list
+    local index = #list
+    hash[hid] = { index = index, sub = 1}
     s.count = 1
-    return hash[hid]
+    return addr, index, 1
   end
+end
+
+-- Get service hash.
+-- @param mixed hid The hash id.
+-- @return mixed
+function get_hash(self, hid)
+  return self.hash[hid]
 end
 
 -- Foreach all service item.
@@ -161,8 +182,9 @@ end
 -- @param number index The hash id.
 function free(self, hid)
   local hash = self.hash
-  local index = hash[hid]
-  if not index then return end
+  local h = hash[hid]
+  if not h then return end
+  local index = h.index
   local info = self.list[index]
   if info then
     info.count = info.count - 1

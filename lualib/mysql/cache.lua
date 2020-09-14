@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS `%s%s` (
 
 local select_sql <const> = 'select val, ver from %s%s where id = "%s"'
 local insert_sql <const> = 'insert ignore %s%s (id, val) values ("%s", %s)'
-local update_sql <const> = 'update %s%s val = "%s", ver = "%s" where id = "%s"'
+local update_sql <const> = 'update %s%s set val = %s, ver = %s where id = "%s"'
 local check_interval <const> = 1000 -- (base 10ms)
 
 data = data or {} -- All cache table.
@@ -94,7 +94,7 @@ local function load_record(id, key)
   else
     assert(false)
   end
-  return d and d.val or nil
+  return d
 end
 
 local function save_record(id, key, val, ver)
@@ -120,9 +120,9 @@ local function save_one(id)
   end
   for key, d in pairs(data[id].save) do
     if d.dirty then
-      local val, ver = d[1], d[2]
+      local val, ver = d.val, d.ver
       save_record(id, key, val, ver)
-      if d[2] == ver then
+      if d.ver == ver then
         d.dirty = nil
       end
     end
@@ -171,13 +171,14 @@ function load(id, key, ...)
     data[id].queue[key](load_one, id, key)
     d = data[id].save[key]
   end
-  return d
+  return d and d.val or nil
 end
 
 function dirty(id, key)
   data[id].dirty = true
   local d = data[id].save[key]
-  d[2] = d[2] + 1
+  log:dump(d, '==============dirty')
+  d.ver = d.ver + 1
   d.dirty = true
 end
 

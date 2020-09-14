@@ -12,6 +12,7 @@
 local log = require 'log'
 local lfs = require 'lfs'
 local cfg_list = require 'cfg.list'
+local sharetable = require 'skynet.sharetable'
 
 local tostring = tostring
 local type = type
@@ -43,7 +44,7 @@ _VERSION = "1.20.07.18"
 
 local function set_cfg(method, data)
   for _, t in pairs(data) do
-    log(' -- Load config %s', t)
+    log('Load config %s', t)
     method(t)
   end
 end
@@ -52,7 +53,7 @@ local function load_list(list)
   local r = {}
   local function load(root)
     for f in lfs.dir(root) do
-      if string.sub(f, 1, 1) ~- '.' then
+      if string.sub(f, 1, 1) ~= '.' then
         local path = root .. '/' .. f
         local attr = lfs.attributes(path)
         if 'directory' == attr.mode then
@@ -61,8 +62,9 @@ local function load_list(list)
           local pos = string.find(f, '.lua$')
           if pos then
             local name = string.sub(f, 1, pos - 1)
+            print('name=====================', name)
             assert(#name > 0)
-            assert(r[name], string.format('dumplicate filename %s', path))
+            assert(not r[name], string.format('dumplicate filename %s', path))
             if list then
               r[name] = list[name] and path
             else
@@ -73,6 +75,8 @@ local function load_list(list)
       end
     end -- for
   end
+  load('cfg')
+  return r
 end
 
 local function load_map_obj(list)
@@ -98,12 +102,19 @@ function loadall(stype)
   end
   set_cfg(sharetable.loadfile, load_list(list))
   -- Load map
+
+  print('map config', sharetable.query('cfg/map.lua'), '--map')
+  print('map config', sharetable.query('test'), '--test')
 end
 
 function reload(name)
 
 end
 
-function get(name)
-
+function get(name, raw)
+  local filename = name
+  if not raw then
+    filename = string.format('cfg/%s.lua', name)
+  end
+  return sharetable.query(filename)
 end

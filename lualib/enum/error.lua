@@ -23,4 +23,8 @@ return {
   enter_fast = 9,                         -- Enter fast.
   enter_repeat = 10,                      -- Enter repeat.
   enter_failed = 11,                      -- Enter failed.
+  map_full = 12,                          -- The map is full.
+  id_invalid = 13,                        -- ID invalid.
+  map_line_invalid = 14,                  -- Map line invalid.
+  map_get_failed = 15,                    -- Get map object failed.
 }

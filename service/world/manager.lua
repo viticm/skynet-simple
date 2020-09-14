@@ -22,6 +22,7 @@ local service_pool = require 'service_pool'
 local log = require 'log'
 local setting = require 'setting'
 local server = require 'server'
+local sharetable = require 'skynet.sharetable'
 local e_error = require 'enum.error'
 local e_role_status = require 'enum.role_status'
 

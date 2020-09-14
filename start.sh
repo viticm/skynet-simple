@@ -86,6 +86,7 @@ echo "tail "$LOGPATH"/log/"$tp$SVR_ID""-$day"-msg.log"
 
 flagfile=$ROOT"/bin/"$SVR_NAME".bootflag"
 echo ""> $flagfile
+# gdb --args $ROOT/skynet/skynet $ROOT/bin/config.$SVR_TYPE
 $ROOT/skynet/skynet $ROOT/bin/config.$SVR_TYPE
 
 function start_status(){
@@ -108,4 +109,4 @@ function start_status(){
     [ $i -ge $_maxtime ] && echo "boot timeout!!!" && return 1
   done
 }
-[2 -eq $OP_TYPE] && sleep 2 && start_status
+[ 2 -eq $OP_TYPE ] && sleep 2 && start_status

@@ -11,6 +11,7 @@
 
 local split_core = require 'split.c'
 local extend_core = require 'extend.c'
+local uniq = require 'uniq.c'
 
 local tostring = tostring
 local type = type
@@ -1565,4 +1566,8 @@ end
 
 function quote_sql_str(str)
   return extend_core.quote_sql_str(str)
+end
+
+function uniq_id()
+  return uniq.id(1)
 end

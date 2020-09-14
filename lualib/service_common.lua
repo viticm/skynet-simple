@@ -14,6 +14,7 @@ local sharetable = require 'skynet.sharetable'
 local setting = require 'setting'
 local setting_loader = require 'setting.loader'
 local log = require 'log'
+local uniq = require 'uniq.c'
 
 local _M = {}
 
@@ -22,6 +23,8 @@ function _M.start()
   -- Setting.
   local def_setting = dofile('bin/setting/default.lua')
   setting.init(def_setting)
+
+  -- sharetable.query('') -- Start service.
   
   -- Proto load.
   local proto_loader = skynet.uniqueservice('proto_loader')
@@ -49,6 +52,8 @@ function _M.start()
   log:info('the info log')
   log:debug('the debug log')
   log:dump({'ccc', {a = 1}, 3}, "the test table")
+
+  uniq.init(sid)
 
 end
 
