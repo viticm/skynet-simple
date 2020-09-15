@@ -44,6 +44,12 @@ static int gettimeofday(struct timeval *tp, void *tzp)
 #ifdef __cplusplus
 }
 #endif /*__cplusplus*/
+#else
+
+#ifndef PTHREAD_MUTEX_RECURSIVE
+#define PTHREAD_MUTEX_RECURSIVE PTHREAD_MUTEX_RECURSIVE_NP
+#endif
+
 #endif /*WIN32*/
 
 /* 日志开关 */
@@ -2888,7 +2894,7 @@ irangeite *irangeitemakefrom(void *p) {
 /* istring                                                   */
 /*************************************************************/
 
-ideclarestring(kstring_zero, "");
+// ideclarestring(kstring_zero, ""); // Note by leafly, declare will be const.
 
 /*Make a string by c-style string */
 istring istringmake(const char* s) {
@@ -3142,6 +3148,7 @@ static void _istringfind_suffix_old(unsigned char *pattern, int m, int suff[]) {
 
 static void _istringfind_suffix(unsigned char *pattern, int m, int suff[]) {
     int f, g, i;
+    f = 0;
     
     suff[m - 1] = m;
     g = m - 1;
@@ -6160,6 +6167,7 @@ static void _ihash(int64_t *hash, int64_t v) {
 /* 默认的过滤器指纹计算方法 */
 static int64_t _entryfilterchecksumdefault(imap *map, const struct ifilter *d) {
 	int64_t hash = 0;
+  int64_t *code = NULL;
 
 	/* circle */
 	_ihash(&hash, __realint(d->s.u.circle.pos.x));
@@ -6175,11 +6183,13 @@ static int64_t _entryfilterchecksumdefault(imap *map, const struct ifilter *d) {
 	/* id */
 	_ihash(&hash, d->s.u.id);
 
+  code = (int64_t *)(d->s.u.code.code);
+
 	/* code */
-	_ihash(&hash, *(int64_t *)(d->s.u.code.code));
-	_ihash(&hash, *(int64_t *)(d->s.u.code.code + sizeof(int64_t)));
-	_ihash(&hash, *(int64_t *)(d->s.u.code.code + sizeof(int64_t) * 2));
-	_ihash(&hash, *(int64_t *)(d->s.u.code.code + sizeof(int64_t) * 3));
+	_ihash(&hash, *(int64_t *)(code));
+	_ihash(&hash, *(int64_t *)(code + sizeof(int64_t)));
+	_ihash(&hash, *(int64_t *)(code + sizeof(int64_t) * 2));
+	_ihash(&hash, *(int64_t *)(code + sizeof(int64_t) * 3));
 
 	return hash;
 }

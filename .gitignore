@@ -31,3 +31,4 @@ CMakeCache.txt
 CMakeFiles/
 cmake_install.cmake
 Makefile
+3rd/aoi/build/*

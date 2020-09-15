@@ -2,6 +2,7 @@ LUA_CLIB_PATH ?= luaclib
 CSERVICE_PATH ?= cservice
 SKYNET_PATH ?= ./skynet
 LUA_RAPIDJSON ?= rapidjson
+LUA_AOI ?= aoi
 LUA_LFS ?= lfs
 
 # platform
@@ -26,6 +27,7 @@ LUA_CLIB = trace \
 all : \
   $(SKYNET_PATH)/skynet \
 	$(LUA_RAPIDJSON) \
+	$(LUA_AOI) \
 	$(LUA_LFS) \
   $(foreach v, $(CSERVICE), $(CSERVICE_PATH)/$(v).so) \
   $(foreach v, $(LUA_CLIB), $(LUA_CLIB_PATH)/$(v).so) 
@@ -39,6 +41,10 @@ $(CSERVICE_PATH) :
 $(LUA_RAPIDJSON) :
 	cd 3rd/lua-rapidjson/ && $(MAKE)
 	cp 3rd/lua-rapidjson/rapidjson.so $(LUA_CLIB_PATH)
+
+$(LUA_AOI) :
+	cd 3rd/aoi/build/ && cmake ../ &&  $(MAKE)
+	cp 3rd/aoi/build/laoi.so $(LUA_CLIB_PATH)
 
 $(LUA_LFS) :
 	cd 3rd/lua-filesystem/ && $(MAKE)

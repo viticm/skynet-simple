@@ -402,7 +402,7 @@ int inavimapdescreadfromtextfile(inavimapdesc *desc, const char* file) {
     if (fp) {
         while (true) {
             /*read header */
-            n = fscanf(fp, "Map: width %lf height %lf points %ld polygons %ld polygonsize %ld\n",
+            n = fscanf(fp, "Map: width %lf height %lf points %zu polygons %zu polygonsize %zu\n",
                        &desc->header.size.w,
                        &desc->header.size.h,
                        &desc->header.points,
@@ -1061,6 +1061,9 @@ int _inavi_cell_lineofsight_test(inavimap *map, _inavi_smooth_point *start, _ina
         }
         /* next util not the end ceil*/
         last = next;
+        if (last) {
+
+        }
         next = inavimapnextcell(map, conn);
         if (next == NULL) {
             return iino;

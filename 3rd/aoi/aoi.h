@@ -76,7 +76,7 @@ extern "C" {
 #endif
 
 /* 是否启动元信息： 记录类型对象的内存使用情况, 并加一层对象的内存缓冲区 */
-#ifndef iimeta 
+#ifndef iimeta
 # define iimeta 1
 #endif
 
@@ -84,7 +84,7 @@ extern "C" {
 #ifndef iiradius
 # define iiradius 1
 #endif
-    
+
 /* if we support thread safe in meta system and ref */
 #ifndef iithreadsafe
 # define iithreadsafe 1
@@ -101,13 +101,13 @@ extern "C" {
 
 /* flat array count */
 #define icountof(arr) (sizeof(arr)/sizeof(arr[0]))
-    
+
 /* 常用的宏 */
 #define imax(a, b) ((a) > (b) ? (a) : (b))
 #define imin(a, b) ((a) < (b) ? (a) : (b))
 #define iunused(v) (void)(v)
 #define ilog(...) printf(__VA_ARGS__)
-    
+
 /* helper for printf isize */
 #define __isize_format "(w:%lf, h:%lf)"
 #define __isize_value(s) (s).w, (s).h
@@ -115,11 +115,11 @@ extern "C" {
 /* helper for printf ipos */
 #define __ipos_format "(x:%lf, y:%lf)"
 #define __ipos_value(p) (p).x, (p).y
-    
+
 /* helper for printf ipos3 */
 #define __ipos3_format "(x:%lf, y:%lf, z:%lf)"
 #define __ipos3_value(p) (p).x, (p).y, (p).z
-    
+
 /* helper for printf ivec2 */
 #define __ivec2_format __ipos_format
 #define __ivec2_value(i) __ipos_value((i).v)
@@ -127,15 +127,15 @@ extern "C" {
 /* helper for printf ivec3 */
 #define __ivec3_format __ipos3_format
 #define __ivec3_value(i) __ipos3_value((i).v)
-    
+
 /* helper for printf iline2d */
 #define __iline2d_format "[start:"__ipos_format" end:"__ipos_format"]"
 #define __iline2d_value(l) __ipos_value((l).start),__ipos_value((l).end)
-    
+
 /* helper for printf iline3d */
 #define __iline3d_format "[start:"__ipos3_format" end:"__ipos3_format"]"
 #define __iline3d_value(l) __ipos3_value((l).start),__ipos3_value((l).end)
-    
+
 /* helper for printf iplane */
 #define __iplane_format "[normal:"__ivec3_format" pos:"__ipos3_format" dist:%lf]"
 #define __iplane_value(p) __ivec3_value((p).normal),__ipos3_value((p).pos),(p).distance
@@ -143,7 +143,7 @@ extern "C" {
 /* helper for printf irect */
 #define __irect_format "[pos:"__ipos_format" size:"__isize_format"]"
 #define __irect_value(r) __ipos_value((r).pos),__isize_value((r).size)
-    
+
 /* helper for printf irect */
 #define __icircle_format "[pos:"__ipos_format" radius:%lf]"
 #define __icircle_value(c) __ipos_value((c).pos), (c).radius
@@ -165,46 +165,46 @@ int64_t igetnextmicro();
 
 /* 精度 */
 typedef double ireal;
-    
+
 /* 默认的 epsilon */
 #define iepsilon 0.1e-6
-    
+
 /* 浮点比较 */
 #define ireal_equal_in(a, b, eps) (fabs((a)-(b)) < (eps))
-    
+
 /*浮点数相等比较*/
 #define ireal_equal(a, b) ireal_equal_in(a, b, iepsilon)
-    
+
 /*与零比较*/
 #define ireal_equal_zero(a) ireal_equal(a, 0)
-    
+
 /* 比较: 小于 */
 #define ireal_less_than(a, b, eps) ((a-b) < -eps)
 #define ireal_less(a, b) ireal_less_than(a, b, iepsilon)
-    
+
 /* 比较: 大于 */
 #define ireal_greater_than(a, b, eps) ((a-b) > eps)
-#define ireal_greater(a, b) ireal_greater_than(a, b, iepsilon) 
-    
+#define ireal_greater(a, b) ireal_greater_than(a, b, iepsilon)
+
 /*小于 0*/
 #define ireal_less_zero(a) ireal_less_than(a, 0, iepsilon)
-    
+
 /*大于 0*/
 #define ireal_greater_zero(a) ireal_greater_than(a, 0, iepsilon)
 
 /* 编号 */
 typedef int64_t iid;
-    
+
 /* type define */
 typedef unsigned char ibyte;
 typedef unsigned char ibool;
-    
+
 /* return the next pow of two */
 int inextpot(int size);
-    
+
 /* sleeping the current thread */
 void isleep(unsigned int milliseconds);
-    
+
 /*************************************************************/
 /* imutex                                                    */
 /*************************************************************/
@@ -217,7 +217,7 @@ typedef struct imutex {
     pthread_mutex_t _mutex;
 #endif
 }imutex;
-    
+
 /*create resource*/
 void imutexinit(imutex *mutex);
 /*release resource*/
@@ -227,12 +227,12 @@ void imutexrelease(imutex *mutex);
 void imutexlock(imutex *mx);
 /*unlock mutex*/
 void imutexunlock(imutex *mx);
-    
+
 /*************************************************************/
 /* iatomic                                                   */
 /*************************************************************/
 /* [asf](https://svn.apache.org/repos/asf/avro/trunk/lang/c/src/avro/refcount.h) */
-    
+
 /* compare the store with expected, than store the value with desired */
 uint32_t iatomiccompareexchange(volatile uint32_t *store, uint32_t expected, uint32_t desired);
 
@@ -241,13 +241,13 @@ uint32_t iatomicadd(volatile uint32_t *store, uint32_t value);
 
 /* fetch the old value, than do exchange operator */
 uint32_t iatomicexchange(volatile uint32_t *store, uint32_t value);
-    
+
 /* atomic increment, return the new value */
 uint32_t iatomccincrement(volatile uint32_t *store);
 
 /* atomic decrement, return the new value */
 uint32_t iatomicdecrement(volatile uint32_t *store);
-    
+
 /*************************************************************/
 /* ibase64                                                   */
 /*************************************************************/
@@ -255,7 +255,7 @@ uint32_t iatomicdecrement(volatile uint32_t *store);
 /* caculating enough space for the base64 algorithm */
 #define ibase64_encode_out_size(s)	(((s) + 2) / 3 * 4 + 1) /*pendding a zero: c-style-ending*/
 #define ibase64_decode_out_size(s)	(((s)) / 4 * 3)
-   
+
 /* base64 encode */
 int ibase64encode_n(const unsigned char *in, size_t inlen, char *out, size_t *outsize);
 /* base64 decode */
@@ -269,26 +269,26 @@ int ibase64decode_n(const char *in, size_t inlen, unsigned char *out, size_t *ou
 typedef struct ipos {
     ireal x, y;
 }ipos;
-    
+
 /* zero point */
 extern const ipos kipos_zero;
 
 /* 计算距离的平方 */
 ireal idistancepow2(const ipos *p, const ipos *t);
-    
+
 /*************************************************************/
 /* ipos                                                      */
 /*************************************************************/
 typedef struct ipos3 {
     ireal x, y, z;
 }ipos3;
-    
+
 /* zero of ipos3 */
 extern const ipos3 kipos3_zero;
-    
+
 /* 计算距离的平方 */
 ireal idistancepow3(const ipos3 *p, const ipos3 *t);
-   
+
 /* get the xy from the p with xz */
 void ipos3takexz(const ipos3 *p, ipos *to);
 
@@ -308,7 +308,7 @@ typedef union ivec2 {
 
 /* 两点相减得到向量 */
 ivec2 ivec2subtractpoint(const ipos *p0, const ipos *p1);
-    
+
 /* 把点在这个方向上进行移动 */
 ipos ivec2movepoint(const ivec2 *dir, ireal dist, const ipos *p);
 
@@ -432,9 +432,9 @@ typedef enum EnumPointClass{
  * if you were standing on PointA of the line looking towards PointB. Posative distances
  * are to the right of the line, negative distances are to the left.
  * */
-int iline2dclassifypoint(const iline2d *line, const ipos *point, ireal epsilon); 
+int iline2dclassifypoint(const iline2d *line, const ipos *point, ireal epsilon);
 
-/* 
+/*
  * line classify
  * */
 typedef enum EnumLineClass {
@@ -457,10 +457,10 @@ typedef enum EnumLineClass {
  * D = PointB of the provided line
  * */
 int iline2dintersection(const iline2d *line, const iline2d *other,  ipos *intersect);
-    
+
 /* Caculating the closest point in the segment to center pos */
 ipos iline2dclosestpoint(const iline2d *line, const ipos *center, ireal epsilon);
-    
+
 /*************************************************************/
 /* iline3d                                                   */
 /*************************************************************/
@@ -474,15 +474,15 @@ ivec3 iline3ddirection(const iline3d *line);
 
 /**/
 ireal iline3dlength(const iline3d *line);
-    
+
 /* Caculating the closest point in the segment to center pos */
 ipos3 iline3dclosestpoint(const iline3d *line, const ipos3 *center, ireal epsilon);
 
-   
+
 /*************************************************************/
 /* iplane                                                    */
 /*************************************************************/
-    
+
 /*
  * A Plane in 3D Space represented in point-normal form (Ax + By + Cz + D = 0).
  * The convention for the distance constant D is:
@@ -492,19 +492,19 @@ typedef struct iplane {
     ipos3 pos;
     ireal distance;
 }iplane;
-    
+
 /* Setup Plane object given a clockwise ordering of 3D points */
 void iplaneset(iplane *plane, const ipos3 *a, const ipos3 *b, const ipos3 *c);
-    
+
 /* TODO */
 ireal iplanesigneddistance(const iplane *plane, const ipos3 *p);
-    
+
 /* Given Z and Y, Solve for X on the plane */
 ireal iplanesolveforx(iplane *plane, ireal y, ireal z);
-    
+
 /* Given X and Z, Solve for Y on the plane */
 ireal iplanesolvefory(iplane *plane, ireal x, ireal z);
-    
+
 /* Given X and Y, Solve for Z on the plane */
 ireal iplanesolveforz(iplane *plane, ireal x, ireal y);
 
@@ -531,7 +531,7 @@ typedef struct irect {
 int irectcontains(const irect *con, const irect *r);
 /* 矩形包含: iiok, iino */
 int irectcontainspoint(const irect *con, const ipos *p);
-    
+
 /* down-left pos*/
 ipos irectdownleft(const irect *con);
 /* down-right pos*/
@@ -573,7 +573,7 @@ int icirclerelation(const icircle *con, const icircle *c);
 
 /* 矩形与圆是否相交 */
 int irectintersect(const irect *con, const icircle *c);
-    
+
 /* Caculating the offset that circle should moved to avoid collided with the line */
 ivec2 icircleoffset(const icircle* circle, const iline2d* line);
 
@@ -606,7 +606,7 @@ typedef struct iname {
 /* 前置声明 */
 struct imeta;
 struct iobj;
-    
+
 /* tracing the iobj alloc */
 typedef void (*ientryobjcalloctrace)(struct imeta *meta, struct iobj *obj);
 /* tracing the iobj free */
@@ -639,27 +639,27 @@ typedef struct imeta {
     int64_t current;
     int64_t alloced;
     int64_t freed;
-    
+
     /* trace all obj calloc */
     ientryobjcalloctrace tracecalloc;
     /* trace all obj free */
     ientryobjfreetrace tracefree;
-    
+
     /*all iobj can be do hash */
     ientryobjhash _hash;
     /*all iobj can be do compare */
     ientryobjcompare _compare;
-    
+
 /* support thread safe for meta system */
 #if (iithreadsafe)
     imutex mutex; /*will never release resouce until program ended */
 #endif
 }imeta;
-    
+
 /*Hepler Macro for log*/
 #define __imeta_format "Meta-Obj: (%15.15s, %5d) --> alloc: %9" PRId64 ", free: %9" PRId64 ", hold: %9" PRId64 " - count: %8" PRId64 " - cache(%6d/%6d)"
 #define __imeta_value(meta) (meta).name,(meta).size,(meta).alloced,(meta).freed,imax((meta).current, 0),imax((meta).current,0)/((meta).size+sizeof(iobj)),(meta).cache.length,(meta).cache.capacity
-    
+
 /* 获取类型的元信息 */
 imeta *imetaget(int idx);
 
@@ -705,7 +705,7 @@ int imetaregister(const char* name, int size, int capacity);
     XX(idict, 0)                 \
     XX(ipolygon3d, 0)            \
     XX(ipolygon2d, 0)
-    
+
 
 /* 定义所有元信息索引 */
 typedef enum EnumMetaTypeIndex {
@@ -752,7 +752,7 @@ int64_t iaoimemorysize(void *meta, int kind);
 
 /* 打印当前内存状态: 空的内存状态 */
 void iaoimemorystate() ;
-    
+
 int64_t iaoimemorysize(void * meta, int kind);
 
 #define iobjmalloc(type) ((type*)icalloc(1, sizeof(type)))
@@ -803,7 +803,7 @@ void irefrelease(iref *ref);
 
 /* 应用计数的赋值操作 */
 #define iassign(dst, src) do { if(src != dst) { irelease(dst); iretain(src); dst = src; } } while(0)
-    
+
 /*************************************************************/
 /* iwref                                                     */
 /*************************************************************/
@@ -813,19 +813,19 @@ void irefrelease(iref *ref);
 typedef struct iwref {
     irefdeclare;
 }iwref;
-    
+
 /* make a weak iref by ref */
 iwref *iwrefmake(iref *ref);
-    
+
 /* make a weak iref by wref */
 iwref *iwrefmakeby(iwref *wref);
 
 /* make strong ref: need call irelease */
 iref *iwrefstrong(iwref *wref);
-    
+
 /* make strong ref: unneed call irelease */
 iref *iwrefunsafestrong(iwref *wref);
-   
+
 /* ref assign to weak ref */
 #define iwassign(dst, src) do { if (dst && (iref*)(dst->wref) == (iref*)(src)) { \
     break; } irelease(dst); dst = iwrefmake((iref*)(src)); } while(0)
@@ -871,7 +871,7 @@ iref *irefassistretain(iref *ref);
 typedef struct irefjoint {
     /* 附加的对象 */
     iref *value;
-    
+
     /* 附加在上的 资源*/
     void *res;
 
@@ -888,14 +888,14 @@ irefjoint* irefjointmake(iref *value);
 
 /* 释放列表节点 */
 void irefjointfree(irefjoint* joint);
-    
+
 /* 释放附加在列表节点上的资源 */
 typedef void (*irefjoint_entry_res_free)(irefjoint *joint);
 
 /* 引用对象列表 */
 typedef struct ireflist {
     irefdeclare;
-    
+
     /* 列表根节点, 也是列表的第一个节点 */
     irefjoint *root;
     /* 列表长度 */
@@ -908,10 +908,10 @@ typedef struct ireflist {
 
 /* 创建列表 */
 ireflist *ireflistmake();
-    
+
 /* 释放列表 */
 void ireflistfree(ireflist *list);
-    
+
 /* 创建列表 */
 ireflist *ireflistmakeentry(irefjoint_entry_res_free entry);
 
@@ -930,7 +930,7 @@ irefjoint* ireflistaddjoint(ireflist *list, irefjoint * joint);
 
 /* 往列表增加节点: 前置节点(会增加引用计数) */
 irefjoint* ireflistadd(ireflist *list, iref *value);
-    
+
 /* 往列表增加节点: 前置节点(会增加引用计数) */
 irefjoint* ireflistaddres(ireflist *list, iref *value, void *res);
 
@@ -944,7 +944,7 @@ irefjoint* ireflistremove(ireflist *list, iref *value);
 /* 释放所有节点 */
 void ireflistremoveall(ireflist *list);
 
-    
+
 /*************************************************************/
 /* irefneighbors                                             */
 /*************************************************************/
@@ -957,40 +957,40 @@ typedef struct irefneighbors {
     ireflist *neighbors_from;
     /* 可走的列表 this ===> other */
     ireflist *neighbors_to;
-    
+
     /* List joint resouce free entry */
     irefjoint_entry_res_free neighbors_resfree;
 }irefneighbors;
-    
+
 /*macro declare*/
 #define irefneighborsdeclare \
     irefdeclare; \
     ireflist *neighbors_from; \
     ireflist *neighbors_to; \
     irefjoint_entry_res_free neighbors_resfree
-    
+
 /* 设置邻居间关系描述的 释放符号 */
 void ineighborsbuild(irefneighbors *neighbors, irefjoint_entry_res_free entry);
-    
+
 /* 从节点图里面移除 */
 void ineighborsclean(irefneighbors *neighbors);
 
 /* 在有向图上加上一单向边 */
 void ineighborsadd(irefneighbors *from, irefneighbors *to);
-    
+
 /* 在有向图上加上一单向边 */
 void ineighborsaddvalue(irefneighbors *from, irefneighbors *to, void *from_to, void *to_from);
 
 /* 在有向图上移除一条单向边 */
 void ineighborsdel(irefneighbors *from, irefneighbors *to);
-    
+
 
 /*************************************************************/
 /* iarray                                                    */
 /*************************************************************/
 struct iarray;
 struct islice;
-    
+
 /* 如果是需要跟 kindex_invalid 进行交换就是置0 */
 /* invalid index */
 extern const int kindex_invalid;
@@ -1020,16 +1020,16 @@ typedef enum EnumArrayFlag {
      *单元不需要通过swap或者assign去释放
      *truncate 的时候可以直接设置长度
      *简单数组实现的assign 函数必须实现 memmove 语义
-     *memmove 可以处理内存重叠问题 
+     *memmove 可以处理内存重叠问题
      *标志位只有设置在数组的entry才有效，不可被更改*/
     EnumArrayFlagSimple = 1<<2,
 
     /*自动缩减存储容量*/
     EnumArrayFlagAutoShirk = 1<<3,
-    
+
     /* MemSet Pennding Memory */
     EnumArrayFlagMemsetZero = 1<<4,
-    
+
     /* 数组被slice 操作过, 数组不能执行shirk, remove, truncate 操作
      * 数组的 insert 操作如果导致需要数组扩容也会失败*/
     EnumArrayFlagSliced = 1<<5,
@@ -1056,7 +1056,7 @@ typedef struct iarray {
 
     /* 每一种数组类型都需要定义这个 */
     const iarrayentry* entry;
-    
+
     /* user data appending to array*/
     void *userdata;
 }iarray;
@@ -1093,13 +1093,13 @@ int iarrayremove(iarray *arr, int index);
 
 /* 增加 */
 int iarrayadd(iarray *arr, const void* value);
-    
+
  /* 插入 */
 int iarrayinsert(iarray *arr, int index, const void *value, int nums);
-   
+
 /* 设置 */
 int iarrayset(iarray *arr, int index, const void *value);
-    
+
 /* 清理数组 */
 void iarrayremoveall(iarray *arr);
 
@@ -1108,13 +1108,13 @@ void iarraytruncate(iarray *arr, size_t len);
 
 /* 缩减容量 */
 size_t iarrayshrinkcapacity(iarray *arr, size_t capacity);
-    
+
 /* 扩大容量 */
 size_t iarrayexpandcapacity(iarray *arr, size_t capacity);
 
 /* 排序 */
 void iarraysort(iarray *arr);
-    
+
 /* for each */
 void iarrayforeach(const iarray *arr, iarray_entry_visitor visitor);
 
@@ -1127,13 +1127,13 @@ typedef struct iarray iheap;
 
 /* 建立 堆操作 */
 void iheapbuild(iheap *heap);
-    
+
 /* 堆大小 */
 size_t iheapsize(const iheap *heap);
 
 /* 堆操作: 增加一个元素 */
 void iheapadd(iheap *heap, const void *value);
-    
+
 /* 堆操作: 调整一个元素 */
 void iheapadjust(iheap *heap, int index);
 
@@ -1146,7 +1146,7 @@ void iheappop(iheap *heap);
 
 /* 堆操作: 移除指定的位置的元素, 仍然保持堆 */
 void iheapdelete(iheap *heap, int index);
-    
+
 /*************************************************************/
 /* iarray: int, ireal, int64, char, iref                     */
 /* iarray: iref                                              */
@@ -1155,54 +1155,54 @@ void iheapdelete(iheap *heap, int index);
 
 /* 内置的整数数组 */
 iarray* iarraymakeint(size_t capacity);
-    
+
 /* 浮点数组 */
 iarray* iarraymakeireal(size_t capacity);
-    
+
 /* int64 数组*/
 iarray* iarraymakeint64(size_t capacity);
-    
+
 /* char 数组*/
 iarray* iarraymakechar(size_t capacity);
-    
+
 /* 用来告知 对象的坐标发生变化 */
 typedef void (*irefarray_index_change) (iarray *arr, iref *ref, int index);
-    
+
 /* append to iarray with iref entry */
 typedef struct irefarrayentry {
     irefarray_index_change indexchange;
 } irefarrayentry;
-    
+
 /* 内置的引用数组 */
 iarray* iarraymakeiref(size_t capacity);
-    
+
 /* 内置的引用数组 */
 iarray* iarraymakeirefwithentry(size_t capacity, const irefarrayentry *refentry);
-    
+
 /* 内置的 ipos 数组*/
 iarray* iarraymakeipos(size_t capacity);
-    
+
 /* 内置的 ipos3 数组*/
 iarray* iarraymakeipos3(size_t capacity);
-    
+
 /* 内置的 isize 数组*/
 iarray* iarraymakeisize(size_t capacity);
-    
+
 /* 内置的 irect 数组*/
 iarray* iarraymakeirect(size_t capacity);
-    
+
 /* 内置的 icircle 数组*/
 iarray* iarraymakeicircle(size_t capacity);
-    
+
 /* 内置的 ivec2 数组*/
 iarray* iarraymakeivec2(size_t capacity);
-    
+
 /* 内置的 ivec3 数组*/
 iarray* iarraymakeivec3(size_t capacity);
-    
+
 /* 辅助宏，获取*/
 #define iarrayof(arr, type, i) (((type *)iarrayat(arr, i))[0])
-    
+
 /* Helper-Macro: For-Earch in c89 */
 #define irangearraycin(arr, type, begin, end, key, value, wrap) \
     do { \
@@ -1210,11 +1210,11 @@ iarray* iarraymakeivec3(size_t capacity);
         value = iarrayof(arr, type, key);\
         wrap;\
     } } while(0)
-    
+
 /* Helper-Macro: For-Earch in c89 */
 #define irangearrayc(arr, type, key, value, wrap) \
     irangearraycin(arr, type, 0, iarraylen(arr), key, value, wrap)
-    
+
 /* Helper-Macro: For-Earch in cplusplus */
 #define irangearrayin(arr, type, begin, end, wrap) \
     do { \
@@ -1244,29 +1244,29 @@ typedef struct islice {
     irefdeclare;
 
     iarray *array;
-    
+
     /*
      * len = end - begin
-     * real.capacity = capacity - begin 
+     * real.capacity = capacity - begin
      **/
     int begin;
     int end;
     int capacity;
-    
+
     /* special flags */
     int flag;
 }islice;
-    
+
 /* 遍历 访问 */
 typedef void (*islice_entry_visitor)(const islice *slice,
     int i, const void *value);
-    
+
 /* 左闭右开的区间 [begin, end) */
 islice *islicemake(iarray *arr, int begin, int end, int capacity);
 
 /* 左闭右开的区间 [begin, end) */
 islice *islicemakeby(islice *slice, int begin, int end, int capacity);
-    
+
 /* 通过参数创建 "begin:end:capacity"
  * islicemakearg(arr, ":")
  * islicemakearg(arr, ":1")
@@ -1275,7 +1275,7 @@ islice *islicemakeby(islice *slice, int begin, int end, int capacity);
  * islicemakearg(arr, "3:")
  */
 islice *islicemakearg(iarray *arr, const char* args);
-    
+
 /* 通过参数创建 "begin:end:capacity"
  * islicemakeargby(arr, ":")
  * islicemakeargby(arr, ":1")
@@ -1284,50 +1284,50 @@ islice *islicemakearg(iarray *arr, const char* args);
  * islicemakeargby(arr, "3:")
  */
 islice *islicemakeargby(islice *slice, const char* args);
-    
-  
+
+
 /* 从array创建slice, 创建的slice 总数享有 父节点的最大容量 */
 #define isliced(arr, begin, end) islicemake((arr), (begin), (end), (int)((arr)->capacity))
 /* 从slice创建子slice, 创建的slice 总数享有 父节点的最大容量 */
 #define islicedby(slice, begin, end) islicemakeby((slice), (begin), (end), islicecapacity(slice))
-    
+
 /* 参数 解析 */
 void isliceparamsparse(int *params, const char* args, const char delim);
-    
+
 /* 释放 */
 void islicefree(islice *slice);
 
 /* 长度 */
 size_t islicelen(const islice *slice);
-    
+
 /* 容量 */
 size_t islicecapacity(const islice *slice);
-    
+
 /* 附加
  * 用法: slice = isliceappendvalues(slice, values, count); */
 islice* isliceappendvalues(islice* slice, const void *values, int count);
-    
+
 /* 附加
  * 用法: slice = isliceappend(slice, append); */
 islice* isliceappend(islice *slice, const islice *append);
-   
-/* 
- * 增加元素 
+
+/*
+ * 增加元素
  * 用法 : slice = isliceadd(slice, i); */
 islice* isliceadd(islice *slice, const void *value);
-    
+
 /* 设置值*/
 int isliceset(islice *slice, int index, const void *value);
-    
+
 /* 查询 */
 const void* isliceat(const islice *slice, int index);
-    
+
 /* foreach */
 void isliceforeach(const islice *slice, islice_entry_visitor visitor);
-    
+
 /* 辅助宏，获取*/
 #define isliceof(slice, type, i) (((type *)isliceat(slice, i))[0])
-    
+
 /* Helper-Macro: For-Earch in c89 */
 #define irangeslicecin(arr, type, begin, end, key, value, wrap) \
     do { \
@@ -1335,11 +1335,11 @@ void isliceforeach(const islice *slice, islice_entry_visitor visitor);
         value = isliceof(arr, type, idx);\
         wrap;\
     } } while(0)
-    
+
 /* Helper-Macro: For-Each in c89*/
 #define irangeslicec(slice, type, key, value, wrap) \
     irangeslicecin(slice, type, 0, islicelen(slice), key, value, wrap)
-    
+
 /* Helper-Macro: For-Each in cplusplus*/
 #define irangeslicein(slice, type, begin, end, wrap) \
     do {\
@@ -1351,12 +1351,12 @@ void isliceforeach(const islice *slice, islice_entry_visitor visitor);
 /* Helper-Macro: For-Each in cplusplus*/
 #define irangeslice(slice, type, wrap) \
     irangeslicein(slice, type, 0, islicelen(slice), wrap)
-    
+
 /*************************************************************/
 /* irange                                                    */
 /*************************************************************/
 struct irangeite;
-    
+
 /* tell the container, about irangite create */
 typedef void (*_irangeentry_create)(struct irangeite *ite);
 /* free all resource about ite */
@@ -1367,7 +1367,7 @@ typedef int (*_irangeentry_next)(struct irangeite *ite);
 typedef const void* (*_irangeentry_value)(struct irangeite *ite);
 /* give me the real key key */
 typedef const void* (*_irangeentry_key)(struct irangeite *ite);
-    
+
 /* iterator accessor */
 typedef struct irangeaccess {
     _irangeentry_create accesscreate;
@@ -1375,20 +1375,20 @@ typedef struct irangeaccess {
     _irangeentry_next accessnext;
     _irangeentry_value accessvalue;
     _irangeentry_key accesskey;
-    
+
 }irangeaccess;
-    
+
 /* iterator over a range container */
 typedef struct irangeite {
     irefdeclare;
-    
+
     void *container;
     void *ite;
-    
+
     const irangeaccess *access;
     int __internal;
 }irangeite;
-    
+
 /* range operator, accept: iarray, islice, istring, iheap */
 size_t irangelen(const void *p);
 
@@ -1400,19 +1400,19 @@ irangeite* irangeitemake(void* p, const irangeaccess* access);
 
 /* free the range ite */
 void irangeitefree(irangeite *ite);
-    
+
 /*iiok: iino*/
 int irangenext(irangeite *ite);
-    
+
 /* returnt the value address */
 const void *irangevalue(irangeite *ite);
-    
+
 /* returnt the key address */
 const void *irangekey(irangeite *ite);
-    
+
 /* Helper-Macro: Get-Value */
 #define irangeof(con, type, i) (((type *)irangeat(con, i))[0])
-    
+
 /* Helper-Macro: For-Earch in c89 */
 #define irangecin(arr, type, begin, end, key, value, wrap) \
     do { \
@@ -1424,7 +1424,7 @@ const void *irangekey(irangeite *ite);
 /* Helper-Macro: For-Earch in c89 */
 #define irangec(arr, type, key, value, wrap) \
     irangecin(arr, type, 0, irangelen(arr), key, value, wrap)
-    
+
 /* Helper-Macro: For-Earch in cplusplus */
 #define irangein(arr, type, begin, end, wrap) \
     do { \
@@ -1436,10 +1436,10 @@ const void *irangekey(irangeite *ite);
 /* Helper-Macro: For-Earch in cplusplus */
 #define irange(arr, type, wrap) \
     irangein(arr, type, 0, irangelen(arr), wrap)
-    
+
 /*can deal with: iarray, islice, ireflist */
 irangeite *irangeitemakefrom(void *p);
-    
+
 /* can not over container for delete */
 #define irangeover(con, keytype, valuetype, wrap) \
     do {\
@@ -1452,25 +1452,25 @@ irangeite *irangeitemakefrom(void *p);
         } \
         irangeitefree(ite);\
     } while(0)
-    
+
 /*************************************************************/
 /* istring                                                   */
 /*************************************************************/
 
 typedef islice* istring;
-  
+
 /* declare the string in stack, no need to free */
 #define ideclarestring(name, value) \
 iarray name##_array = {1, NULL, NULL, NULL, NULL, strlen(value), strlen(value), (char*)value};\
 islice name##_slice = {1, NULL, NULL, NULL, NULL, &name##_array, 0, strlen(value)};\
 islice * name = & name##_slice
-    
+
 /*Make a string by c-style string */
 istring istringmake(const char* s);
-    
+
 /*Make a string by s and len*/
 istring istringmakelen(const char* s, size_t len);
-    
+
 /*Make a copy of s with c-style string*/
 istring istringdup(const istring s);
 
@@ -1479,7 +1479,7 @@ size_t istringlen(const istring s);
 
 /*visit the real string buffer*/
 const char* istringbuf(const istring s);
-    
+
 /*set the entry for stack string */
 istring istringlaw(istring s);
 
@@ -1502,43 +1502,43 @@ istring istringlaw(istring s);
  * %% - Verbatim "%" character.
  */
 istring istringformat(const char* format, ...);
-    
+
 /*compare the two istring*/
 int istringcompare(const istring lfs, const istring rfs);
-    
+
 /*find the index in istring */
 int istringfind(const istring rfs, const char *sub, int len, int index);
-    
+
 /*sub string*/
 istring istringsub(const istring s, int begin, int end);
-    
+
 /*return the array of istring*/
 iarray* istringsplit(const istring s, const char* split, int len);
-   
+
 /*return the array of sting joined by dealer */
 istring istringjoin(const iarray* ss, const char* join, int len);
-    
+
 /*return the new istring with new component*/
 istring istringrepleace(const istring s, const char* olds, const char* news);
-  
+
 /*return the new istring append with value*/
 istring istringappend(const istring s, const char* append);
-    
+
 /*baisc wrap for ::atoi */
 int istringatoi(const istring s);
- 
+
 /*[cocos2dx](https://github.com/cocos2d/cocos2d-x/blob/v3/cocos/base/ccUtils.h)*/
 /** Same to ::atof, but strip the string, remain 7 numbers after '.' before call atof.
- * Why we need this? Because in android c++_static, atof ( and std::atof ) 
+ * Why we need this? Because in android c++_static, atof ( and std::atof )
  * is unsupported for numbers have long decimal part and contain
- * several numbers can approximate to 1 ( like 90.099998474121094 ), it will return inf. 
+ * several numbers can approximate to 1 ( like 90.099998474121094 ), it will return inf.
  * This function is used to fix this bug.
  * @param str The string be to converted to double.
  * @return Returns converted value of a string.
  */
 double istringatof(const istring s);
-    
-    
+
+
 /*************************************************************/
 /* iringbuffer                                               */
 /*************************************************************/
@@ -1546,21 +1546,21 @@ double istringatof(const istring s);
 typedef enum EnumRingBufferFlag {
     EnumRingBufferFlag_BlockRead = 1,  /* Block Read Will Got What We Needed */
     EnumRingBufferFlag_BlockWrite = 1<<1, /* Block Write Util We Got Empty Spaces */
-    
+
     EnumRingBufferFlag_Override = 1<<2,   /* Override The Ring Buffer */
-    
+
     EnumRingBufferFlag_ReadChannelShut = 1<<3,
     EnumRingBufferFlag_WriteChannelShut = 1<<4,
-    
+
     EnumRingBufferFlag_ReadSleep = 1<<5,
     EnumRingBufferFlag_WriteSleep = 1<<6,
 }EnumRingBufferFlag;
-    
+
 /* ring buffer */
 /*[the ring buffer](https://github.com/JerryZhou/ringbuffer)*/
 typedef struct iringbuffer {
     irefdeclare;
-    
+
     /* char array */
     iarray *buf;
     /* the control flags */
@@ -1574,7 +1574,7 @@ typedef struct iringbuffer {
     /* total read length */
     int64_t rlen;
 } iringbuffer;
-    
+
 /* Make a ring buffer */
 iringbuffer *iringbuffermake(size_t capacity, int flag);
 
@@ -1606,13 +1606,13 @@ const char* iringbufferraw(iringbuffer *r);
  * %u(unsigned int),
  * %U(unsigned 64bit) */
 size_t iringbufferfmt(iringbuffer *rb, const char * fmt, ...);
-    
+
 /*************************************************************/
 /*  idict                                                    */
 /*************************************************************/
 /* [redis](https://github.com/antirez/redis) */
 /* see details dict.h dict.c in redis */
-    
+
 /* dict type */
 typedef struct idicttype {
     unsigned int (*hashFunction)(const void *key);
@@ -1642,20 +1642,20 @@ typedef struct idicthashtable {
     unsigned long size;
     unsigned long sizemask;
     unsigned long used;
-    
+
 }idicthashtable;
-    
+
 /* Real has table structure */
 typedef struct idict {
     irefdeclare;
-    
+
     idicttype *type;
     void *privdata;
     idicthashtable ht[2];
     long rehashidx; /* rehashing not in progress if rehashidx == -1 */
     unsigned long iterators; /* number of iterators currently running */
 } idict;
-    
+
 /* If safe is set to 1 this is a safe iterator, that means, you can call
  * dictAdd, dictFind, and other functions against the dictionary even while
  * iterating. Otherwise it is a non safe iterator, and only dictNext()
@@ -1668,10 +1668,10 @@ typedef struct idictiterator {
     /* unsafe iterator fingerprint for misuse detection. */
     int64_t fingerprint;
 } idictiterator;
-    
+
 /* the dict foreach scanner */
 typedef void (*idictscanfunction)(void *privdata, const idictentry *de);
-    
+
 /* make a dict with type and privdata */
 idict *idictmake(idicttype *type, void *privdata);
 
@@ -1684,16 +1684,16 @@ void *idictget(idict *d, const void *key);
  * element with such key and dictReplace() just performed a value update
  * operation. */
 int idictset(idict *d, const void *key, void *value);
-    
+
 /* Search and remove an element */
 int idictremove(idict *d, const void *key);
 
 /* get the dict size */
 size_t idictsize(idict *d);
-    
+
 /* clear all the key-values */
 void idictclear(idict *d);
-   
+
 /*Resize the table to the minimal size that contains all the elements,
 * but with the invariant of a USED/BUCKETS ratio near to <= 1*/
 int idictresize(idict *d);
@@ -1703,39 +1703,39 @@ int idictrehashmilliseconds(idict *d, int ms);
 
 void idictenableresize(void);
 void idictdisableresize(void);
-    
+
 /* if the dict has the key-value */
 int idicthas(idict *d, const void *key);
-    
+
 /* scan the dict */
 unsigned long idictscan(idict *d, unsigned long v, idictscanfunction fn, void *privdata);
 
 /*all details idict: */
 unsigned int idictgenhashfunction(const void *key, int len);
-    
+
 void idictsethashfunctionseed(uint32_t seed);
 uint32_t idictgethashfunctionseed(void);
-    
+
 int idictdelete(idict *ht, const void *key);
 int idictdeletenofree(idict *ht, const void *key);
-    
+
 idictentry *idictreplaceraw(idict *d, void *key);
-    
+
 idictiterator * idictgetsafeiterator(idict *d);
 idictentry *idictNext(idictiterator *iter);
 void idictreleaseiterator(idictiterator *iter);
-    
+
 idictentry *idictgetrandomkey(idict *d);
 unsigned int idictgetsomekeys(idict *d, idictentry **des, unsigned int count);
 
 /*************************************************************/
 /* ipolygon3d                                                */
 /*************************************************************/
-    
+
 /* polygon 3d definition */
 typedef struct ipolygon3d {
     irefdeclare;
-    
+
     /*ipos3 slice*/
     islice *pos;
     /* max point */
@@ -1744,32 +1744,32 @@ typedef struct ipolygon3d {
     ipos3 min;
     /* center point */
     ipos3 center;
-    
+
     /* accumulating the pos */
     ipos3 accumulating;
-    
+
     /* the polygon plane */
     iplane plane;
 }ipolygon3d;
-    
+
 /* create a polygon 3d*/
 ipolygon3d *ipolygon3dmake(size_t capacity);
-    
+
 /* free a polygon 3d*/
 void ipolygon3dfree(ipolygon3d *);
-    
+
 /* add ivec3 to polygon*/
 void ipolygon3dadd(ipolygon3d *poly, const ipos3 *v, int nums);
-    
+
 /* caculating the center of polygon3d  */
 void ipolygon3dfinish(ipolygon3d *poly);
-    
+
 /* take the polygon3d as a wrap buffer of pos */
 const ipos3 * ipolygon3dpos3(ipolygon3d *polygon, int index);
-    
+
 /* take the polygon3d pos (x, z) as a wrap buffer of pos */
 ipos ipolygon3dposxz(ipolygon3d *polygon, int index);
-    
+
 /* the the edge (center-middle) point*/
 ipos3 ipolygon3dedgecenter(ipolygon3d *polygon, int index);
 
@@ -1784,33 +1784,33 @@ ipos3 ipolygon3dedgecenter(ipolygon3d *polygon, int index);
  * |---------> x
  * */
 int ipolygon3dincollum(const ipolygon3d *poly, const ipos3 *v);
-    
+
 /* give the projection rect in xz-plane */
 void ipolygon3dtakerectxz(const ipolygon3d *poly, irect *r);
-   
+
 /*************************************************************/
 /* ipolygon2d                                                */
 /*************************************************************/
- 
+
 /* polygon 2d definition */
 typedef struct ipolygon2d {
     irefdeclare;
-    
+
     /*ivec2 slice*/
     islice *slice;
     ivec2 max;
     ivec2 min;
 }ipolygon2d;
-    
+
 /* create a polygon 2d*/
 ipolygon2d *ipolygon2dmake(size_t capacity);
-    
+
 /* free a polygon 2d*/
 void ipolygon2dfree(ipolygon2d *);
-    
+
 /* add ivec2 to polygon*/
 void ipolygon2dadd(ipolygon2d *poly, const ivec2 *v, int nums);
-    
+
 /* if the point in polygon*/
 int ipolygon2dcontains(const ipolygon2d *poly, const ivec2 *v);
 
@@ -1909,7 +1909,7 @@ typedef enum EnumUnitState {
     EnumUnitStateMoving = 1<< 6,
     EnumUnitStateSearching = 1<<10,
 }EnumUnitState;
-    
+
     /*内置的单元标志*/
 typedef enum EnumUnitFlag {
     EnumUnitFlagNone = 0,
@@ -2036,7 +2036,7 @@ typedef struct inode {
     struct inode *next;
 
 }inode;
-    
+
 /* inode format */
 #define __inode_format "[code:"__icode_format" size:"__isize_format" level:%d]"
 #define __inode_value(m, n) __icode_value((n).code),__isize_value((m).nodesizes[(n).level]),(n).level
@@ -2052,13 +2052,13 @@ void ifreenodekeeper(inode *node);
 
 /* 释放节点组成的树 */
 void ifreenodetree(inode *node);
-    
+
 /*坐标是否在节点里面*/
 int inodecontains(const struct imap *map, const inode *node, const ipos *pos);
 
 /* 从子节点的时间戳更新父节点 */
 int inodeupdatparenttick(inode *node);
-    
+
 /* 从单元身上获取更新时间戳*/
 int inodeupdatetickfromunit(inode *node, iunit *unit);
 
@@ -2187,13 +2187,13 @@ int imapgen(imap *map);
 
 /* 增加一个单元到地图上 */
 int imapaddunit(imap *map, iunit *unit);
-    
+
 /* 把单元加入地图， 到指定的分割层次 */
 int imapaddunittolevel(imap *map, iunit *unit, int level);
 
 /* 从地图上移除一个单元 */
 int imapremoveunit(imap *map, iunit *unit);
-    
+
 /* direct remove the unit from the unit->node */
 int imapremoveunitdirect(imap *map, iunit *unit);
 
@@ -2216,7 +2216,7 @@ void imaploadblocks(imap *map, char* blocks);
 
 /* 获取块的状态 */
 int imapgetblock(const imap *map, int x, int y);
-    
+
 /* 返回地图水平的分割层次：当前层次的分割单元大于给定的大小, 那么轴对齐的线段的断点最多在两个分割单元内部*/
 int imapcontainslevelw(const imap *map, int level, ireal w);
 /* 返回地图垂直的分割层次：当前层次的分割单元大于给定的大小, 那么轴对齐的线段的断点最多在两个分割单元内部*/
@@ -2241,7 +2241,7 @@ typedef int (*ientryfilter)(imap *map, const struct ifilter *filter, const iunit
 
 /* 过滤器指纹入口 */
 typedef int64_t (*ientryfilterchecksum)(imap *map, const struct ifilter *filter);
-    
+
 /* 包装线段过滤器参数 */
 typedef  struct ifilterline {
     iline2d line;
@@ -2299,7 +2299,7 @@ ifilter *ifiltermake_circle(const ipos *pos, ireal range);
 
 /* rect 过滤器 */
 ifilter *ifiltermake_rect(const ipos *pos, const isize *size);
-    
+
 /* line2d 过滤器 */
 ifilter *ifiltermake_line2d(const ipos *from, const ipos *to, ireal epsilon);
 
@@ -2349,7 +2349,7 @@ void isearchresultrefreshfromsnap(imap *map, isearchresult *result);
 
 /* 收集包含指定矩形局域的节点(最多4个) */
 void imapsearchcollectnode(imap *map, const irect *rect, ireflist *list);
-    
+
 /* Collecting nodes that intersected with line with map radius */
 void imapsearchcollectline(imap *map, const iline2d *line, ireflist *list);
 
@@ -2359,7 +2359,7 @@ inode *imapcaculatesameparent(imap *map, const ireflist *collects);
 /* 从地图上搜寻单元 irect{pos, size{rangew, rangeh}}, 并附加条件 filter */
 void imapsearchfromrectwithfilter(imap *map, const irect *rect,
                                   isearchresult *result, ifilter *filter);
-    
+
 /* Collecting units from nodes(collects) with the filter */
 void imapsearchfromcollectwithfilter(imap *map, const ireflist* collects,
                                      isearchresult *result, ifilter *filter);
@@ -2379,7 +2379,7 @@ void imapsearchfromnode(imap *map, const inode *node,
 /* 从地图上搜寻单元: 视野检测, 没有缓存的*/
 void imaplineofsight(imap *map, const ipos *from,
                      const ipos *to, isearchresult *result);
-    
+
 /* 计算节点列表的指纹信息 */
 int64_t imapchecksumnodelist(imap *map, const ireflist *list, int64_t *maxtick, int64_t *maxutick);
 
