@@ -10,12 +10,17 @@
 --]]
 
 local skynet = require 'skynet'
+local cfg = require 'cfg'
 local cache = require 'mysql.cache'
+local client = require 'client'
+local server = require 'server'
+local log = require 'log'
 local e_error = require 'enum.error'
 
 -- Enviroment.
 -------------------------------------------------------------------------------
 
+local _CH = client.handler()
 local print = print
 local table = table
 
@@ -31,20 +36,39 @@ end
 -------------------------------------------------------------------------------
 
 function enter_map(self)
-  print('scene enter==============================', self.id)
+  print('scene enter==============================', self.id, self.fd)
   local base = self.base
   local map = base.map or {}
   local id = map.id or 1
   local line = map.line
   local x, y = map.x, map.y
-  local args = { x = x, y = y, id = self.id }
-  local r, addr, line = skynet.call('.map_mgr', 'lua', 'enter', id, line, args)
+  local map_cfg = cfg.get('map')[id]
+  if not x or not y then
+    x, y = table.unpack(map_cfg.born)  
+  end
+  local args = { x = x, y = y, id = self.id, fd = self.fd }
+  local r, addr, line
+  local node = server.node
+  if map_cfg.is_cross then
+  else
+    r, addr, line = skynet.call('.map_mgr', 'lua', 'enter', id, line, args)
+  end
   if e_error.none ==  r then
+    self.map_addr = addr
     base.map = base.map or {}
     base.map.id = id
     base.map.line = line
+    base.map.node = node
     cache.dirty(self.id, 'base')
     print('enter_map success11111111111111111111111111111111')
   end
   return r
+end
+
+-- Client message.
+-------------------------------------------------------------------------------
+
+function _CH:move_to(msg)
+  log:dump(msg)
+  return self:call_map('move_to', msg)
 end

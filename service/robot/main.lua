@@ -58,8 +58,8 @@ local function init()
 
   skynet.error('robot start = ', start, ' num = ', num)
   for i = start, start + num - 1 do
-    local agent = skynet.uniqueservice 'robot/agent'
-    skynet.send(agent, 'lua', 'init', id)
+    local agent = skynet.newservice 'robot/agent'
+    skynet.send(agent, 'lua', 'init', i)
   end
 
   -- Finsh.

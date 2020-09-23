@@ -1,26 +1,31 @@
 --[[
  - SKYNET SIMPLE ( https://github.com/viticm/skynet-simple )
- - $Id base.lua
+ - $Id handler.lua
  - @link https://github.com/viticm/skynet-simple for the canonical source repository
  - @copyright Copyright (c) 2020 viticm( viticm.ti@gmail.com )
  - @license
  - @user viticm( viticm.ti@gmail.com )
- - @date 2020/09/07 13:53
- - @uses The player base module.
+ - @date 2020/09/17 17:33
+ - @uses The map handler.
 --]]
 
 local skynet = require 'skynet'
-local mod = require 'world.role.mod'
-local cache = require 'mysql.cache'
+local laoi = require 'laoi'
 local log = require 'log'
-local client = require 'client'
+local e_error = require 'enum.error'
 
--- Enviroment.
+-- Data.
 -------------------------------------------------------------------------------
 
-local print = print
+local pairs = pairs
+local ipairs = ipairs
+local string = string
 local table = table
-local _CH = client.handler()
+local load = load
+local pcall = pcall
+local setmetatable = setmetatable
+local print = print
+local math = math
 
 local _M = {}
 package.loaded[...] = _M
@@ -30,30 +35,15 @@ else
   _ENV = _M -- Lua 5.2+
 end
 
-
--- Data.
+-- Local functions.
 -------------------------------------------------------------------------------
 
-local nm = 'base'
-mod(nm, _M)
-
--- API(self is the role object).
+-- API.
 -------------------------------------------------------------------------------
 
-function load(self)
-  local rid = self.id
-  self[nm] = cache.load(rid, nm)
-
-  log:dump(self[nm], 'base load===================')
-end
-
-function enter(self)
-  print('base enter==============================', self.id)
-end
-
--- Message.
--------------------------------------------------------------------------------
-
-function _CH:forward()
-  return self.map and self.map.addr
+-- Move message.
+function move_to(map, obj, msg)
+  print('map handler move_to==========================', obj.id)
+  obj:set_pos(msg)
+  return { e = e_error.none }
 end

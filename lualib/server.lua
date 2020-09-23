@@ -13,6 +13,7 @@ local skynet = require 'skynet'
 local util = require 'util'
 local log = require 'log'
 local setting = require 'setting'
+local cluster = require 'skynet.cluster'
 
 local print = print
 local ipairs = ipairs
@@ -66,6 +67,33 @@ function db_proxy_list(self)
     self.db_mgr = skynet.queryservice('db_mgr')
   end
   return skynet.call(self.db_mgr, 'lua', 'proxy_list', self.db)
+end
+
+-- Send message to node.
+function send(self, node, addr, ...)
+  if self.node == node then
+    skynet.send(addr, 'lua', ...)
+  else
+    cluster.send(node, addr, ...)
+  end
+end
+
+-- Call message from node.
+function call(self, node, addr, ...)
+  if self.node == node then
+    return skynet.call(addr, 'lua', ...)
+  else
+    return cluster.call(node, addr, ...)
+  end
+end
+
+function send_map(self, node, addr, ...)
+  print('send_map', self, node, addr, ...)
+  self:send(node, addr, 'handle', ...)
+end
+
+function call_map(self, node, addr, ...)
+  return self:call(node, addr, 'handle', ...)
 end
 
 -- Get db query unique proxy.

@@ -31,6 +31,7 @@ return {
       role_mgr.on_lua_msg(session, cmd, rid, ...)
     end,
     client = function(fd, address, msg, sz)
+      skynet.ignoreret()
       role_mgr.on_client_msg(fd, msg, sz)
     end
   },

@@ -45,7 +45,6 @@ end
 -- @param table msg The login msg.
 -- @return mixed
 local function login_local(self, msg)
-  print('login_local====================')
   local op = 'login'
   local json_msg = {
     device = msg.device,
@@ -124,6 +123,9 @@ local function msg_loop(self)
         loop_error(self, fd, 'disptaching')
       else
         skynet.fork(function()
+          if not self.fd then
+            loop_error(self, fd, 'closed')
+          end
           in_dispatch = true
           client.dispatch(self, msg, sz)
           in_dispatch = nil

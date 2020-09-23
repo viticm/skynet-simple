@@ -12,6 +12,8 @@
 local skynet = require 'skynet'
 local log = require 'log'
 local map = require 'map.init'
+local map_handler = require 'map.handler'
+local e_error = require 'enum.error'
 
 -- Data.
 -------------------------------------------------------------------------------
@@ -47,6 +49,7 @@ function _M.new(id, line)
     return false
   end
   obj = map.new({ id = id })
+  obj:init()
   maps[id][line] = obj
   return true
 end
@@ -69,6 +72,36 @@ end
 function _M.free(id, line)
   if not maps[id] then return end
   maps[id][line] = nil
+end
+
+-- Handle lua message.
+-- @param number id Map id.
+-- @param number line Map line.
+-- @param string pid Player id.
+-- @param table msg
+-- @return mixed
+function _M.handle(id, line, name, pid, msg)
+  print('id====================', id, line, name, pid, msg)
+  local obj = get_map(id, line)
+  if not obj then
+    log:warn('handle[%s] not find the map object from[%d:%d]', name, id, line)
+    return { e = e_error.unknown }
+  end
+  local player
+  if pid then
+    player = obj.objs[pid]
+    if not player then
+      log:warn('Handle[%s] not find player from %s', name, pid)
+      return { e = e_error.unknown }
+    end
+  end
+  local handler = map_handler[name]
+  if not handler then
+    log:warn('handle[%s] not find the handler', name)
+    return { e = e_error.unknown }
+  end
+
+  return handler(map, player, msg)
 end
 
 return {

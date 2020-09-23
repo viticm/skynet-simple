@@ -13,6 +13,8 @@ local skynet = require 'skynet'
 local log = require 'log'
 local player = require 'map.player'
 local e_error = require 'enum.error'
+local cfg = require 'cfg'
+local aoi = require 'map.aoi'
 
 local tostring = tostring
 local type = type
@@ -43,7 +45,10 @@ function new(conf)
 
   local t = {
     id = conf.id,
-    objs = {}
+    objs = {},                                  -- All object hash.
+    players = {},                               -- All player object hash.
+    monsters = {},
+    npcs = {},
   }
 
   return setmetatable(t, { __index = _M })
@@ -52,11 +57,37 @@ end
 
 function init(self)
 
+  local map_cfg = self:get_cfg()
+
+  -- AOI.
+  local aoi_args = {}
+  aoi_args.width = map_cfg.width
+  aoi_args.height = map_cfg.height
+  aoi_args.view = map_cfg.view
+  self.aoi = aoi.new(aoi_args)
+
+  -- Other objs create from config.
+
 end
 
 -- Add a object.
 function add(self, obj)
-  self.objs[obj.id] =  obj
+  local aoi_id = self.aoi:unit_new({ x = obj.x, y = obj.y, id = obj.id })
+  print('aoi_id=================', aoi_id)
+  obj:init({ aoi_id = aoi_id })
+  self.objs[obj.id] = obj
+
+  if obj:is_player() then
+    self.players[obj.id] = obj
+  elseif obj:is_npc() then
+    self.npcs[obj.id] = obj
+  elseif obj:is_monster() then
+    self.monsters[obj.id] = obj
+  end
+
+  -- Appear.
+  local name, msg = obj:pack_appear()
+  obj:send_around(name, msg)
 end
 
 -- Get a object.
@@ -67,6 +98,19 @@ end
 -- Remove a object.
 function remove(self, id)
   self.objs[id] = nil
+  self.aoi:unit_del(id)
+
+  if obj:is_player() then
+    self.players[obj.id] = nil
+  elseif obj:is_npc() then
+    self.npcs[obj.id] = nil
+  elseif obj:is_monster() then
+    self.monsters[obj.id] = nil
+  end
+
+  -- Disappear.
+  local name, msg = obj:pack_disappear()
+  obj:send_around(name, msg)
 end
 
 -- The enter.
@@ -80,7 +124,9 @@ function enter(self, args)
   end
   local obj = self:get(id)
   if not obj then
+    args.map = self
     obj = player.new(args)
+    obj:init(args)
     self:add(obj)
   else
 
@@ -90,5 +136,5 @@ function enter(self, args)
 end
 
 function get_cfg(self)
-
+  return cfg.get('map')[self.id]
 end

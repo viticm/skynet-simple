@@ -15,6 +15,7 @@ local cfg = require 'cfg'
 local log = require 'log'
 local util = require 'util'
 local e_map = require 'enum.map'
+local queue = require 'skynet.queue'
 local e_error = require 'enum.error'
 
 local tostring = tostring
@@ -49,6 +50,7 @@ end
 function init()
   pools = {}            -- [id] = service_pool
   lines = {}            -- [id][line] = { count, no }
+  locks = {}
 end
 
 -- Get the map config.
@@ -57,6 +59,14 @@ end
 function get_cfg(id)
   local conf = cfg.get('map')
   return conf[id]
+end
+
+-- Get map lock.
+function get_lock(id)
+  if not locks[id] then
+    locks[id] = queue()
+  end
+  return locks[id]
 end
 
 -- Create a pool for map.
@@ -90,7 +100,7 @@ function get_map_line(id, new)
   print('get_map===================', id, new)
   local line
   for k, v in pairs(list) do
-    if v.count < conf.max then
+    if v.count < conf.max_online then
       line = k
       break
     end
@@ -152,7 +162,8 @@ function enter(id, line, args)
     if conf.tp ~= e_map.tp_normal or switch then
       return e_error.map_line_invalid
     end
-    line = get_map_line(id, true)
+    local lock = get_lock(id)
+    line = lock(get_map_line, id, true)
   end
   print('line===================', line)
   if not line then
@@ -162,6 +173,10 @@ function enter(id, line, args)
   local pool = get_pool(id)
   local addr = pool:get(line)
   local r = skynet.call(addr, 'lua', 'enter', id, line, args)
+  local info = lines[id][line]
+  if r then
+    info.count = info.count + 1
+  end
   log:info('enter %d|%s end', id, line)
   return r, addr, line
 end

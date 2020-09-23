@@ -108,6 +108,7 @@ end
 function signin(self)
   if not self:is_connected() then return false end
   local uid = self.account.uid
+  print('uid======================', uid)
   local msg = {
     channel = 100,
     imei = uid,
@@ -261,7 +262,7 @@ function login_game(self)
   skynet.fork(function() 
     local ok, err = pcall(client.dispatch, self)
     if not ok then
-      log:warn('login game dispatch error %d', err or -1)
+      log:warn('login game dispatch error %s', err or -1)
     end
   end)
   local r = self:auth_game()
@@ -273,5 +274,5 @@ end
 
 -- Doing action with config.
 function do_action(self)
-
+  action.run(self)
 end

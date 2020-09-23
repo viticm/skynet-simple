@@ -27,7 +27,7 @@ local _M = {}
 
 -- Loop.
 local function loop()
-  skynet.sleep(20)
+  skynet.sleep(200)
   local r = obj:login_account()
   print('login_account:', r)
   if r then
@@ -36,7 +36,10 @@ local function loop()
         r = obj:create_role()
       end
       if r then
-        obj:enter_game()
+        r = obj:enter_game()
+      end
+      if r then
+        obj:do_action()
       end
     end
   end

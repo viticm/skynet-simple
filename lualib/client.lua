@@ -20,7 +20,7 @@ local log = require 'log'
 -- Data.
 -------------------------------------------------------------------------------
 
-local thread = thread or {}
+local threads = threads or {}
 local ret_msg = ret_msg or {}
 local ret_err = ret_err or {}
 local host = host or nil
@@ -41,16 +41,20 @@ local handler = {}
 -- @param mixed args
 local function forward_msg(self, name, response, args)
   local start_t = skynet.now()
-  local f = server.send_map
+  local f = self.send_map
   if response then
-    f = server.call_map
+    f = self.call_map
   end
-  local ok, r = xpcall(f, traceback, self, name, self.rid, args)
+  if not f then
+    log:warn('forward_msg fd[%d] msg[%s] invalid from self', self.fd, name)
+    return
+  end
+  local ok, r = xpcall(f, traceback, self, name, args)
   if ok then
     if response then
       local msg = string.pack('>s2', response(r))
       if not socketdriver.send(self.fd, msg) then
-        log:warn('forward_msg response msg[%s] failed')
+        log:warn('forward_msg response msg[%s] failed', name)
       end
     end
   else
@@ -77,6 +81,10 @@ local function handle_msg(self, name, response, f, args)
       if type(r) ~= 'table' then
         log:warn('handle_msg fd[%d] msg[%s] response error', self.fd, name)
       else
+        if not self.fd then
+          log:warn('handle_msg invalid fd %s', name)
+          return
+        end
         if r.e and type(r.e) ~= 'number' then
           log:warn('handle_msg fd[%d] msg[%s] response error', self.fd, name)
         end
@@ -99,7 +107,7 @@ local function handle_msg(self, name, response, f, args)
 end
 
 local print_ignores = {
-  ['move'] = 1,
+  ['move_to'] = 1,
 }
 
 local function print_m(name, str)

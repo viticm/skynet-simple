@@ -317,8 +317,8 @@ function _CH:auth_game(msg)
       log:info('Check token success, fd[%d] uid[%s](%s)', 
         self.fd, msg.uid, msg.token)
     else
-      log:info('Check token failure, fd[%d] uid[%s](%s) error[%s]',
-        self.fd, self.uid, msg.uid, msg.token, err)
+      log:warn('Check token failure, fd[%d] uid[%s](%s) error[%s]',
+        self.fd, msg.uid, msg.token, err)
         return { e = e_error.auth_failed, m = 'auth failed' }
     end
   end

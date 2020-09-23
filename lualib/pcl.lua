@@ -124,13 +124,13 @@ function post(uri, data, is_chat)
     data.sign = cfg.game_key
   end
   local msg = json.encode(data)
-  local sign_msg = md5.sumhexa(msg .. cfg.game_key) .. msg
+  local sign_req = { data = msg, sign = md5.sumhexa(msg .. cfg.game_key) }
   local recv_header = {}
   local code, body
   if is_chat then
-    code, body = post_chat(uri, recv_header, sign_msg)
+    code, body = post_chat(uri, recv_header, json.encode(sign_req))
   else
-    code, body = post_normal(uri, recv_header, sign_msg)
+    code, body = post_normal(uri, recv_header, json.encode(sign_req))
   end
   if 200 == code then
     return json.decode(body)

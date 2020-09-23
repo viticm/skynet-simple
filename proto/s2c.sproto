@@ -31,3 +31,24 @@ roles 2 {
 other_login 3 {
   request {}
 }
+
+# Add map object.
+map_object 4 {
+  request {
+    id              0 : string      # ID
+    name            1 : string      # Name
+    tp              2 : integer
+    x               3 : integer
+    y               4 : integer
+    dir             5 : integer
+  }
+}
+
+# Remove map object.
+unmap_object 5 {
+  request {
+    id              0 : string
+    name            1 : string
+    tp              2 : integer
+  }
+}

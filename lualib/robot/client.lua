@@ -79,6 +79,7 @@ end
 -- API.
 -------------------------------------------------------------------------------
 
+
 -- Dispatch socket message.
 -- @param table self The socket table.
 function dispatch(self)
@@ -126,6 +127,7 @@ end
 -- @param string name The package name.
 -- @param table data The message data.
 function push(self, name, data)
+  if not self.fd then return end
   assert(socket.write(self.fd, pack_msg(name, data), 'closed ' .. self.fd))
 end
 

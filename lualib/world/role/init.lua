@@ -12,6 +12,8 @@
 local skynet = require 'skynet'
 local socket = require 'skynet.socket'
 local client = require 'client'
+local server = require 'server'
+local log = require 'log'
 
 require 'world.role.load' -- Load all role script(mods)
 
@@ -19,6 +21,7 @@ require 'world.role.load' -- Load all role script(mods)
 -------------------------------------------------------------------------------
 
 local setmetatable = setmetatable
+local print = print
 
 local _M = {}
 package.loaded[...] = _M
@@ -64,4 +67,22 @@ function send(self, name, msg)
   client.push(self, name, msg)
 end
 
+function send_map(self, name, ...)
+  if not self.map_addr then
+    log:warn('send map invalid')
+    return
+  end
+  local map = self.base.map
+  print('self.map=============', map.node, self.map_addr, name, self.id, ...)
+  server:send_map(map.node, self.map_addr, map.id, map.line, name, self.id, ...)
+end
 
+function call_map(self, name, ...)
+  if not self.map_addr then
+    log:warn('call map invalid')
+    return
+  end
+  local map = self.base.map
+  return server:call_map(
+    map.node, self.map_addr, map.id, map.line, name, self.id, ...)
+end

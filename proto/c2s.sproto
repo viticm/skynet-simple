@@ -106,3 +106,15 @@ enter 8 {
     e                 0 : integer
   }
 }
+
+# Move to.
+move_to 9 {
+  request {
+    x                 0 : integer
+    y                 1 : integer
+    dir               2 : integer
+  }
+  response {
+    e                 0 : integer
+  }
+}

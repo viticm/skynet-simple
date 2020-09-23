@@ -68,13 +68,14 @@ local function on_login(self, msg, r)
   local model = info.model
   local last_t = util.time()
   local r = login_db('select last from t_user where uid = "%s"', uid)
+  log:dump(r, 'login_db========================')
   if r[1] then
     login_db(
       format('update t_user set last = %d where uid = "%s"', last_t, uid))
-    last_t = r[1][1]
+    last_t = r[1].last
   else
     login_db(
-      format('insert into t_user(uid, last) values ("%s", %d)', uid, last_t))
+      format('replace into t_user(uid, last) values ("%s", %d)', uid, last_t))
   end
   r = login_db(format(
     'select level, rname, icon, sid, last from t_player where uid = "%s"', uid))

@@ -205,7 +205,7 @@ end
 function on_client_msg(fd, msg, sz)
   local obj = get_by_fd(fd)
   if obj then
-    local lock = get_rid_lock(obj.id)
+    local lock = get_lock(obj.id)
     client.dispatch(obj, msg, sz, lock)
   end
 end

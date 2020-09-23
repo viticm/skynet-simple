@@ -12,10 +12,12 @@
 local skynet = require 'skynet'
 local log = require 'log'
 local util = require 'util'
-local table = table
 
 -- Data.
 -------------------------------------------------------------------------------
+
+local table = table
+local print = print
 
 local _M = {}
 package.loaded[...] = _M
@@ -67,5 +69,13 @@ end
 -- Action run.
 -- @param table role
 function run(role)
-
+  local mod = role.run_mod
+  local name = mod.name
+  if mod.once then
+    local handler = run_handler[name] 
+    print('handler==================', handler)
+    local _ = handler and handler(role)
+    log:debug('Robot action run[%s] once exit', name)
+  else
+  end
 end
