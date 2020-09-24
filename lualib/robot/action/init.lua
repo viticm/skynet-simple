@@ -18,6 +18,8 @@ local util = require 'util'
 
 local table = table
 local print = print
+local debug = debug
+local collectgarbage = collectgarbage
 
 local _M = {}
 package.loaded[...] = _M
@@ -75,6 +77,7 @@ function run(role)
     local handler = run_handler[name] 
     print('handler==================', handler)
     local _ = handler and handler(role)
+    role:close()
     log:debug('Robot action run[%s] once exit', name)
   else
   end

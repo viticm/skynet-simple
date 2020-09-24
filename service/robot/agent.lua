@@ -26,10 +26,11 @@ local _M = {}
 -------------------------------------------------------------------------------
 
 -- Loop.
-local function loop()
-  skynet.sleep(200)
+local function loop(obj)
+  do
+    local _ <close> = obj:ref_guard()
+  end
   local r = obj:login_account()
-  print('login_account:', r)
   if r then
     if obj:login_game() then
       if not obj.roles or not next(obj.roles) then
@@ -45,6 +46,16 @@ local function loop()
   end
 end
 
+local function exit()
+  _M.robot:close()
+  -- Wait to collect.
+  repeat
+    skynet.sleep(1)
+  until _M.robot.ref <= 0
+  _M.robot = nil
+  collectgarbage('collect')
+end
+
 -- API.
 -------------------------------------------------------------------------------
 
@@ -53,14 +64,18 @@ end
 function _M.init(id)
   local uid_prefix = setting.get('uid_prefix')
   local uid = tonumber(tostring(uid_prefix) .. tostring(id))
-  local myrobot <close> = setmetatable(robot, {
-    __close = function(t, err)
-      t:release()
+  _M.robot = setmetatable({}, {
+    __index = robot,
+    __gc = function(t)
+      -- GC do something...
+      print('--- robot __gc ---', t.pid)
     end
   })
-  obj = myrobot
-  print('the obj========================', obj)
-  obj:init({ uid = uid, pid = id })
+  _M.robot:init({ uid = uid, pid = id })
+  skynet.fork(function()
+    loop(_M.robot)
+    exit()
+  end)
 end
 
 return {
@@ -69,6 +84,5 @@ return {
   init = function()
     math.random(util.time())
     client.init('s2c', 'c2s')
-    skynet.fork(loop)
   end
 }

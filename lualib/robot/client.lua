@@ -109,10 +109,6 @@ function dispatch(self)
       self.fd = nil
       return self
     end
-    if self.exit then
-      log('client exit fd: %d', self.fd)
-      return self
-    end
   until false
 end
 

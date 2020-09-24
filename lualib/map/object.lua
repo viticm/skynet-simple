@@ -118,14 +118,14 @@ function set_pos(self, args)
   self.x = args.x
   self.y = args.y
   self.dir = args.dir
-  print('set_pos===============', self.x, self.y, self.dir)
+  -- print('set_pos===============', self.x, self.y, self.dir)
   self:aoi_update()
 end
 
 -- Update aoi.
 function aoi_update(self)
   -- Update AOI.
-  print('self.aoi_id===========', self.aoi_id, self.map and self.map.aoi and self.map.aoi.view)
+  -- print('self.aoi_id===========', self.aoi_id, self.map and self.map.aoi and self.map.aoi.view)
   local view = self.map and self.map.aoi and self.map.aoi.view
   if self.aoi_id and view then
     local args = { id = self.aoi_id, x = self.x, y = self.y }
@@ -133,7 +133,7 @@ function aoi_update(self)
     if ins and next(ins) then
       local name, msg = self:pack_appear()
       for _, id in ipairs(ins) do
-        print('in id=============================', id)
+        print('in id=============================', id, self.id)
         local obj = self.map.objs[id]
         if obj then
           if obj.send and not obj.viewers[self.id] then
@@ -150,7 +150,7 @@ function aoi_update(self)
     if outs and next(outs) then
       local name, msg = self:pack_disappear()
       for _, id in ipairs(outs) do
-        print('out id=============================', id)
+        print('out id=============================', id, self.id)
         local obj = self.map.objs[id]
         if obj then
           if obj.send and obj.viewers[self.id] then

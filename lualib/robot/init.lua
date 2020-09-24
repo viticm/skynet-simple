@@ -25,6 +25,7 @@ local xpcall = xpcall
 local pcall = pcall
 local print = print
 local next = next
+local setmetatable = setmetatable
 
 -- Data.
 -------------------------------------------------------------------------------
@@ -46,10 +47,16 @@ function init(self, data)
   self.run_mod = setting.get('run_mod')
   self.pid = data.pid
   self.account = {uid = data.uid}
+  self.ref = 0
 end
 
 -- Release
 function release(self)
+  print('release=================================')
+  if self.fd then socket.close(self.fd) end
+end
+
+function close(self)
   if self.fd then socket.close(self.fd) end
 end
 
@@ -69,6 +76,19 @@ end
 -- Ping server.
 function ping(self)
   
+end
+
+-- Reference self.
+function ref_guard(self)
+  self.ref = self.ref + 1
+  local t = {}
+  setmetatable(t, {
+    __close = function()
+      self.ref = self.ref - 1
+      -- print('now ref', self.ref)
+    end
+  })
+  return t
 end
 
 -- Request from server.
@@ -153,6 +173,7 @@ function login_account(self)
 
   -- Dispatch.
   skynet.fork(function() 
+    local _ <close> = self:ref_guard()
     local ok, err = xpcall(client.dispatch, trace.traceback, self)
     if not ok then
       log:warn(err)
@@ -260,6 +281,7 @@ function login_game(self)
   log:info('login game open fd: %d', fd)
   self.fd = fd
   skynet.fork(function() 
+    local _ <close> = self:ref_guard()
     local ok, err = pcall(client.dispatch, self)
     if not ok then
       log:warn('login game dispatch error %s', err or -1)

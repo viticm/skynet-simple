@@ -88,7 +88,7 @@ function call(self, node, addr, ...)
 end
 
 function send_map(self, node, addr, ...)
-  print('send_map', self, node, addr, ...)
+  -- print('send_map', self, node, addr, ...)
   self:send(node, addr, 'handle', ...)
 end
 

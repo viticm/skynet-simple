@@ -81,7 +81,7 @@ end
 -- @param table msg
 -- @return mixed
 function _M.handle(id, line, name, pid, msg)
-  print('id====================', id, line, name, pid, msg)
+  -- print('id====================', id, line, name, pid, msg)
   local obj = get_map(id, line)
   if not obj then
     log:warn('handle[%s] not find the map object from[%d:%d]', name, id, line)

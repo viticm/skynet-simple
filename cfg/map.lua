@@ -6,7 +6,7 @@ return {
     max_online = 100,
     width = 512,
     height = 512,
-    view = 200,
+    view = 20,
     born = {10, 100},
   },
   [2] = {

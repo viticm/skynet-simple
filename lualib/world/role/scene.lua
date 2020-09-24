@@ -69,6 +69,6 @@ end
 -------------------------------------------------------------------------------
 
 function _CH:move_to(msg)
-  log:dump(msg)
+  -- log:dump(msg)
   return self:call_map('move_to', msg)
 end

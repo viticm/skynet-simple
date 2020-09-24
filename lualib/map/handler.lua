@@ -43,7 +43,7 @@ end
 
 -- Move message.
 function move_to(map, obj, msg)
-  print('map handler move_to==========================', obj.id)
+  -- print('map handler move_to==========================', obj.id)
   obj:set_pos(msg)
   return { e = e_error.none }
 end
