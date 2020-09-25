@@ -23,6 +23,18 @@ skynet/*
 *.log
 *.pid
 *.dport
+*.o
+*.d
+
+lua_checker
+lua_checker_parser.cc
+lua_checker_parser.h
+lua_lexxer.cc
+lua_lexxer.h
+lua_parser.cc
+lua_parser.h
+lua_simplifier
+
 
 #############
 ## Cmake
