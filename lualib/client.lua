@@ -58,7 +58,7 @@ local function forward_msg(self, name, response, args)
       end
     end
   else
-    log:warn('forward_msg fd[%d] msg[%s] handle raise error: %s', 
+    log:warn('forward_msg fd[%d] msg[%s] handle raise error: %s',
               self.fd, name, r)
   end
   local use_t = skynet.now() - start_t
@@ -152,7 +152,7 @@ function _M.dispatch(self, msg, sz, lock)
       end
     end
   else
-    local session, r, ud = name, args, response
+    local session, r, _ = name, args, response
     local co = threads[session]
     if not co then
       log:warn('dispatch invalid session: %s', session)
@@ -160,7 +160,7 @@ function _M.dispatch(self, msg, sz, lock)
       ret_msg[session] = r
       threads[session] = nil
       ret_err[session] = nil
-      socket.wakeup(co)
+      skynet.wakeup(co)
     end
   end
   if self.quit then
@@ -228,7 +228,7 @@ end
 -- @param string name
 -- @param table data
 function _M.push_objs(objs, name, data)
-  local msg = pack('>s2', sender(name, data))
+  local msg = string.pack('>s2', sender(name, data))
   print_m(name, 'send >>>')
   for _, obj in pairs(objs) do
     if obj.is_player then

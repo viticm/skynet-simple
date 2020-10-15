@@ -27,4 +27,6 @@ return {
   id_invalid = 13,                        -- ID invalid.
   map_line_invalid = 14,                  -- Map line invalid.
   map_get_failed = 15,                    -- Get map object failed.
+  skill_forbit = 16,                      -- A skill forbit.
+  skill_cannot_spell = 17,                -- Skill can't spell.
 }

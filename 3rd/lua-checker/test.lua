@@ -18,7 +18,7 @@ a = 123.456e99
 a = 123.456e+99
 a = 123.456e-99
 
-dofile "tmp/abc.lua"
+-- dofile "tmp/abc.lua"
 
 -- Test syntactic sugar expansions.
 function fn() end			-- Dummy function used below

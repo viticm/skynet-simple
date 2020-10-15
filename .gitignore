@@ -33,7 +33,10 @@ lua_lexxer.cc
 lua_lexxer.h
 lua_parser.cc
 lua_parser.h
+lex.yy.c
 lua_simplifier
+lua_checker_t
+lua_checker_t/*
 
 
 #############

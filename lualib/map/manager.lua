@@ -127,14 +127,14 @@ end
 function create(id)
   local pool = get_pool(id)
   if not pool then return end
-  local line = util.uniq_id() 
+  local line = util.uniq_id()
   local addr, index, sub = pool:get(line)
   print('create============================', addr, index, sub)
   if not addr then
     return
   end
   local no = (index - 1) * pool.cap + sub
-  local info = { count = 0, no = no } 
+  local info = { count = 0, no = no }
   lines[id][line] = info                 -- initial player count.
 
   local r = skynet.call(addr, 'lua', 'new', id, line)
@@ -151,7 +151,7 @@ end
 function enter(id, line, args)
   log:info('enter %d|%s start', id, line)
   local conf = get_cfg(id)
-  if not conf then 
+  if not conf then
     log:warn('enter %d|%s failed, not find config', id, line)
     return e_error.invalid_id
   end
@@ -173,7 +173,7 @@ function enter(id, line, args)
   local pool = get_pool(id)
   local addr = pool:get(line)
   local r = skynet.call(addr, 'lua', 'enter', id, line, args)
-  local info = lines[id][line]
+  info = lines[id][line]
   if r then
     info.count = info.count + 1
   end

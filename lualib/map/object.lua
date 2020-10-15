@@ -182,6 +182,6 @@ function get_viewers(self)
     for _, id in ipairs(ids) do
        self.viewers[id] = 1
     end
-    return r
+    return self.viewers
   end
 end

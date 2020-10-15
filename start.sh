@@ -87,7 +87,8 @@ echo "tail "$LOGPATH"/log/"$tp$SVR_ID""-$day"-msg.log"
 flagfile=$ROOT"/bin/"$SVR_NAME".bootflag"
 echo ""> $flagfile
 #gdb --args $ROOT/skynet/skynet $ROOT/bin/config.$SVR_TYPE
-valgrind $ROOT/skynet/skynet $ROOT/bin/config.$SVR_TYPE
+#valgrind $ROOT/skynet/skynet $ROOT/bin/config.$SVR_TYPE
+$ROOT/skynet/skynet $ROOT/bin/config.$SVR_TYPE
 
 function start_status(){
   # Start max time.

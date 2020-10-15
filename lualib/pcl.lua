@@ -71,16 +71,16 @@ local function get_uri(url)
 end
 
 -- Post a uri to normal platform.
--- @param string uri
+-- @param string url
 -- @param table recv_header
 -- @param table recv_body
-local function post_normal(uri, recv_header, recv_body)
+local function post_normal(url, recv_header, recv_body)
   post_index = post_index + 1
   local header = {
     ['Content-Type'] = format('application/json{"game_id:%d"}', cfg.game_id)
   }
   local host = url_cache.normal.host
-  local uri = url_cache.normal.uri .. uri
+  local uri = url_cache.normal.uri .. url
   log:info('%d POST %s[%s] %s', post_index, host, uri, recv_body)
   local ok, code, body = pcall(
     httpc.request, 'POST', host, uri, recv_header, header, recv_body)
@@ -92,15 +92,15 @@ local function post_normal(uri, recv_header, recv_body)
 end
 
 -- Post a uri to chat platform.
--- @param string uri
+-- @param string url
 -- @param table recv_header
 -- @param table recv_body
-local function post_chat(uri, recv_header, recv_body)
+local function post_chat(url, recv_header, recv_body)
   local header = {
     ['Content-Type'] = format('application/json{"game_id:%d"}', cfg.game_id)
   }
   local host = url_cache.chat.host
-  local uri = url_cache.chat.uri .. uri
+  local uri = url_cache.chat.uri .. url
   log:info('Chat POST %s[%s] %s', host, uri, recv_body)
   local ok, code, body = pcall(
     httpc.request, 'POST', host, uri, recv_header, header, recv_body)
