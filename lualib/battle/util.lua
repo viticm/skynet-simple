@@ -40,6 +40,10 @@ function search_entity(et, pos, dir, shape, args)
 
 end
 
+function is_valid_pos(pos)
+
+end
+
 -- Config --
 
 function get_effects(id)

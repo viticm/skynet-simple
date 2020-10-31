@@ -13,6 +13,7 @@
 
 local skynet = require 'skynet'
 local log = require 'log'
+local attr = require 'battle.attr'
 
 local e_object_type = require 'enum.object_type'
 
@@ -107,7 +108,7 @@ end
 -- @param table msg Package data.
 function send_around(self, name, msg)
   local objs = self:get_viewers()
-  for id, obj in pairs(objs or {}) do
+  for _, obj in pairs(objs or {}) do
     local _ = obj.send and obj:send(name, msg)
   end
 end

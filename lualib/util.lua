@@ -12,6 +12,7 @@
 local split_core = require 'split.c'
 local extend_core = require 'extend.c'
 local uniq = require 'uniq.c'
+local skynet = require 'skynet'
 
 local tostring = tostring
 local type = type
@@ -23,6 +24,7 @@ local pcall = pcall
 local setmetatable = setmetatable
 local print = print
 local os = os
+local format = string.format
 
 -- Create the module table here
 -- Data.
@@ -827,6 +829,11 @@ function time()
   return os.time()
 end
 
+-- Get current tick.
+function tick()
+  return skynet.now() * 10
+end
+
 -- Split string.
 function split_row(str, seq)
   return split_core.splitrow(str, seq)
@@ -907,7 +914,7 @@ function foldl(obj, iterator, memo)
   each(obj, function(keys, item)
     if memo then
       memo = iterator(memo, keys, item)
-    else 
+    else
       memo = item
     end
   end)

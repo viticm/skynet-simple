@@ -10,7 +10,7 @@
 --]]
 
 local skynet = require 'skynet'
-local sharetable = require 'skynet.sharetable'
+-- local sharetable = require 'skynet.sharetable'
 local setting = require 'setting'
 local setting_loader = require 'setting.loader'
 local log = require 'log'
@@ -25,7 +25,7 @@ function _M.start()
   setting.init(def_setting)
 
   -- sharetable.query('') -- Start service.
-  
+
   -- Proto load.
   local proto_loader = skynet.uniqueservice('proto_loader')
   skynet.call(proto_loader, 'lua', 'load', { 'c2s', 's2c' })

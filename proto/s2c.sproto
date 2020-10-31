@@ -52,3 +52,15 @@ unmap_object 5 {
     tp              2 : integer
   }
 }
+
+.attr_item {
+  id    0 : integer   # The attr id.
+  value 1 : integer   # The attr value.
+}
+
+# Update attr list.
+update_attr 6 {
+  request {
+    list  0 : *attr_item
+  }
+}

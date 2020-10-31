@@ -97,8 +97,9 @@ end
 
 -- Remove a object.
 function remove(self, id)
-  self.objs[id] = nil
-  self.aoi:unit_del(id)
+
+  local obj = self.objs[id]
+  if not obj then return end
 
   if obj:is_player() then
     self.players[obj.id] = nil
@@ -111,6 +112,9 @@ function remove(self, id)
   -- Disappear.
   local name, msg = obj:pack_disappear()
   obj:send_around(name, msg)
+
+  self.objs[id] = nil
+  self.aoi:unit_del(id)
 end
 
 -- The enter.
@@ -119,7 +123,7 @@ end
 function enter(self, args)
   local id = args.id
   if not id then
-    log:warn('enter not found player id') 
+    log:warn('enter not found player id')
     return e_error.invalid_operation
   end
   local obj = self:get(id)
@@ -137,4 +141,8 @@ end
 
 function get_cfg(self)
   return cfg.get('map')[self.id]
+end
+
+function update(self)
+
 end

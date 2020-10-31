@@ -13,7 +13,7 @@ local util = require 'util'
 local log = require 'log'
 local e_error = require 'enum.error'
 local e_skill = require 'enum.skill'
-local cfg = require 'cfg.init'
+local battle_util = require 'battle.util'
 
 -- Local defines.
 local math = math
@@ -26,6 +26,8 @@ local setmetatable = setmetatable
 -- Data.
 -------------------------------------------------------------------------------
 
+local c_prepare_error_t <const> = 20
+
 local _M = {}
 package.loaded[...] = _M
 if setfenv and type(setfenv) == 'function' then
@@ -37,8 +39,19 @@ end
 -- local functions.
 -------------------------------------------------------------------------------
 
-local function save_param()
+local function save_param(self, args)
 
+end
+
+-- Get skill or effect ready time(round mode return round count).
+-- @param number time The delay time(ms).
+-- @return number
+local function get_ready_time(self, time)
+  if e_skill.mode_round == self._mode then
+    return util.tick() + time
+  else
+    return math.ceil(time / 1000)
+  end
 end
 
 -- API.
@@ -114,8 +127,7 @@ end
 -- @param number id
 -- @return bool
 function is_effect_full(self, id)
-  local skill_cfg = cfg.get('skill')
-  local one_cfg = skill_cfg[id]
+  local one_cfg = battle_util.get_skill_cfg(id)
   if not one_cfg then return true end
   local list = self._effects[id]
   if not list then return false end
@@ -146,6 +158,45 @@ end
 function check(self, id, args)
   if self:is_forbit(id) then return e_error.skill_forbit end
   if self:is_effect_full(id) then return e_error.skill_cannot_spell end
+  local conf = battle_util.get_skill_cfg(id)
+  if not conf then return e_error.id_invalid end
+  local map = self.map
+  local target = args.target_id and map:get(args.target_id)
+
+  -- Break.
+  if not args.is_trigger then
+    local curr_t = util.tick()
+    local cur_id = self._prepare.id or self._lead.id
+    if id ~= cur_id then
+      self:break_spell()
+      return e_error.none
+    end
+    if self:is_prepareing() then
+      local x, y = self.x, self.y
+      if not self._prepare.target_id and conf.can_move ~= 1 then
+        if x ~= self._prepare.x or y ~= self._prepare.y then
+          return e_error.invalid_operation
+        end
+      else
+        if self._prepare.target_id ~= args.target_id then
+          return e_error.invalid_operation
+        end
+      end
+      if curr_t + c_prepare_error_t < self._prepare.ready_t then
+        return e_error.skill_cd_limited
+      else
+        self:prepare_clear()
+        local level = self._prepare.level
+        local _args = {
+          target_id = self._prepare.target_id,
+          x = x,
+          y = y
+        }
+        self:hit(id, level, _args)
+      end
+    end
+  end
+  return e_error.none, conf, target
 end
 
 -- Get the real skill id.
@@ -155,8 +206,23 @@ function real_id(self, id)
   return id
 end
 
+-- Save skill prepare info.
+-- @param number id Skill id.
+-- @param number level Skill level.
+-- @param number delay_t The prepare cost time(ms).
+-- @param mixed target_id
+-- @param mixed pos
+-- @param mixed args
 function prepare_save(self, id, level, delay_t, target_id, pos, args)
-
+  args = args or {}
+  local d = self._prepare
+  local x, y = self.x, self.y
+  d.id = id
+  d.level = level
+  d.ready_t = get_ready_time(self, delay_t)
+  d.pos = pos
+  d.x, d.y = x, y
+  d.is_trigger = args.is_trigger
 end
 
 function prepare_clear(self)
@@ -192,8 +258,25 @@ end
 -- @return e
 function use(self, id, args)
   print('skill use====================', id, args)
-  local e = self:check(id, args)
+  id = self:real_id(id)
+  local e, conf, target = self:check(id, args)
   if e ~= e_error.none then return e end
+
+  local pos
+  if battle_util.is_valid_pos(args.pos) then
+    pos = args.pos
+  end
+
+  -- Prepare.
+  if conf.prepare > 0 then
+    local level = args.level or 1
+    local tid = args.target_id
+    self:prepare_save(id, level, conf.prepare, tid, pos, args)
+  else
+    self:use(id, args)
+  end
+
+  return e
 end
 
 -- A skill hit.
@@ -205,7 +288,15 @@ function hit(self, id, args)
 end
 
 -- Update for handle.
-function update(self)
+-- @param table args
+function update(self, args)
+
+  -- Effects.
+  if next(self._effects) then
+    print('handle effects')
+  end
+
+  -- Prepare.
 
 end
 

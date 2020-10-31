@@ -17,4 +17,14 @@ return {
   shape_cricle = 2,
   shape_sector = 3,
   shape_ring = 4,
+
+  buff = {                                -- Buff type.
+    tp_hash_class = 1,                    -- The type class hash.
+
+    event_hash_death = 1,                 -- The death event hash.
+  },
+
+  skill = {                               -- Skill type.
+
+  }
 }
