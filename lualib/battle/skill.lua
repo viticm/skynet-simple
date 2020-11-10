@@ -40,7 +40,7 @@ end
 -------------------------------------------------------------------------------
 
 local function save_param(self, args)
-
+  util.merge(args.from, args.to, { 'dir_cut' })
 end
 
 -- Get skill or effect ready time(round mode return round count).
@@ -258,7 +258,11 @@ end
 -- @return e
 function use(self, id, args)
   print('skill use====================', id, args)
+  local origin_id = id
   id = self:real_id(id)
+  if id ~= origin_id then
+    args.origin = origin_id
+  end
   local e, conf, target = self:check(id, args)
   if e ~= e_error.none then return e end
 
@@ -270,7 +274,7 @@ function use(self, id, args)
   -- Prepare.
   if conf.prepare > 0 then
     local level = args.level or 1
-    local tid = args.target_id
+    local tid = target and target.id
     self:prepare_save(id, level, conf.prepare, tid, pos, args)
   else
     self:use(id, args)

@@ -823,6 +823,16 @@ function dump(value, fold, flag)
     return lua_table
   end
 end
+-- Merge values to table.
+-- @param table f From table.
+-- @param table t To table.
+-- @param table keys Need merge keys of from table.
+function merge(f, t, keys)
+  if not keys or not next(keys) then return end
+  for _, key in ipairs(keys) do
+    t[key] = f[key]
+  end
+end
 
 -- Get now unix time.
 function time()
