@@ -48,6 +48,7 @@ function init(self, data)
   self.pid = data.pid
   self.account = {uid = data.uid}
   self.ref = 0
+  self.action = {}
 end
 
 -- Release
@@ -75,7 +76,7 @@ end
 
 -- Ping server.
 function ping(self)
-  
+
 end
 
 -- Reference self.
@@ -172,7 +173,7 @@ function login_account(self)
   self.fd = fd
 
   -- Dispatch.
-  skynet.fork(function() 
+  skynet.fork(function()
     local _ <close> = self:ref_guard()
     local ok, err = xpcall(client.dispatch, trace.traceback, self)
     if not ok then
@@ -261,6 +262,17 @@ function auth_game(self)
   skynet.sleep(100)
 
   local roles = self.roles
+  if roles then
+    if 0 == #roles then
+      log:info('auth game no role, create one')
+      self:create_role()
+    else
+      self:enter_game()
+    end
+  else
+    log:warn('auth game roles is nil')
+    return false
+  end
 
   print('auth game roles', roles)
 
@@ -280,7 +292,7 @@ function login_game(self)
   if not fd then return false end
   log:info('login game open fd: %d', fd)
   self.fd = fd
-  skynet.fork(function() 
+  skynet.fork(function()
     local _ <close> = self:ref_guard()
     local ok, err = pcall(client.dispatch, self)
     if not ok then

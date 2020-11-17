@@ -15,10 +15,12 @@ local client = require 'robot.client'
 local log = require 'log'
 local setting = require 'setting'
 local util = require 'util'
-local obj -- The robot object.
+local action = require 'robot.action'
 
 -- Data.
 -------------------------------------------------------------------------------
+
+local _ARH = action.run_handler
 
 local _M = {}
 
@@ -30,20 +32,14 @@ local function loop(obj)
   do
     local _ <close> = obj:ref_guard()
   end
-  local r = obj:login_account()
-  if r then
-    if obj:login_game() then
-      if not obj.roles or not next(obj.roles) then
-        r = obj:create_role()
-      end
-      if r then
-        r = obj:enter_game()
-      end
-      if r then
-        obj:do_action()
-      end
-    end
+  local run_mod = obj.run_mod
+  if not run_mod.no_login then
+    local run_args = {}
+    repeat
+      _ARH.auto_login(obj, nil, run_args)
+    until run_args.ended
   end
+  obj:do_action()
 end
 
 local function exit()
