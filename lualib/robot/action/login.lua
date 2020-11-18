@@ -17,7 +17,7 @@ local action = require 'robot.action'
 -- Data.
 -------------------------------------------------------------------------------
 
-local _RH = client.handler
+local _CH = client.handler
 local _ARH = action.run_handler
 local _NET = action.no_enter_t
 
@@ -54,7 +54,7 @@ end
 -------------------------------------------------------------------------------
 
 -- Role list.
-function _RH:roles(msg)
+function _CH:roles(msg)
   self.roles = msg.list
   log:dump(msg.list, 'self.roles======================')
 end
