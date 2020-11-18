@@ -19,6 +19,7 @@ local action = require 'robot.action'
 
 local _RH = client.handler
 local _ARH = action.run_handler
+local _NET = action.no_enter_t
 
 -- Local functions.
 -------------------------------------------------------------------------------
@@ -27,6 +28,7 @@ local _ARH = action.run_handler
 -- Run handlers.
 -------------------------------------------------------------------------------
 
+_NET.auto_login = true
 -- Auto login action.
 function _ARH:auto_login(cfg, args)
   _ARH.discon(self, cfg, {})
@@ -37,6 +39,7 @@ function _ARH:auto_login(cfg, args)
   end
 end
 
+_NET.discon = true
 -- Disconnect.
 function _ARH:discon(cfg, args)
   args.ended = true

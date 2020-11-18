@@ -18,8 +18,9 @@ local util = require 'util'
 
 local table = table
 local print = print
-local debug = debug
-local collectgarbage = collectgarbage
+local string = string
+local require = require
+local assert = assert
 
 local _M = {}
 package.loaded[...] = _M
@@ -154,7 +155,7 @@ function loop(role)
 
   -- Check timeout.
   d.start_t = d.start_t or skynet.now()
-  if one_cfg.timeout and (now - d.start_t) > (one_cfg.time[1] * 100) then
+  if one_cfg.timeout and (now - d.start_t) > (one_cfg.timeout[1] * 100) then
     local timeout_logic = one_cfg.timeout[2]
     if not timeout_logic or 0 == timeout_logic then
       log:error('Robot action timeout: %d', d.index)
@@ -172,7 +173,7 @@ function loop(role)
   local ended = args.ended or
     (not first_start and func_is_end and func_is_end(role, acfg, args))
   if ended then
-    tonext()
+    tonext(role)
     log:debug('Robot action do next action: %d', d.index)
     return
   end
