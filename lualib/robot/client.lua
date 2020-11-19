@@ -47,6 +47,7 @@ local ret_err = {}
 
 -- Handle message.
 local function handle_msg(self, type, name, response, f, args)
+  local _ <close> = self.ref_guard and self:ref_guard()
   local ok, r = pcall(f, self, args)
   if ok then
     if response then
@@ -74,6 +75,20 @@ local function pack_msg(t, data, session)
   local msg = sender(t, data, session)
   return string.pack('>s2', msg)
   --return msg:pack('>s2')
+end
+
+-- Reference inc.
+local function ref_inc(self)
+  if self.ref then
+    self.ref = self.ref + 1
+  end
+end
+
+-- Reference dec.
+local function ref_dec(self)
+  if self.ref then
+    self.ref = self.ref - 1
+  end
 end
 
 -- API.
@@ -139,6 +154,7 @@ end
 -- @param string name Package data.
 -- @return table
 function request(self, timeout, name, data)
+  local _ <close> = self.ref_guard and self:ref_guard()
   if not self.fd or socket.invalid(self.fd) then 
     return { e = -1 }
   end
@@ -147,7 +163,9 @@ function request(self, timeout, name, data)
     socket.write(self.fd, pack_msg(name, data, session), 'closed ' .. self.fd))
   local co = coroutine.running()
   threads[session] = co
+  ref_inc(self)
   skynet.timeout(timeout, function() 
+    ref_dec(self)
     local co = threads[session]
     if not co then return end
     ret_msg[session] = string.format('timeout %d, %s', self.fd or 0, name)

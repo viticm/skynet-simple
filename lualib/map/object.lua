@@ -108,8 +108,10 @@ end
 -- @param table msg Package data.
 function send_around(self, name, msg)
   local objs = self:get_viewers()
-  for _, obj in pairs(objs or {}) do
-    local _ = obj.send and obj:send(name, msg)
+  for id in pairs(objs or {}) do
+    local obj = self.map.objs[id]
+    print('send_around obj======================', obj and obj.id)
+    local _ = obj and obj.send and obj:send(name, msg)
   end
 end
 
