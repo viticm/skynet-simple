@@ -99,18 +99,17 @@ function unit_update(self, args)
   if not unit then return end
   if self.view then
     ins, outs = {}, {}
-    args.range = self.view
-    before = self:unit_search(args)
+    before = self.map:unit_search(unit, self.view) -- self:unit_search(args)
   end
   local _ = unit and self.map:unit_update(unit, { args.x, args.y })
   if self.view then
-    after = self:unit_search(args)
-    for id, unit in pairs(before) do
+    after = self.map:unit_search(unit, self.view) -- self:unit_search(args)
+    for id in pairs(before) do
       if not after[id] then
         table.insert(outs, self.ids[id])
       end
     end
-    for id, unit in pairs(after) do
+    for id in pairs(after) do
       if not before[id] then
         table.insert(ins, self.ids[id])
       end
@@ -128,7 +127,7 @@ function unit_search(self, args)
   local unit = self.map:get_units()[args.id]
   if not unit then return r end
   local units = self.map:unit_search(unit, args.range)
-  for id, unit in pairs(units) do
+  for id in pairs(units) do
     table.insert(r, self.ids[id])
   end
   return r
@@ -140,7 +139,7 @@ end
 function search_cricle(self, args)
   local units = self.map:search_circle(args.range, { args.x, args.y })
   local r = {}
-  for id, unit in pairs(units) do
+  for id in pairs(units) do
     table.insert(r, self.ids[id])
   end
   return r

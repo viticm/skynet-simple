@@ -274,7 +274,7 @@ function on_lua_msg(session, cmd, rid, ...)
   print('on_lua_msg', cmd, rid, ...)
   if f then
     if rid then
-      print('on_lua_msg', cmd, rid)
+      print('on_lua_msg do handler', cmd, rid)
       waiting_enter(rid)
       if 'enter' == cmd then
         if session > 0 then
