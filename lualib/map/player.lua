@@ -60,8 +60,9 @@ end
 
 -- Send a msg to client.
 function send(self, name, msg)
-  if not self.fd or socket.invalid(self.fd) then return end
-  client.push(self.fd, name, msg)
+  print('player send===================', self.fd, socket.invalid(self.fd))
+  if not self.fd then return end
+  client.push(self, name, msg)
 end
 
 -- Events.

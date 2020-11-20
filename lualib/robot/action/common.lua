@@ -45,3 +45,11 @@ end
 function _CH:move_to(msg)
   log:dump(msg, 'recv move to')
 end
+
+function _CH:map_object(msg)
+  log:dump(msg, 'recv map_object')
+end
+
+function _CH:unmap_object(msg)
+  log:dump(msg, 'recv unmap_object')
+end

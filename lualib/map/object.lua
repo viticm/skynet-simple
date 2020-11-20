@@ -100,7 +100,7 @@ function pack_disappear(self)
     name = self.name,
     tp = self.tp,
   }
-  return "map_object", msg
+  return "unmap_object", msg
 end
 
 -- Send a message to around object.
@@ -140,10 +140,12 @@ function aoi_update(self)
         local obj = self.map.objs[id]
         if obj then
           if obj.send and not obj.viewers[self.id] then
+            print('send to obj:', obj.id)
             obj.viewers[self.id] = 1
             obj:send(name, msg)
           end
           if self.send and not self.viewers[obj.id] then
+            print('send to self:', self.id)
             self.viewers[obj.id] = 1
             self:send(obj:pack_appear())
           end

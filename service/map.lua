@@ -10,6 +10,7 @@
 --]]
 
 local skynet = require 'skynet'
+local client = require 'client'
 local log = require 'log'
 local map = require 'map.init'
 local map_handler = require 'map.handler'
@@ -32,7 +33,7 @@ local function get_map(id, line)
 end
 
 local function init()
-
+  client.init('c2s', 's2c')
 end
 
 -- API.

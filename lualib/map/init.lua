@@ -132,8 +132,8 @@ function enter(self, args)
     obj = player.new(args)
     obj:init(args)
     self:add(obj)
-  else
-
+  else -- Some update.
+    obj.fd = args.fd
   end
   log:info('map enter[%s] success', id)
   return e_error.none
