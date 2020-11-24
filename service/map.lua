@@ -52,6 +52,12 @@ function _M.new(id, line)
   obj = map.new({ id = id })
   obj:init()
   maps[id][line] = obj
+  skynet.fork(function()
+    repeat
+      skynet.sleep(10)
+      obj:update()
+    until obj.exited
+  end)
   return true
 end
 

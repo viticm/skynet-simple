@@ -65,7 +65,15 @@ function new(conf)
 end
 
 function init(self, args)
-
+  for name, value in pairs(args.data or {}) do
+    print('init set==================', name, value)
+    self:set(name, value)
+  end
+  if not args.keep then
+    local hpmax = self:get('hpmax')
+    print('hpmax======================', hpmax)
+    self:set('hp', hpmax)
+  end
 end
 
 function set(self, name, value)

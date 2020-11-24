@@ -7,6 +7,7 @@ return {
     ['map'] = 1,
     ['skill'] = 1,
     ['attr'] = 1,
+    ['monster'] = 1,
   },
   ['robot'] = {
 

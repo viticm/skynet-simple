@@ -14,21 +14,17 @@
 local skynet = require 'skynet'
 local log = require 'log'
 local attr = require 'battle.attr'
+local skill = require 'battle.skill'
+local buff = require 'battle.buff'
 
 local e_object_type = require 'enum.object_type'
 
-local tostring = tostring
 local type = type
 local pairs = pairs
 local ipairs = ipairs
-local string = string
-local table = table
-local load = load
-local pcall = pcall
 local setmetatable = setmetatable
 local print = print
 local next = next
-local os = os
 
 -- Data.
 -------------------------------------------------------------------------------
@@ -53,6 +49,11 @@ function new(conf)
     map = conf.map,
     viewers = nil,                  -- All can see object id hash.
   }
+  if not conf.no_battle then
+    t.attr = attr.new({ et = t })
+    t.skill = skill.new({ et = t })
+    t.buff = buff.new({ et = t })
+  end
   return setmetatable(t, { __index = _M })
 end
 
@@ -163,7 +164,7 @@ function aoi_update(self)
             obj:send(name, msg)
           end
           if self.send and self.viewers[obj.id] then
-            obj:send(name, msg)
+            self.viewers[obj.id] = nil
             self:send(obj:pack_disappear())
           end
         end
@@ -189,4 +190,39 @@ function get_viewers(self)
     end
     return self.viewers
   end
+end
+
+-- If self can be attack by input object.
+-- @param table et Input entity object.
+-- @return bool
+function can_attacked(self, et)
+  if et:is_npc() then return false end
+  return true
+end
+
+-- Change self hp.
+-- @param number hp The change hp.
+-- @param mixed args
+function change_hp(self, hp, args)
+  args = args or {}
+  local cur_hp = self.attr:get('hp')
+  local hpmax = self.attr:get('hpmax')
+  local final = cur_hp + hp
+  if final < 0 then
+    final = 0
+  elseif final > hpmax then
+    final = hpmax
+  end
+  self.attr:set('hp', final)
+  if 0 == final then
+    self:on_death(self, args)
+  end
+end
+
+-- Events.
+-------------------------------------------------------------------------------
+
+function on_death(self, args)
+  local target = args.target
+  print('on_death=======================', target and target.id)
 end

@@ -35,7 +35,10 @@ end
 -------------------------------------------------------------------------------
 
 function damage(src, target)
-
+  local cost = src.attr:get('attack') - target.attr:get('defend')
+  if cost > 0 then
+    target:change_hp(-cost, {target = src})
+  end
 end
 
 function cure(src, target)

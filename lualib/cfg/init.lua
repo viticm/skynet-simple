@@ -56,3 +56,13 @@ function get(name)
   end
   return _data[name]
 end
+
+-- Get one row config from table.
+-- @param string name Config name.
+-- @param mixed key The table key.
+-- @return mixed
+function get_row(name, key)
+  local conf = get(name)
+  if not conf then return end
+  return conf[key]
+end

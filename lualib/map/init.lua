@@ -12,20 +12,18 @@
 local skynet = require 'skynet'
 local log = require 'log'
 local player = require 'map.player'
+local monster = require 'map.monster'
 local e_error = require 'enum.error'
 local cfg = require 'cfg'
 local aoi = require 'map.aoi'
 
-local tostring = tostring
 local type = type
 local pairs = pairs
 local string = string
 local table = table
-local load = load
-local pcall = pcall
+local math = math
 local setmetatable = setmetatable
 local print = print
-local os = os
 
 -- Data.
 -------------------------------------------------------------------------------
@@ -49,6 +47,7 @@ function new(conf)
     players = {},                               -- All player object hash.
     monsters = {},
     npcs = {},
+    loop = 0,
   }
 
   return setmetatable(t, { __index = _M })
@@ -68,13 +67,25 @@ function init(self)
 
   -- Other objs create from config.
 
+  -- Create test monster.
+  for i = 1, 100 do
+    print('create monster', i)
+    local x = math.random(1, map_cfg.width)
+    local y = math.random(1, map_cfg.height)
+    self:add_monster({ id = 1, x = x, y = y })
+  end
+
 end
 
 -- Add a object.
-function add(self, obj)
+-- @param table obj
+-- @param mixed args
+function add(self, obj, args)
+  args = args or {}
   local aoi_id = self.aoi:unit_new({ x = obj.x, y = obj.y, id = obj.id })
   print('aoi_id=================', aoi_id)
-  obj:init({ aoi_id = aoi_id })
+  args.aoi_id = aoi_id
+  obj:init(args)
   self.objs[obj.id] = obj
 
   if obj:is_player() then
@@ -130,8 +141,7 @@ function enter(self, args)
   if not obj then
     args.map = self
     obj = player.new(args)
-    obj:init(args)
-    self:add(obj)
+    self:add(obj, args)
   else -- Some update.
     obj.fd = args.fd
   end
@@ -143,6 +153,36 @@ function get_cfg(self)
   return cfg.get('map')[self.id]
 end
 
-function update(self)
+-- Add a monster to map.
+-- @param table conf The monster config.
+-- @return mixed
+function add_monster(self, conf)
+  local mcfg = cfg.get_row('monster', conf.id)
+  if not mcfg then
+    log:warn('add_monster can not find the config from: %d', conf.id)
+    return
+  end
+  conf.cfg = mcfg
+  local obj = monster.new(conf)
+  obj.x = conf.x
+  obj.y = conf.y
+  self:add(obj, conf)
+  log:debug('add_monster: %d|%d to [%d, %d]', conf.id, obj.id, obj.x, obj.y)
+  return obj
+end
 
+-- Update self logic.
+function update(self)
+  self.loop = self.loop + 1
+  if 0 == self.loop % 5 then
+    local monsters = self.monsters
+    for _, et in pairs(monsters) do
+      et:update()
+    end
+  end
+end
+
+-- Exit a map object.
+function exit(self)
+  self.exited = true
 end
