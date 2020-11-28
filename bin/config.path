@@ -1,4 +1,5 @@
 root = "./"
+preload = root.."lualib/debug/preload.lua"
 luaservice = root.."service/?.lua;"..root.."test/?.lua;"..root.."skynet/service/?.lua"
 lualoader = root .. "lualib/loader.lua"
 lua_path = root.."lualib/?.lua;"..root.."lualib/?/init.lua;"..root.."skynet/lualib/?.lua;"..root.."skynet/lualib/?/init.lua"

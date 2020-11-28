@@ -64,7 +64,7 @@ local function query(...)
   return d
 end
 
-skynet.init(function() 
+skynet.init(function()
   local db_mgr = skynet.uniqueservice('db_mgr')
   proxy = assert(skynet.call(db_mgr, 'lua', 'proxy', 'DB_LOGIN'))
 end)

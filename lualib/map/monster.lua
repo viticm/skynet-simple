@@ -68,5 +68,5 @@ function pack_appear(self)
 end
 
 function update(self)
-  print('update self:', self.id)
+  print('update self add:', self.id)
 end

@@ -68,7 +68,7 @@ function init(self)
   -- Other objs create from config.
 
   -- Create test monster.
-  for i = 1, 100 do
+  for i = 1, 10 do
     print('create monster', i)
     local x = math.random(1, map_cfg.width)
     local y = math.random(1, map_cfg.height)
@@ -157,6 +157,7 @@ end
 -- @param table conf The monster config.
 -- @return mixed
 function add_monster(self, conf)
+  print('the require_ex===================', require_ex)
   local mcfg = cfg.get_row('monster', conf.id)
   if not mcfg then
     log:warn('add_monster can not find the config from: %d', conf.id)

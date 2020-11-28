@@ -17,6 +17,7 @@ local timer = require 'timer'
 local pcl_msg = require 'login.pcl_msg'
 local login_db = require 'login.db'
 local auth_tool = require 'login.auth_tool'
+local e_error = require 'enum.error'
 local util = require 'util'
 local log = require 'log'
 local _CH = client.handler()
@@ -81,7 +82,7 @@ local function login_3rd(self, msg)
     ip = util.split_row(self.addr, ':')
   }
   log:info('login_local partner = %s', msg.partner)
-  return pcl_msg[op](self, msg)
+  return pcl_msg[op](self, json_msg)
 end
 
 local function loop_error(self, fd, what)
@@ -212,10 +213,10 @@ function _M.get_roles(uid)
   local sql = string.format(
     'select rid, rname, sid, level from t_player where uid = "%s"', uid)
   local r = login_db(sql)
-  if not d or d.errno then
-    return false, d.errno
+  if not r or r.errno then
+    return false, r.errno
   end
-  return true, d
+  return true, r
 end
 
 return {
@@ -224,5 +225,13 @@ return {
     client.init('c2s', 's2c')
     local auth_setting = setting.get('auth') or {}
     auth_timeout = tonumber(auth_setting.timeout or 10)
+    --[[
+    skynet.fork(function()
+      repeat
+        skynet.sleep(200)
+        print('util.name()======================', util.test())
+      until false
+    end)
+    --]]
   end,
 }

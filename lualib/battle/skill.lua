@@ -17,8 +17,6 @@ local battle_util = require 'battle.util'
 
 -- Local defines.
 local math = math
-local xpcall = xpcall
-local pcall = pcall
 local print = print
 local next = next
 local setmetatable = setmetatable
@@ -51,6 +49,24 @@ local function get_ready_time(self, time)
     return util.tick() + time
   else
     return math.ceil(time / 1000)
+  end
+end
+
+-- Handle a skill effects.
+-- @param table cfg The skill config.
+-- @param mixed args
+local function handle_effects(self, cfg, args)
+  args = args or {}
+  local left_effects = {}
+  for index, effect in ipairs(cfg.effects) do
+    if effect.delay > 0 then
+      table.insert(left_effects, effect)
+    else
+      self:hit(cfg.id, index, args)
+    end
+  end
+  if next(left_effects) then
+    self:add_effects(cfg.id, left_effects, args)
   end
 end
 
@@ -141,14 +157,21 @@ end
 -- @param table args
 -- @param number over_t Over time.
 function add_effects(self, id, effects, args, over_t)
-
+  self._effects[id] = self._effects[id] or {}
+  for _, effect in ipairs(effects) do
+    local ready_t = get_ready_time(effect.delay)
+    local cfg = effect.effect
+    table.insert(self._effects[id], {ready_t = ready_t, cfg = cfg})
+  end
 end
 
 -- Delete effects of skill.
 -- @param number id Skill ID.
 -- @param mixed index Delete effect index(Defalut delete all).
 function del_effects(self, id, index)
-
+  if self._effects[id] then
+    self._effects[id][index] = nil
+  end
 end
 
 -- Check use a skill.
@@ -186,13 +209,14 @@ function check(self, id, args)
         return e_error.skill_cd_limited
       else
         self:prepare_clear()
-        local level = self._prepare.level
         local _args = {
           target_id = self._prepare.target_id,
+          level = self._prepare.level,
           x = x,
           y = y
         }
-        self:hit(id, level, _args)
+        -- self:hit(id, level, _args)
+        handle_effects(id, conf, _args)
       end
     end
   end
@@ -277,7 +301,7 @@ function use(self, id, args)
     local tid = target and target.id
     self:prepare_save(id, level, conf.prepare, tid, pos, args)
   else
-    self:use(id, args)
+    handle_effects(self, conf, args)
   end
 
   return e
@@ -288,6 +312,17 @@ end
 -- @param mixed args
 -- @return e
 function hit(self, id, args)
+  local effects = battle_util.get_effects(id)
+  if not effects then
+    log:warn('hit can not found the skil config: %d', id)
+    return e_error.id_invalid
+  end
+  local eff_index = args.eff_index
+  local eff_cfg = effects[eff_index]
+  if not eff_cfg then
+    log:warn('hit the index can not found config: %d', eff_index or 0)
+    return e_error.invalid_operation
+  end
 
 end
 

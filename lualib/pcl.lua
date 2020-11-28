@@ -162,3 +162,5 @@ function init(c, timeout)
   print('uri11111111111111111111', uri)
   url_cache.chat = {host = host, uri = uri or ''}
 end
+
+return _M

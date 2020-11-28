@@ -1588,3 +1588,35 @@ end
 function uniq_id()
   return uniq.id(1)
 end
+
+-- 包含
+function require_ex(module_name)
+  local log = require 'log'
+  if package.loaded[module_name] then
+    log:debug('require_ex module[%s] reload', module_name)
+  else
+    log:info('require_ex(%s)', module_name)
+  end
+  package.loaded[module_name] = nil
+  return require(module_name)
+end
+
+-- 文件加载
+function dofile_ex(filename)
+  local log = require 'log'
+  local func = loadfile(filename..'.lua')
+  if nil == func then
+    func = loadfile(filename..'.lc')
+    if nil == func then
+      log:error('dofile_ex(%s) failed', filename)
+      os.exit()
+      return
+    end
+  end
+  setfenv(func, getfenv(2))
+  func()
+end
+
+function test()
+  print('my test xxxxxxxxxxxxxxx----------')
+end

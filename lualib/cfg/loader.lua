@@ -30,7 +30,8 @@ local next = next
 -------------------------------------------------------------------------------
 
 local _M = {}
-package.loaded[...] = _M
+print('=============================test==================', ...)
+-- package.loaded[...] = _M
 if setfenv and type(setfenv) == "function" then
   setfenv(1, _M) -- Lua 5.1
 else
@@ -118,3 +119,5 @@ function get(name, raw)
   end
   return sharetable.query(filename)
 end
+
+return _M

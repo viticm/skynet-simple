@@ -10,11 +10,12 @@
 --]]
 
 local skynet = require 'skynet'
-local skynetdebug = require 'skynet.debug'
+-- local skynetdebug = require 'skynet.debug'
 local trace = require 'trace.c'
 
 local traceback = trace.traceback
 
+--[[
 skynetdebug.reg_debugcmd('RELOAD', function(f)
   local _LOADED = debug.getregistry()._LOADED
   if _LOADED[f] then
@@ -22,7 +23,17 @@ skynetdebug.reg_debugcmd('RELOAD', function(f)
   else
     return skynet.retpack(nil)
   end
+  print('reload========================', f)
+  if package.loaded[f] then
+  print('reload========================1', f)
+    package.loaded[f] = nil
+    require(f)
+  end
+  return skynet.retpack(true)
 end)
+--]]
+
+
 
 skynet.register_protocol {
   name = 'master',

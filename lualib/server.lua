@@ -131,3 +131,5 @@ skynet.init(function()
 
   -- log:dump(_M, 'the _M')
 end)
+
+return _M

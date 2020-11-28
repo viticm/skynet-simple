@@ -17,7 +17,7 @@ local cfg_loader = require 'cfg.loader'
 local _data = _data or {}
 local _rebuild_handler = _rebuild_hander or {}
 local _M = {}
-package.loaded[...] = _M
+-- package.loaded[...] = _M
 if setfenv and type(setfenv) == 'function' then
   setfenv(1, _M) -- Lua 5.1
 else
@@ -66,3 +66,5 @@ function get_row(name, key)
   if not conf then return end
   return conf[key]
 end
+
+return _M

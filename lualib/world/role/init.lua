@@ -86,3 +86,5 @@ function call_map(self, name, ...)
   return server:call_map(
     map.node, self.map_addr, map.id, map.line, name, self.id, ...)
 end
+
+return _M

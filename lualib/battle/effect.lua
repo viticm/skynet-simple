@@ -34,25 +34,27 @@ end
 -- API.
 -------------------------------------------------------------------------------
 
-function damage(src, target)
+function damage(src, target, cfg)
+  local fix = cfg[2]
+  print('damage fix:', fix)
   local cost = src.attr:get('attack') - target.attr:get('defend')
   if cost > 0 then
     target:change_hp(-cost, {target = src})
   end
 end
 
-function cure(src, target)
+function cure(src, target, cfg)
 
 end
 
-function add_buff(src, target)
+function add_buff(src, target, cfg)
 
 end
 
-function del_buff(src, target)
+function del_buff(src, target, cfg)
 
 end
 
-function change_attr(src, target)
+function change_attr(src, target, cfg)
 
 end

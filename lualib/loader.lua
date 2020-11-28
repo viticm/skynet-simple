@@ -8,6 +8,7 @@
  - @date 2020/07/10 19:30
  - @uses The lua loader diffrent from skynet.
 --]]
+
 local args = {}
 for word in string.gmatch(..., '%S+') do
   table.insert(args, word)
