@@ -32,11 +32,20 @@ else
   _ENV = _M -- Lua 5.2+
 end
 
+local map_one
+
+-- Local functions.
+-------------------------------------------------------------------------------
+
+local function rebuild_map_cfg()
+  map_one = cfg.get("map")[3]
+end
+
 -- API(self is the role object).
 -------------------------------------------------------------------------------
 
 function enter_map(self)
-  print('scene enter==============================', self.id, self.fd)
+  print('scene enter==============================', self.id, self.fd, map_one)
   local base = self.base
   local map = base.map or {}
   local id = map.id or 1
@@ -72,3 +81,7 @@ function _CH:move_to(msg)
   -- log:dump(msg)
   return self:call_map('move_to', msg)
 end
+
+skynet.init(function()
+  cfg.rebuild("map", rebuild_map_cfg)
+end)
