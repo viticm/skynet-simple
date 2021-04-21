@@ -38,6 +38,10 @@ function _M.start()
 
   print('setting port', setting.get('port'))
 
+  if not skynet.getenv('daemon') then
+    skynet.uniqueservice('console')
+  end
+
   local port = setting.get('port')
 
   -- Debug service.

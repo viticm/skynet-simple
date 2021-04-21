@@ -80,8 +80,8 @@ dirty_decay_ms:0,muzzy_decay_ms:0,narenas:8"
 
 echo $tp$SVR_ID
 day=`date "+%Y%m%d"`
-echo "tail "$LOGPATH"/log/"$tp$SVR_ID""-$day"-msg.log"
-[ $OP_TYPE -eq 1 ] && export LOGGER=$LOGPATH"/log/"$SVR_NAME
+echo "tail "$LOGPATH"/"$tp$SVR_ID""-$day"-msg.log"
+[ $OP_TYPE -eq 1 ] && export LOGGER=$LOGPATH"/"$SVR_NAME
 [ $OP_TYPE -eq 1 ] && export DAEMON=$PIDFILE
 
 flagfile=$ROOT"/bin/"$SVR_NAME".bootflag"
