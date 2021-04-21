@@ -108,8 +108,15 @@ function loadall(stype)
   print('map config', sharetable.query('test'), '--test')
 end
 
-function reload(name)
-
+function reload(name, raw)
+  local filename = name
+  if not raw then
+    filename = string.format('cfg/%s.lua', name)
+  end
+  local r = sharetable.query(filename)
+  if not r then return end
+  sharetable.loadfile(filename)
+  return sharetable.query(filename)
 end
 
 function get(name, raw)

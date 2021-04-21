@@ -18,5 +18,4 @@ return {
     height = 512,
     born = {2, 200},
   },
-
 }

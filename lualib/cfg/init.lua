@@ -10,12 +10,13 @@
 --]]
 
 local cfg_loader = require 'cfg.loader'
+local sharetable = require "skynet.sharetable"
 
 -- Data.
 -------------------------------------------------------------------------------
 
-local _data = _data or {}
-local _rebuild_handler = _rebuild_hander or {}
+local _data = {}
+local _rebuild_handler = {}
 local _M = {}
 -- package.loaded[...] = _M
 if setfenv and type(setfenv) == 'function' then
@@ -29,7 +30,8 @@ end
 -- Reload one config.
 -- @param string name Config name.
 function reload(name)
-  _data[name] = sharetable.query(name)
+  if not _data[name] then return end
+  _data[name] = cfg_loader.reload(name)
   if _rebuild_handler[name] then
     _rebuild_handler[name](_data[name])
   end
