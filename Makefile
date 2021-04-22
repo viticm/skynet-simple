@@ -22,7 +22,7 @@ CFLAGS = -std=c11 -g -O2 -Wall -I$(LUA_INC) -I$(SKYNET_INC) $(MYCFLAGS)
 
 CSERVICE = logger
 LUA_CLIB = trace \
-  print extend minheap split uniq seri
+  print extend minheap split uniq seri skiplist
 
 all : \
   $(SKYNET_PATH)/skynet \
@@ -77,6 +77,10 @@ $(LUA_CLIB_PATH)/uniq.so : lualib-src/lua-uniq.c | $(LUA_CLIB_PATH)
 	$(CC) $(CFLAGS) $(SHARED) $^ -o $@ 
 
 $(LUA_CLIB_PATH)/seri.so : lualib-src/lua-seri.c | $(LUA_CLIB_PATH)
+	$(CC) $(CFLAGS) $(SHARED) $^ -o $@ 
+
+$(LUA_CLIB_PATH)/skiplist.so : lualib-src/lua-skiplist.c \
+	lualib-src/lua-split.c  | $(LUA_CLIB_PATH)
 	$(CC) $(CFLAGS) $(SHARED) $^ -o $@ 
 
 $(SKYNET_PATH)/skynet :

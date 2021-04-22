@@ -53,12 +53,13 @@ function enter_map(self)
   local x, y = map.x, map.y
   local map_cfg = cfg.get('map')[id]
   if not x or not y then
-    x, y = table.unpack(map_cfg.born)  
+    x, y = table.unpack(map_cfg.born)
   end
   local args = { x = x, y = y, id = self.id, fd = self.fd }
-  local r, addr, line
+  local r, addr
   local node = server.node
   if map_cfg.is_cross then
+
   else
     r, addr, line = skynet.call('.map_mgr', 'lua', 'enter', id, line, args)
   end
