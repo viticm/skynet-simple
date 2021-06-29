@@ -15,8 +15,6 @@ local cfg = require 'cfg'
 
 -- Local defines.
 local math = math
-local xpcall = xpcall
-local pcall = pcall
 local print = print
 local pairs = pairs
 local next = next
@@ -107,6 +105,19 @@ function set_by_id(self, id, value, not_update)
   --]]
 end
 
+function change(self, id, value, not_update)
+    local name = self.get_name(id)
+    if id > c_percent_value then
+        local pname = name .. '__p'
+        local ovalue = self._hash[pname] or 0
+        self:set_percent(id, ovalue + value, not_update)
+    else
+        local fname = name .. '__f'
+        local ovalue = self._hash[fname] or 0
+        self:set_fix(id, ovalue + value, not_update)
+    end
+end
+
 function set_fix(self, id, value, not_update)
   local name = id_hash[id]
   local fname = name .. '__f'
@@ -114,7 +125,7 @@ function set_fix(self, id, value, not_update)
   self._hash[fname] = value
   local fvalue = self._hash[fname] or 0
   local pvalue = self._hash[pname] or 0
-  local final = fvalue * math.ceil((1000 + pvalue / 1000))
+  local final = fvalue * math.ceil((1000 + pvalue) / 1000)
   self._data[id] = final
   if not not_update then
     self._update[id] = 1
@@ -129,7 +140,7 @@ function set_percent(self, id, value, not_update)
   self._hash[pname] = value
   local fvalue = self._hash[fname] or 0
   local pvalue = self._hash[pname] or 0
-  local final = fvalue * math.ceil((1000 + pvalue / 1000))
+  local final = fvalue * math.ceil((1000 + pvalue) / 1000)
   self._data[nid] = final
   if not not_update then
     self._update[nid] = 1
@@ -174,6 +185,13 @@ function update(self)
   if next(round_list) then
     self._et:send_around('update_attr', { list = round_list })
   end
+end
+
+function get_name(id)
+    if id > c_percent_value then
+        id = id % 1000
+    end
+    return id_hash[id]
 end
 
 -- Other.

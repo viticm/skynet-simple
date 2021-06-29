@@ -57,6 +57,7 @@ function _M.new(id, line)
       skynet.sleep(10)
       obj:update()
     until obj.exited
+    _M.free(id, line)
   end)
   return true
 end

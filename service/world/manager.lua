@@ -114,7 +114,7 @@ function _S.close(gate, fd)
     cache.connection_count = cache.connection_count - 1
     local rid = socket.rid
     if rid then
-      local agent = login.agent_pool:get(rid)
+      local agent = login.agent_pool:get(rid, true)
       if agent then
         if not xpcall(skynet.call, traceback, agent, 'lua', 'afk', rid) then
           log:warn('call agent afk failed, rid %s', rid)

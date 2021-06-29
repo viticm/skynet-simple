@@ -126,7 +126,7 @@ end
 local function check_repeat_enter(uid)
   local rid = onlines[uid]
   if not rid then return end
-  local agent = agent_pool.get(rid)
+  local agent = agent_pool:get(rid, true)
   if agent then
     skynet.send(agent, 'lua', 'kick', rid)
   end
