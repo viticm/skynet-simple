@@ -4,6 +4,7 @@ SKYNET_PATH ?= ./skynet
 LUA_RAPIDJSON ?= rapidjson
 LUA_AOI ?= aoi
 LUA_LFS ?= lfs
+LUA_SNAPPY ?= snappy
 
 # platform
 # PLAT ?= linux
@@ -29,6 +30,7 @@ all : \
 	$(LUA_RAPIDJSON) \
 	$(LUA_AOI) \
 	$(LUA_LFS) \
+	$(LUA_SNAPPY) \
   $(foreach v, $(CSERVICE), $(CSERVICE_PATH)/$(v).so) \
   $(foreach v, $(LUA_CLIB), $(LUA_CLIB_PATH)/$(v).so) 
 
@@ -49,6 +51,10 @@ $(LUA_AOI) :
 $(LUA_LFS) :
 	cd 3rd/lua-filesystem/ && $(MAKE)
 	cp 3rd/lua-filesystem/src/lfs.so $(LUA_CLIB_PATH)
+
+$(LUA_SNAPPY) :
+	cd 3rd/lua-snappy/ && $(MAKE)
+	cp 3rd/lua-snappy/snappy.so $(LUA_CLIB_PATH)
 
 
 define CSERVICE_TEMP
