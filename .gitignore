@@ -25,6 +25,7 @@ skynet/*
 *.dport
 *.o
 *.d
+*.lo
 
 lua_checker
 lua_checker_parser.cc

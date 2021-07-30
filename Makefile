@@ -5,6 +5,7 @@ LUA_RAPIDJSON ?= rapidjson
 LUA_AOI ?= aoi
 LUA_LFS ?= lfs
 LUA_SNAPPY ?= snappy
+ZLIB_PATH ?= ./3rd/zlib
 
 # platform
 # PLAT ?= linux
@@ -14,16 +15,18 @@ SHARED := -fPIC --shared
 
 LUA_INC ?= $(SKYNET_PATH)/3rd/lua/
 SKYNET_INC ?= $(SKYNET_PATH)/skynet-src/
+ZLIB_INC ?= $(ZLIB_PATH)
 
 
-CFLAGS = -std=c11 -g -O2 -Wall -I$(LUA_INC) -I$(SKYNET_INC) $(MYCFLAGS)
+CFLAGS = -std=c11 -g -O2 -Wall -I$(LUA_INC) -I$(SKYNET_INC) -I$(ZLIB_INC) \
+				 $(MYCFLAGS)
 # CFLAGS += -DUSE_PTHREAD_LOCK
 
 # skynet
 
 CSERVICE = logger
 LUA_CLIB = trace \
-  print extend minheap split uniq seri skiplist
+  print extend minheap split uniq seri skiplist zip
 
 all : \
   $(SKYNET_PATH)/skynet \
@@ -85,9 +88,13 @@ $(LUA_CLIB_PATH)/uniq.so : lualib-src/lua-uniq.c | $(LUA_CLIB_PATH)
 $(LUA_CLIB_PATH)/seri.so : lualib-src/lua-seri.c | $(LUA_CLIB_PATH)
 	$(CC) $(CFLAGS) $(SHARED) $^ -o $@ 
 
-$(LUA_CLIB_PATH)/skiplist.so : lualib-src/lua-skiplist.c \
-	lualib-src/lua-split.c  | $(LUA_CLIB_PATH)
+$(LUA_CLIB_PATH)/skiplist.so : lualib-src/lua-skiplist.c | $(LUA_CLIB_PATH)
 	$(CC) $(CFLAGS) $(SHARED) $^ -o $@ 
+
+$(LUA_CLIB_PATH)/zip.so : lualib-src/lua-zip.c | $(LUA_CLIB_PATH)
+	cd $(ZLIB_PATH) && ./configure && make
+	$(CC) $(CFLAGS) $(SHARED) $^ $(ZLIB_PATH)/*.lo -o $@ 
+
 
 $(SKYNET_PATH)/skynet :
 	cd $(SKYNET_PATH) && $(MAKE) linux
