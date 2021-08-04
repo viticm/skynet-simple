@@ -12,10 +12,109 @@
 #include <string.h>
 #include <stdlib.h>
 #include <inttypes.h>
+#include <memory.h>
 
 #include "zlib.h"
 #include "lualib.h"
 #include "lauxlib.h"
+
+int
+addslashes(const char *in, size_t in_size, char *out, size_t out_size_max) {
+  /* maximum string length, worst case situation */
+  char *target;
+  const char *source, *end;
+  size_t offset;
+
+  if (!in || in_size >= out_size_max) {
+    return 0;
+  }
+
+  source = (char *)in;
+  end = source + in_size;
+
+  while (source < end) {
+    switch (*source) {
+      case '\0':
+      case '\'':
+      case '\"':
+      case '\\':
+        goto do_escape;
+      default:
+        source++;
+        break;
+    }
+  }
+
+  memcpy(out, in, in_size);
+  return in_size;
+do_escape:
+  offset = source - in;
+  memcpy(out, in, offset);
+  target = out + offset;
+
+  while (source < end) {
+    switch (*source) {
+      case '\0':
+        *target++ = '\\';
+        *target++ = '0';
+        break;
+      case '\'':
+      case '\"':
+      case '\\':
+        *target++ = '\\';
+        /* break is missing *intentionally* */
+      default:
+        *target++ = *source;
+        break;
+    }
+    source++;
+  }
+
+  *target = '\0';
+  /*
+  size_t out_size = strlen(out);
+  if (out_size - (target - out) > 16) {
+    out_size = target - out + 1;
+    char *tmp_buffer = malloc(out_size);
+    if (!tmp_buffer) return 0;
+    memset(tmp_buffer, 0, out_size);
+    memcpy(tmp_buffer, out, out_size);
+    memset(out, 0, out_size_max);
+    memcpy(out, tmp_buffer, out_size);
+    // new_str = zend_string_truncate(new_str, target - ZSTR_VAL(new_str), 0);
+    free(tmp_buffer);
+  }
+  */
+  printf("len: %ld\n", strlen(out));
+  return target - out;
+}
+
+int 
+stripslashes(const char *in, size_t in_size, char *out, size_t out_size_max) {
+  if (!in || in_size > out_size_max) return 0;
+	size_t len = out_size_max;
+  char *str = (char *)in;
+  while (len > 0) {                                                                                          
+      if (*str == '\\') {                                                                                    
+          str++;              /* skip the slash */                            
+          len--;                                                                                             
+          if (len > 0) {                                                                                     
+              if (*str == '0') {                                                                             
+                  *out++='\0';                                                                               
+                  str++;                                                                                     
+              } else {                                                                                       
+                  *out++ = *str++;    /* preserve the next character */       
+              }                                                                                              
+              len--;                                                                                         
+          }                                                                                                  
+      } else {                                                                                               
+          *out++ = *str++;                                                                                   
+          len--;                                                                                             
+      }                                                                                                      
+  }
+  return strlen(out);
+}
+
 
 /*
 	zlib utility functions
@@ -269,7 +368,7 @@ lua_encode252(lua_State *L) {
     }
     free(dstmem);
   }
-  return outlen > 0 ? 1 : luaL_error(L, "zip: compress error.");
+  return outlen > 0 ? 1 : luaL_error(L, "zip: encode252 error.");
 }
 
 static int
@@ -287,15 +386,53 @@ lua_decode252(lua_State *L) {
     }
     free(dstmem);
   }
-  return outlen > 0 ? 1 : luaL_error(L, "zip: uncompress error.");
+  return outlen > 0 ? 1 : luaL_error(L, "zip: decode252 error.");
 }
 
+static int
+lua_addslashes(lua_State *L) {
+  size_t len;
+  const char *src = luaL_checklstring(L, 1, &len);
+  size_t dstlen = len * 2 + 1;
+  char *dstmem = (char *)malloc(dstlen);
+  memset(dstmem, 0, dstlen);
+  size_t outlen = 0;
+  if (dstmem != NULL) {
+    outlen = addslashes(src, len, dstmem, dstlen);
+    // printf("r: %d|%ld|%ld|%d|%s|\n", r, dstlen, len, level, dstmem);
+    if (outlen > 0) {
+      lua_pushlstring(L, dstmem, outlen);
+    }
+    free(dstmem);
+  }
+  return outlen > 0 ? 1 : luaL_error(L, "zip: addslashes error.");
+}
+
+static int
+lua_stripslashes(lua_State *L) {
+  size_t len;
+  const char *src = luaL_checklstring(L, 1, &len);
+  size_t dstlen = len + 1;
+  char *dstmem = (char *)malloc(dstlen);
+  memset(dstmem, 0, dstlen);
+  size_t outlen = 0;
+  if (dstmem != NULL) {
+    outlen = stripslashes(src, len, dstmem, dstlen);
+    if (outlen > 0) {
+      lua_pushlstring(L, dstmem, outlen);
+    }
+    free(dstmem);
+  }
+  return outlen > 0 ? 1 : luaL_error(L, "zip: stripslashes error.");
+}
 
 static const struct luaL_Reg lib[] = {
   { "compress",  lua_compress},
   { "uncompress",  lua_uncompress},
   { "encode252",  lua_encode252},
   { "decode252",  lua_decode252},
+  { "addslashes",  lua_addslashes},
+  { "stripslashes",  lua_stripslashes},
   { NULL, NULL }
 };
 
