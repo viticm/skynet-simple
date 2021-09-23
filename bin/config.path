@@ -7,6 +7,9 @@ lua_cpath = root.."luaclib/?.so;"..root.."skynet/luaclib/?.so"
 snax = root.."service/?.lua;"..root.."test/?.lua"
 cpath = root.."cservice/?.so;"..root.."skynet/cservice/?.so"
 
+-- Enable ssl for https.
+enablessl = true
+
 -- Other settings from the start.sh env.
 
 log_path = "$LOGPATH"
