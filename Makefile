@@ -43,19 +43,19 @@ $(LUA_CLIB_PATH) :
 $(CSERVICE_PATH) :
 	mkdir $(CSERVICE_PATH)
 
-$(LUA_RAPIDJSON) :
+$(LUA_RAPIDJSON) : $(LUA_CLIB_PATH)
 	cd 3rd/lua-rapidjson/ && $(MAKE)
 	cp 3rd/lua-rapidjson/rapidjson.so $(LUA_CLIB_PATH)
 
-$(LUA_AOI) :
+$(LUA_AOI) : $(LUA_CLIB_PATH)
 	cd 3rd/aoi/build/ && cmake ../ &&  $(MAKE)
 	cp 3rd/aoi/build/laoi.so $(LUA_CLIB_PATH)
 
-$(LUA_LFS) :
+$(LUA_LFS) : $(LUA_CLIB_PATH)
 	cd 3rd/lua-filesystem/ && $(MAKE)
 	cp 3rd/lua-filesystem/src/lfs.so $(LUA_CLIB_PATH)
 
-$(LUA_SNAPPY) :
+$(LUA_SNAPPY) : $(LUA_CLIB_PATH)
 	cd 3rd/lua-snappy/ && $(MAKE)
 	cp 3rd/lua-snappy/snappy.so $(LUA_CLIB_PATH)
 
