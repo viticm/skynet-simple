@@ -43,6 +43,17 @@ local function newservice(self)
     if #self.list >= self.max then
         return
     end
+		if self.count >= self.max then
+			local no = math.random(1, self.count)
+			local s = self.list[no]
+			local addr, sub
+			if s then
+				s.count = s.count + 1
+				addr = s.addr
+				sub = s.count
+			end
+			return addr, no, sub
+		end
     print('newservice====================', #self.list, self.max)
     local no = self.count + 1
     if next(self.free_nos) then
