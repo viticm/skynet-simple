@@ -2,25 +2,23 @@
  - SKYNET SIMPLE ( https://github.com/viticm/skynet-simple )
  - $Id service_pool.lua
  - @link https://github.com/viticm/skynet-simple for the canonical source repository
- - @copyright Copyright (c) 2020 viticm( viticm.ti@gmail.com )
+ - @copyright Copyright (c) 2022 viticm( viticm.ti@gmail.com )
  - @license
  - @user viticm( viticm.ti@gmail.com )
- - @date 2020/08/20 20:22
- - @uses The service pool generate tool.
+ - @date 2022/01/20 11:57
+ - @uses The service pool.
 --]]
 
 local skynet = require 'skynet'
+local queue = require 'skynet.queue'
+local log = require 'log'
 
-local tostring = tostring
 local type = type
 local pairs = pairs
-local string = string
 local table = table
-local load = load
-local pcall = pcall
 local setmetatable = setmetatable
 local print = print
-local os = os
+local next = next
 
 -- Data.
 -------------------------------------------------------------------------------
@@ -28,12 +26,49 @@ local os = os
 local _M = {}
 package.loaded[...] = _M
 if setfenv and type(setfenv) == 'function' then
-  setfenv(1, _M) -- Lua 5.1
+    setfenv(1, _M) -- Lua 5.1
 else
-  _ENV = _M -- Lua 5.2+
+    _ENV = _M -- Lua 5.2+
 end
 
 _VERSION = "0.0.1"
+
+-- Local function.
+-------------------------------------------------------------------------------
+
+-- Create a new service.
+-- return [addr? no? sub?]
+local function newservice(self)
+    print('newservice====================', #self.list, self.max)
+    if #self.list >= self.max then
+        return
+    end
+    print('newservice====================', #self.list, self.max)
+    local no = self.count + 1
+    if next(self.free_nos) then
+        no = table.remove(self.free_nos, 1)
+    end
+    local addr = skynet.newservice(self.boot, self.boot_arg, no)
+    local s = { addr = addr, count = 1, no = no }
+    self.list[no] = s
+    self.count = self.count + 1
+    self.usable_nos[no] = 1
+    return addr, no, 1
+end
+
+local function findservice(self)
+    if next(self.usable_nos) then
+        local no = next(self.usable_nos)
+        local s = self.list[no]
+        s.count = s.count + 1
+        if s.count >= self.cap then
+            self.usable_nos[no] = nil
+        end
+        return s.addr, no, s.count
+    end
+    return newservice(self)
+end
+
 
 -- API.
 -------------------------------------------------------------------------------
@@ -47,148 +82,155 @@ _VERSION = "0.0.1"
 -- boot_args = mixed, -- The service boot startup extend args.
 -- }
 function new(conf)
-  local t = {
-    max = conf.max or 99,
-    cap = conf.cap or 999,
-    def = conf.def or 5,
-    hash = {},              -- The hash key list[hid] = {index}.
-    list = {},              -- The service list {addr, count}.
-    usable = nil,             -- The usable service index, must be the min index.
-    boot = conf.boot,
-    boot_arg = conf.boot_arg or -1
-  }
-  for i = 1, t.def do
-    local addr = skynet.newservice(t.boot, t.boot_arg, i)
-    local s = { addr = addr, count = 0 }
-    table.insert(t.list, s)
-  end
-  if #t.list > 0 then
-    t.usable = 1
-  end
-  return setmetatable(t, { __index = _M })
+    local t = {
+        max = conf.max or 99,
+        cap = conf.cap or 999,
+        def = conf.def or 5,
+        hash = {},          -- The hash key list[hid] = {index}.
+        list = {},          -- The service list {addr, count} [no] = {}.
+        free_nos = {},      -- The service can use nos.
+        usable_nos = {},    -- The service not full service no hash.
+        count = 0,          -- The current service count.
+        new_queue = queue(),
+        boot = conf.boot,
+        new_count = 0,
+        boot_arg = conf.boot_arg or -1
+    }
+    for i = 1, t.def do
+        t.new_queue(newservice, t, true)
+    end
+    t.count = t.def
+
+    if t.list[1] then
+        t.usable = 1
+    end
+    return setmetatable(t, { __index = _M })
 end
 
 -- Get a service addr by hash id.
 -- @param mixed hid Hash id.
--- @param mixed not_alloc Not alloc new when hasn't alloc.
--- @return addr?, index?, sub?
-function get(self, hid, not_alloc)
-  local hash = self.hash
-  local list = self.list
-  if hash[hid] then
-    local info = hash[hid]
-    local index, sub = info.index, info.sub
-    local s = list[index]
-    return s and s.addr, index, sub
-  end
-  if not_alloc then return end
-  if self.usable then
-    local s = list[self.usable]
-    if not s then return end
-    local addr = list[self.usable].addr
-    local index = self.usable
-    local sub = s.count
-    hash[hid] = { index = index, sub = sub }
-    s.count = s.count + 1
-    local sub = self.count
-    if s.count >= self.cap and self.usable < #list then -- Find next usable index.
-      local find_usable
-      for i = self.usable + 1, #self.list do
-        s = list[i]
-        if s.count < self.cap then
-          find_usable = i
-          break
+-- @param mixed alloc Alloc new when hasn't alloc.
+-- @return addr?, no?, sub?
+function get(self, hid, alloc)
+    local hash = self.hash
+    local list = self.list
+    if hash[hid] then
+        local info = hash[hid]
+        local no, sub = info.no, info.sub
+        local s = self.list[no]
+        return s and s.addr, no, sub
+    end
+    if not alloc then return end
+    self.new_count = self.new_count + 1
+    log.error('self.new_count========================', self.new_count)
+    local usable = next(self.usable_nos)
+    if usable then
+        local s = list[usable]
+        local addr = s.addr
+        s.count = s.count + 1
+        local sub = s.count
+        hash[hid] = { no = s.no, sub = sub }
+        print('no=================', s.no, s.count, s.addr)
+        if s.count >= self.cap then
+            self.usable_nos[usable] = nil
         end
-      end
-      self.usable = find_usable
+        return addr, s.no, sub
+    else
+        local addr, no, sub = self.new_queue(findservice, self)
+        self.hash[hid] = { no = no, sub = sub}
+        return addr, no, sub
     end
-    return addr, index, sub
-  else
-    print('get1====================', hid, #list, self.max)
-    if #list >= self.max then
-      return
-    end
-    print('get====================', hid, #list, self.max)
-    local addr = skynet.newservice(self.boot, self.boot_arg, #list + 1)
-    local s = { addr = addr, count = 0 }
-    table.insert(list, s)
-    local index = #list
-    hash[hid] = { index = index, sub = 1}
-    s.count = 1
-    return addr, index, 1
-  end
 end
 
 -- Get service hash.
 -- @param mixed hid The hash id.
 -- @return mixed
 function get_hash(self, hid)
-  return self.hash[hid]
+    return self.hash[hid]
 end
 
 -- Foreach all service item.
--- @param function func The foreach function handle (addr, index, ...)
+-- @param function func The foreach function handle (addr, no, ...)
 function foreach(self, func, ...)
-  for index, info in ipairs(self.list) do
-    func(info.addr, index, ...)
-  end
+    for no, info in pairs(self.list) do
+        func(info.addr, no, ...)
+    end
 end
 
 -- Stop all service in pool.
 function stop(self)
-  for index, info in ipairs(self.list) do
-    skynet.send(info.addr, 'lua', 'stop')
-  end
+    for _, info in pairs(self.list) do
+        skynet.send(info.addr, 'lua', 'stop')
+    end
 end
 
 -- Reload one file.
 -- @param string filename
 function reload(self, filename)
-  for index, info in ipairs(self.list) do
-    skynet.send(info.addr, 'lua', 'reload', filename)
-  end
+    for _, info in pairs(self.list) do
+        skynet.send(info.addr, 'lua', 'reload', filename)
+    end
 end
 
 -- Garbage collect(keep one alive full usable service when service more than def).
 function gc(self)
-  local count = #self.list
-  local usables = {}
-  for i = count, self.def + 1, -1 do
-    local info = self.list[i]
-    if 0 == info.count then
-      table.insert(usables, i)
-    else
-      break
+    local usables = {}
+    for no, info in pairs(self.list) do
+        if 0 == info.count then
+            table.insert(usables, no)
+        end
     end
-  end
-  if #usables <= 1 then return end
-  for i = 1, i < #usables -1 do
-    local index = usables[i]
-    local info = self.list[index]
-    log:info('gc index %d', index)
-    skynet.send(info.addr, 'lua', 'stop')
-    table.remove(self.list, index)
-  end
+    local count = #usables
+    if count <= 1 then return end
+    for i, no in ipairs(usables) do
+        if i == count then break end
+        self:del(no)
+    end
+end
+
+-- Remove a service by no.
+function del(self, no)
+    local s = self.list[no]
+    log.info('service_pool del no', no)
+    skynet.send(s.addr, 'lua', 'stop')
+    self.list[no] = nil
+    self.usable_nos[no] = nil
+    self.count = self.count - 1
+    table.insert(self.free_nos, no)
 end
 
 -- Send a message to all service.
 function broadcast(self, name, ...)
-  for _, info in ipairs(self.list) do
-    skynet.send(info.addr, 'lua', name, ...)
-  end
+    for _, info in pairs(self.list) do
+        skynet.send(info.addr, 'lua', name, ...)
+    end
 end
 
 -- Free an service use count.
--- @param number index The hash id.
+-- @param number hid The hash id.
 function free(self, hid)
-  local hash = self.hash
-  local h = hash[hid]
-  if not h then return end
-  local index = h.index
-  local info = self.list[index]
-  if info then
-    info.count = info.count - 1
-  end
-  hash[hid] = nil
-  self:gc()
+    local hash = self.hash
+    local h = hash[hid]
+    if not h then return end
+    local no = h.no
+    local s = self.list[no]
+    if s then
+      s.count = s.count - 1
+    end
+    self.usable_nos[no] = 1
+    print('free================================', s and s.no, s and s.count)
+    hash[hid] = nil
+    if s.count <= 0 and self.count > 1 then
+        self:del(s.no)
+    end
+end
+
+-- Add the service usable from hash id.
+-- @param number hid The hash id.
+function set_usable(self, hid)
+    local h = self.hash[hid]
+    if not h then return end
+    local s = self.list[h.no]
+    if not s then return end
+    self.usable_nos[h.no] = 1
 end

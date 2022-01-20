@@ -33,7 +33,6 @@ all : \
 	$(LUA_RAPIDJSON) \
 	$(LUA_AOI) \
 	$(LUA_LFS) \
-	$(LUA_SNAPPY) \
   $(foreach v, $(CSERVICE), $(CSERVICE_PATH)/$(v).so) \
   $(foreach v, $(LUA_CLIB), $(LUA_CLIB_PATH)/$(v).so) 
 
