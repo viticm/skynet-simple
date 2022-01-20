@@ -225,12 +225,11 @@ function free(self, hid)
     end
 end
 
--- Add the service usable from hash id.
--- @param number hid The hash id.
-function set_usable(self, hid)
-    local h = self.hash[hid]
-    if not h then return end
-    local s = self.list[h.no]
+-- Add the service usable from no.
+-- @param number no The no.
+-- @param mixed flag Usable flag.
+function set_usable(self, no, flag)
+    local s = self.list[no]
     if not s then return end
-    self.usable_nos[h.no] = 1
+    self.usable_nos[no] = flag and 1 or nil
 end
