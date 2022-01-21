@@ -19,6 +19,7 @@ local table = table
 local setmetatable = setmetatable
 local print = print
 local next = next
+local math = math
 
 -- Data.
 -------------------------------------------------------------------------------
