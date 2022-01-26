@@ -236,13 +236,13 @@ function free(self, hid)
   if s then
     s.count = s.count - 1
   end
-  self.usable_nos[no] = 1
   print('free================================', s and s.no, s and s.count)
   hash[hid] = nil
   if s.count <= 0 and self.count > self.def then
-     skynet.timeout(10000, function()
-       self:safe_del(s.no)
-     end)
+    self.usable_nos[no] = 1
+    skynet.timeout(10000, function()
+      self:safe_del(s.no)
+    end)
   end
 end
 
